@@ -75,7 +75,6 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     this.x = clamp(this.x, 32, worldWidth - 32)
     this.lane = clamp(this.lane, 0.58, 0.88)
     this.y = laneToY(this.lane)
-    this.scaleX = Math.abs(this.scaleX) * (this.face === -1 ? 1 : -1)
     this.depth = Math.round(this.y)
     this.updateFrame()
   }
@@ -133,6 +132,13 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
 
     const frame = this.animations.frame('enemy', action, index)
     this.animations.apply(this, 'enemy-sheet', frame)
+    this.applyFacing(action)
     this.alpha = this.invincibleMs > 0 && Math.floor(this.invincibleMs / 55) % 2 ? 0.62 : 1
+  }
+
+  private applyFacing(action: 'idle' | 'walk' | 'punch' | 'kick' | 'guard' | 'hurt' | 'down') {
+    const attackArtFacesRight = action === 'punch' || action === 'kick'
+    const direction = attackArtFacesRight ? this.face : (this.face === -1 ? 1 : -1)
+    this.scaleX = Math.abs(this.scaleX) * direction
   }
 }
