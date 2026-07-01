@@ -78,8 +78,11 @@ export class WorldScene extends Phaser.Scene {
     }
 
     this.player.updatePlayer(delta, input, this.level.worldWidth)
+    this.enemies = this.enemies.filter((enemy) => enemy.active)
     this.enemies.forEach((enemy) => enemy.updateEnemy(delta, this.player, this.level.worldWidth))
-    if (this.boss) this.boss.updateEnemy(delta, this.player, this.level.worldWidth)
+    this.enemies = this.enemies.filter((enemy) => enemy.active)
+    if (this.boss?.active) this.boss.updateEnemy(delta, this.player, this.level.worldWidth)
+    if (this.boss && !this.boss.active) this.boss = undefined
     this.handlePlayerAttack()
     this.handleBossSpawn()
     this.handleStageClear()
@@ -185,7 +188,7 @@ export class WorldScene extends Phaser.Scene {
       title: 'Neon Gauntlet',
       player: { x: this.player.x, hp: this.player.hp },
       level: this.level,
-      enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({ x: enemy.x, hp: enemy.hp })),
+      enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({ x: enemy.x, hp: enemy.hp, active: enemy.active })),
       assets: {
         stage1: this.textures.exists('stage-01-bg'),
         player: this.textures.exists('player-sheet'),

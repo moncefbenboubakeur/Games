@@ -7,6 +7,9 @@ import { laneToY } from '../utils/lane'
 import type { Player } from './Player'
 
 export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
+  private static readonly corpseLifetimeMs = 1600
+  private static readonly corpseFadeStartMs = 1200
+
   lane: number
   face: -1 | 1 = -1
   hp: number
@@ -16,6 +19,8 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   telegraphMs = 0
   cooldownMs = 500
   readonly isBoss: boolean = false
+  private corpseStartedAt = 0
+  private downFrameApplied = false
 
   constructor(
     scene: Phaser.Scene,
@@ -36,7 +41,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
 
   updateEnemy(dt: number, player: Player, worldWidth: number) {
     if (this.hp <= 0) {
-      this.updateFrame('down')
+      this.updateCorpse(dt)
       return
     }
 
@@ -81,7 +86,29 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     this.x += knockback
     this.invincibleMs = 180
     this.scene.events.emit('sfx', 'hit')
+    if (this.hp <= 0) {
+      this.corpseStartedAt = performance.now()
+      this.downFrameApplied = false
+      this.attackMs = 0
+      this.telegraphMs = 0
+      this.invincibleMs = 0
+    }
     return true
+  }
+
+  private updateCorpse(_dt: number) {
+    if (!this.corpseStartedAt) this.corpseStartedAt = performance.now()
+    if (!this.downFrameApplied) {
+      this.updateFrame('down')
+      this.downFrameApplied = true
+      this.alpha = 1
+    }
+    const corpseMs = performance.now() - this.corpseStartedAt
+    if (corpseMs >= Enemy.corpseFadeStartMs) {
+      const fade = (corpseMs - Enemy.corpseFadeStartMs) / (Enemy.corpseLifetimeMs - Enemy.corpseFadeStartMs)
+      this.alpha = Phaser.Math.Clamp(1 - fade, 0, 1)
+    }
+    if (corpseMs >= Enemy.corpseLifetimeMs) this.destroy()
   }
 
   protected updateFrame(force?: 'down') {

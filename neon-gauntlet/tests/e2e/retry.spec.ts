@@ -29,7 +29,7 @@ test('enter replays from a real stage clear', async ({ page }) => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
       boss?: { hp: number }
       bossSpawned: boolean
-      enemies: Array<{ hp: number }>
+      enemies: Array<{ hp: number; destroy: () => void }>
       level: { stageClearX: number }
       player: { x: number }
     }
@@ -37,6 +37,7 @@ test('enter replays from a real stage clear', async ({ page }) => {
     world.boss = undefined
     world.enemies.forEach((enemy) => {
       enemy.hp = 0
+      enemy.destroy()
     })
     world.player.x = world.level.stageClearX + 2
   })

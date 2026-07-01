@@ -9,7 +9,7 @@ declare global {
       title: string
       player: { x: number; hp: number }
       level: { name: string }
-      enemies: Array<{ x: number; hp: number }>
+      enemies: Array<{ x: number; hp: number; active?: boolean }>
       assets: Record<string, boolean>
     }
   }
