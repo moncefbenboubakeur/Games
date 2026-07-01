@@ -60,11 +60,12 @@ async function main() {
   const startButton = page.locator('#start-play')
   if (await startButton.count()) await startButton.click()
   else {
+    await page.waitForSelector('canvas')
+    await page.waitForFunction(() => typeof window.__NEON_START__ === 'function')
     await page.evaluate(() => window.__NEON_START__?.())
-    await page.locator('canvas').click()
-    await page.keyboard.press('Enter')
+    await page.waitForFunction(() => !!window.__NEON_DEBUG__?.player)
   }
-  await page.waitForTimeout(1000)
+  await page.waitForTimeout(500)
 
   mkdirSync(resolve(root, 'test-results'), { recursive: true })
   const screenshot = resolve(root, 'test-results', `${game.id}-smoke.png`)

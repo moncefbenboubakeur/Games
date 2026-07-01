@@ -16,6 +16,7 @@ const emptyInput = (): NormalizedInput => ({
 
 export class InputSystem {
   readonly state = emptyInput()
+  private readonly held = emptyInput()
   private readonly keys: Record<string, Phaser.Input.Keyboard.Key>
   private readonly windowKeys = new Set<string>()
   private readonly windowShots = new Set<keyof NormalizedInput>()
@@ -45,28 +46,30 @@ export class InputSystem {
     }
     window.addEventListener('keydown', this.handleWindowKeyDown, { passive: false })
     window.addEventListener('keyup', this.handleWindowKeyUp, { passive: false })
+    window.addEventListener('blur', this.releaseWindowKeys)
+    document.addEventListener('visibilitychange', this.releaseHiddenWindowKeys)
     scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.destroy())
   }
 
   press(action: keyof NormalizedInput, down: boolean) {
-    this.state[action] = down
+    this.held[action] = down
     if (down && (action === 'left' || action === 'right')) this.lastHorizontal = action
     if (down && (action === 'up' || action === 'down')) this.lastVertical = action
     if (down) this.oneShot.add(action)
   }
 
   consume(action: keyof NormalizedInput) {
-    const active = this.oneShot.has(action) || this.state[action]
+    const active = this.oneShot.has(action) || this.held[action]
     this.oneShot.delete(action)
     return active
   }
 
   update() {
     const next = emptyInput()
-    const left = this.keys.left.isDown || this.keys.a.isDown || this.down('ArrowLeft', 'a', 'A') || this.state.left
-    const right = this.keys.right.isDown || this.keys.d.isDown || this.down('ArrowRight', 'd', 'D') || this.state.right
-    const up = this.keys.up.isDown || this.keys.w.isDown || this.down('ArrowUp', 'w', 'W') || this.state.up
-    const down = this.keys.down.isDown || this.keys.s.isDown || this.down('ArrowDown', 's', 'S') || this.state.down
+    const left = this.keys.left.isDown || this.keys.a.isDown || this.down('ArrowLeft', 'a', 'A') || this.held.left
+    const right = this.keys.right.isDown || this.keys.d.isDown || this.down('ArrowRight', 'd', 'D') || this.held.right
+    const up = this.keys.up.isDown || this.keys.w.isDown || this.down('ArrowUp', 'w', 'W') || this.held.up
+    const down = this.keys.down.isDown || this.keys.s.isDown || this.down('ArrowDown', 's', 'S') || this.held.down
     const horizontal = this.resolveAxis(left, right, this.lastHorizontal)
     const vertical = this.resolveAxis(up, down, this.lastVertical)
     next.left = horizontal.negative
@@ -76,7 +79,7 @@ export class InputSystem {
     next.punch = Phaser.Input.Keyboard.JustDown(this.keys.punch) || Phaser.Input.Keyboard.JustDown(this.keys.punchEnter) || this.shot('punch') || this.oneShot.has('punch')
     next.kick = Phaser.Input.Keyboard.JustDown(this.keys.kick) || this.shot('kick') || this.oneShot.has('kick')
     next.jump = Phaser.Input.Keyboard.JustDown(this.keys.jump) || this.shot('jump') || this.oneShot.has('jump')
-    next.guard = this.keys.guard.isDown || this.down('l') || this.state.guard
+    next.guard = this.keys.guard.isDown || this.down('l', 'L') || this.held.guard
     next.pause = Phaser.Input.Keyboard.JustDown(this.keys.pause) || this.shot('pause') || this.oneShot.has('pause')
     this.gamepad.apply(next)
     Object.assign(this.state, next)
@@ -88,6 +91,8 @@ export class InputSystem {
   destroy() {
     window.removeEventListener('keydown', this.handleWindowKeyDown)
     window.removeEventListener('keyup', this.handleWindowKeyUp)
+    window.removeEventListener('blur', this.releaseWindowKeys)
+    document.removeEventListener('visibilitychange', this.releaseHiddenWindowKeys)
   }
 
   private down(...keys: string[]) {
@@ -122,6 +127,18 @@ export class InputSystem {
     if ((event.key === 'ArrowDown' || event.key === 's' || event.key === 'S') && this.lastVertical === 'down') {
       this.lastVertical = this.down('ArrowUp', 'w', 'W') ? 'up' : null
     }
+  }
+
+  private readonly releaseWindowKeys = () => {
+    this.windowKeys.clear()
+    this.windowShots.clear()
+    Object.values(this.keys).forEach((key) => key.reset())
+    this.lastHorizontal = null
+    this.lastVertical = null
+  }
+
+  private readonly releaseHiddenWindowKeys = () => {
+    if (document.visibilityState === 'hidden') this.releaseWindowKeys()
   }
 
   private resolveAxis(negative: boolean, positive: boolean, last: 'left' | 'right' | 'up' | 'down' | null) {
