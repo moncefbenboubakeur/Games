@@ -8,6 +8,7 @@ export class GameOverScene extends Phaser.Scene {
     event.preventDefault()
     this.retry()
   }
+  private readonly retryFromPointer = () => this.retry()
 
   constructor() {
     super(SceneKeys.GameOver)
@@ -23,8 +24,10 @@ export class GameOverScene extends Phaser.Scene {
     this.input.keyboard?.once('keydown-SPACE', () => this.retry())
     this.input.once('pointerdown', () => this.retry())
     window.addEventListener('keydown', this.retryFromKeyboard, { passive: false })
+    window.addEventListener('pointerdown', this.retryFromPointer)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       window.removeEventListener('keydown', this.retryFromKeyboard)
+      window.removeEventListener('pointerdown', this.retryFromPointer)
     })
   }
 
@@ -32,6 +35,7 @@ export class GameOverScene extends Phaser.Scene {
     if (this.retryStarted) return
     this.retryStarted = true
     window.removeEventListener('keydown', this.retryFromKeyboard)
+    window.removeEventListener('pointerdown', this.retryFromPointer)
     this.scene.start(SceneKeys.World)
   }
 }

@@ -26,12 +26,14 @@ export class WorldScene extends Phaser.Scene {
   private stageCleared = false
   private frozen = false
   private save = new SaveAdapter()
+  private readonly playSfx = (key: string) => this.audioSystem.playSfx(key)
 
   constructor() {
     super(SceneKeys.World)
   }
 
   create() {
+    this.resetRunState()
     const animations = this.cache.json.get('animations') as AnimationData
     const combat = this.cache.json.get('combat') as CombatData
     const enemies = this.cache.json.get('enemies') as EnemiesData
@@ -59,7 +61,8 @@ export class WorldScene extends Phaser.Scene {
     this.scene.launch(SceneKeys.UI)
     this.audioSystem.unlock()
     this.audioSystem.playMusic(this.level.music)
-    this.events.on('sfx', (key: string) => this.audioSystem.playSfx(key))
+    this.events.on('sfx', this.playSfx)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off('sfx', this.playSfx))
 
     this.events.emit('hud:update', this.snapshot())
     this.exposeDebug()
@@ -92,6 +95,16 @@ export class WorldScene extends Phaser.Scene {
 
   toggleMute() {
     return this.audioSystem.toggleMute()
+  }
+
+  private resetRunState() {
+    this.enemies = []
+    this.boss = undefined
+    this.score = 0
+    this.bossSpawned = false
+    this.stageCleared = false
+    this.frozen = false
+    this.events.off('sfx', this.playSfx)
   }
 
   private drawBackground() {

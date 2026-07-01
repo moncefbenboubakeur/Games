@@ -22,3 +22,51 @@ test('enter retries from game over', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('WorldScene'))).toBe(true)
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player?.hp)).toBe(150)
 })
+
+test('enter replays from a real stage clear', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      boss?: { hp: number }
+      bossSpawned: boolean
+      enemies: Array<{ hp: number }>
+      level: { stageClearX: number }
+      player: { x: number }
+    }
+    world.bossSpawned = true
+    world.boss = undefined
+    world.enemies.forEach((enemy) => {
+      enemy.hp = 0
+    })
+    world.player.x = world.level.stageClearX + 2
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('StageClearScene'))).toBe(true)
+  await expect.poll(() => page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as { stageCleared: boolean }
+    return world.stageCleared
+  })).toBe(true)
+
+  await page.keyboard.press('Enter')
+
+  await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('WorldScene'))).toBe(true)
+  await expect.poll(() => page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as { stageCleared: boolean }
+    return world.stageCleared
+  })).toBe(false)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player?.hp)).toBe(150)
+})
+
+test('click replays from stage clear', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => {
+    window.__NEON_GAME__?.scene.stop('WorldScene')
+    window.__NEON_GAME__?.scene.stop('UIScene')
+    window.__NEON_GAME__?.scene.start('StageClearScene', { score: 345 })
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('StageClearScene'))).toBe(true)
+
+  await page.mouse.click(720, 740)
+
+  await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('WorldScene'))).toBe(true)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player?.hp)).toBe(150)
+})

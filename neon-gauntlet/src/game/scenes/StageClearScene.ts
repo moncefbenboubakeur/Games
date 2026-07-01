@@ -8,6 +8,7 @@ export class StageClearScene extends Phaser.Scene {
     event.preventDefault()
     this.replay()
   }
+  private readonly replayFromPointer = () => this.replay()
 
   constructor() {
     super(SceneKeys.StageClear)
@@ -23,8 +24,10 @@ export class StageClearScene extends Phaser.Scene {
     this.input.keyboard?.once('keydown-SPACE', () => this.replay())
     this.input.once('pointerdown', () => this.replay())
     window.addEventListener('keydown', this.replayFromKeyboard, { passive: false })
+    window.addEventListener('pointerdown', this.replayFromPointer)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       window.removeEventListener('keydown', this.replayFromKeyboard)
+      window.removeEventListener('pointerdown', this.replayFromPointer)
     })
   }
 
@@ -32,6 +35,7 @@ export class StageClearScene extends Phaser.Scene {
     if (this.replayStarted) return
     this.replayStarted = true
     window.removeEventListener('keydown', this.replayFromKeyboard)
+    window.removeEventListener('pointerdown', this.replayFromPointer)
     this.scene.start(SceneKeys.World)
   }
 }
