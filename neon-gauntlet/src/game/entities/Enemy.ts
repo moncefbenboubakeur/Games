@@ -22,7 +22,6 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   private corpseStartedAt = 0
   private downFrameApplied = false
   private moving = false
-  private walkMs = 0
 
   constructor(
     scene: Phaser.Scene,
@@ -57,6 +56,11 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     this.face = dx < 0 ? -1 : 1
     this.moving = false
 
+    if (this.telegraphMs > 0 && !this.canStartAttack(player)) {
+      this.telegraphMs = 0
+      this.cooldownMs = Math.min(this.cooldownMs, 180)
+    }
+
     if (this.telegraphMs <= 0 && this.attackMs <= 0) {
       if (Math.abs(dx) > this.def.range * 0.82) {
         this.x += Math.sign(dx) * this.def.speed * dt / 1000
@@ -67,8 +71,6 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
         this.moving = true
       }
     }
-    this.walkMs = this.moving ? this.walkMs + dt : 0
-
     if (this.cooldownMs <= 0 && this.telegraphMs <= 0 && this.attackMs <= 0 && this.canStartAttack(player)) {
       this.telegraphMs = this.def.id === 'thrower' ? 430 : 260
       this.cooldownMs = Phaser.Math.Between(this.def.cooldownMinMs, this.def.cooldownMaxMs)
@@ -123,8 +125,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   }
 
   protected updateFrame(force?: 'down') {
-    const tick = Math.floor(this.walkMs / 115)
-    const walkCycle = [0, 1, 2, 1]
+    const tick = Math.floor(this.scene.time.now / 130)
     let action: 'idle' | 'walk' | 'punch' | 'kick' | 'guard' | 'hurt' | 'down' = 'idle'
     let index = 0
 
@@ -140,7 +141,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
       index = this.attackMs > 170 ? 0 : 1
     } else if (this.moving) {
       action = 'walk'
-      index = walkCycle[tick % walkCycle.length]
+      index = tick % 4
     }
 
     const frame = this.animations.frame('enemy', action, index)
