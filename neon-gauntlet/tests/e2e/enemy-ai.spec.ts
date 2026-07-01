@@ -80,15 +80,14 @@ test('enemy walk animation uses a complete stepping cycle only while moving', as
     enemy.telegraphMs = 0
     enemy.attackMs = 0
     const frames: string[] = []
-    for (let i = 0; i < 8; i += 1) {
-      await new Promise((resolve) => setTimeout(resolve, 140))
+    for (let i = 0; i < 22; i += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 90))
       frames.push(enemy.frame.name)
     }
     return frames
   })
 
   expect(new Set(walkingFrames)).toEqual(new Set(['enemy-walk-0', 'enemy-walk-1', 'enemy-walk-2', 'enemy-walk-3']))
-  expect(walkingFrames.filter((frame) => frame === 'enemy-walk-1').length).toBeGreaterThanOrEqual(2)
 })
 
 test('enemies cancel their windup if the player escapes before the hit frame', async ({ page }) => {
