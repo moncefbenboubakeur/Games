@@ -18,6 +18,9 @@ export class UIScene extends Phaser.Scene {
   private levelText!: Phaser.GameObjects.Text
   private bossText!: Phaser.GameObjects.Text
   private messageText!: Phaser.GameObjects.Text
+  private world?: WorldScene
+  private readonly onHudUpdate = (state: HudState) => this.renderHud(state)
+  private readonly onMessage = (message: string) => this.flashMessage(message)
 
   constructor() {
     super(SceneKeys.UI)
@@ -32,12 +35,14 @@ export class UIScene extends Phaser.Scene {
     this.messageText = this.add.text(GAME_WIDTH / 2, 72, '', { fontFamily: 'monospace', fontSize: '16px', color: '#fff', stroke: '#081020', strokeThickness: 4 }).setOrigin(0.5)
 
     this.createTouchControls()
-    const world = this.scene.get(SceneKeys.World) as WorldScene
-    world.events.on('hud:update', (state: HudState) => this.renderHud(state))
-    world.events.on('message', (message: string) => this.flashMessage(message))
+    this.world = this.scene.get(SceneKeys.World) as WorldScene
+    this.world.events.on('hud:update', this.onHudUpdate)
+    this.world.events.on('message', this.onMessage)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup)
   }
 
   private renderHud(state: HudState) {
+    if (!this.scene.isActive() || !this.hpBar?.active || !this.scoreText?.active) return
     this.hpBar.width = 96 * Math.max(0, state.hp / state.maxHp)
     this.scoreText.setText(`SCORE ${String(state.score).padStart(6, '0')}`)
     this.levelText.setText(`${state.level}  ENEMIES ${state.enemies}`)
@@ -45,8 +50,15 @@ export class UIScene extends Phaser.Scene {
   }
 
   private flashMessage(message: string) {
+    if (!this.scene.isActive() || !this.messageText?.active) return
     this.messageText.setText(message).setAlpha(1)
     this.tweens.add({ targets: this.messageText, alpha: 0, delay: 900, duration: 700 })
+  }
+
+  private readonly cleanup = () => {
+    this.world?.events.off('hud:update', this.onHudUpdate)
+    this.world?.events.off('message', this.onMessage)
+    this.world = undefined
   }
 
   private createTouchControls() {

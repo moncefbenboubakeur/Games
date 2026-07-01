@@ -4,6 +4,7 @@ declare global {
   interface Window {
     __NEON_START__?: () => void
     __NEON_FREEZE__?: () => void
+    __NEON_GAME__?: import('phaser').Game
     __NEON_DEBUG__?: {
       title: string
       player: { x: number; hp: number }
