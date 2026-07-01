@@ -7,8 +7,9 @@
 - [x] Add game-specific static dev server.
 - [x] Add root game registry.
 - [x] Add root smoke-test command.
-- [ ] Add a Phaser + TypeScript starter template for future games.
-- [ ] Add screenshot comparison baselines.
+- [x] Migrate Neon Gauntlet to Phaser + TypeScript + Vite.
+- [x] Add screenshot comparison baseline infrastructure.
+- [ ] Add a reusable Phaser + TypeScript starter template for future games.
 - [ ] Add gamepad smoke-test coverage.
 
 ## Neon Gauntlet

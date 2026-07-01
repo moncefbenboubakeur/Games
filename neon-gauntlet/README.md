@@ -1,14 +1,15 @@
 # Neon Gauntlet
 
-Standalone version of the SamiTube teen brawler prototype.
+Standalone Phaser + TypeScript + Vite version of the SamiTube teen brawler prototype.
 
 This folder is self-contained:
 
-- `index.html` - game entrypoint
-- `_harness.js` - copied local game runtime
-- `_game.css` - copied local shell styles
-- `neon/assets/` - stage and sprite assets
-- `serve.mjs` - no-dependency static server
+- `src/` - Phaser scenes, entities, systems, and utilities
+- `public/assets/` - sprites, backgrounds, audio, and maps
+- `public/data/` - data-driven levels, enemies, combat, animations, audio
+- `tests/` - Vitest logic tests and Playwright screenshot tests
+- `legacy/` - preserved original Canvas prototype
+- `serve.mjs` - no-dependency static server for the legacy prototype
 
 ## Run
 
@@ -17,6 +18,28 @@ npm start
 ```
 
 Open the printed URL, usually `http://127.0.0.1:4177/`.
+
+## Verify
+
+```sh
+npm run test
+npm run build
+npm run test:screenshots
+```
+
+From the Games repo root:
+
+```sh
+npm run smoke:neon
+```
+
+## Legacy Prototype
+
+```sh
+npm run serve:legacy
+```
+
+Then open `http://127.0.0.1:4177/legacy/`.
 
 ## Controls
 

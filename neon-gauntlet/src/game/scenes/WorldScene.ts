@@ -1,0 +1,186 @@
+import Phaser from 'phaser'
+import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData } from '../data/types'
+import { Boss } from '../entities/Boss'
+import { Enemy } from '../entities/Enemy'
+import { Player } from '../entities/Player'
+import { AnimationSystem } from '../systems/AnimationSystem'
+import { AudioSystem } from '../systems/AudioSystem'
+import { CameraSystem } from '../systems/CameraSystem'
+import { CombatSystem } from '../systems/CombatSystem'
+import { InputSystem } from '../systems/InputSystem'
+import { SaveAdapter } from '../systems/SaveAdapter'
+import { SpawnSystem } from '../systems/SpawnSystem'
+
+export class WorldScene extends Phaser.Scene {
+  private inputSystem!: InputSystem
+  private animationSystem!: AnimationSystem
+  private audioSystem!: AudioSystem
+  private combat!: CombatSystem
+  private player!: Player
+  private enemies: Enemy[] = []
+  private boss?: Boss
+  private level!: LevelData
+  private score = 0
+  private bossSpawned = false
+  private stageCleared = false
+  private frozen = false
+  private save = new SaveAdapter()
+
+  constructor() {
+    super(SceneKeys.World)
+  }
+
+  create() {
+    const animations = this.cache.json.get('animations') as AnimationData
+    const combat = this.cache.json.get('combat') as CombatData
+    const enemies = this.cache.json.get('enemies') as EnemiesData
+    const bosses = this.cache.json.get('bosses') as BossesData
+    const audio = this.cache.json.get('audio') as AudioData
+    this.level = this.cache.json.get('stage-01') as LevelData
+    const map = this.cache.json.get('stage-01-map') as TiledMapData
+
+    this.animationSystem = new AnimationSystem(this, animations)
+    this.animationSystem.registerFrames()
+    this.combat = new CombatSystem(combat)
+    this.audioSystem = new AudioSystem(this, audio)
+    this.inputSystem = new InputSystem(this)
+    this.registry.set('inputSystem', this.inputSystem)
+    this.registry.set('worldScene', this)
+
+    this.drawBackground()
+    this.drawTiledCollisionDebug(map)
+
+    this.player = new Player(this, this.level.playerSpawn.x, this.level.playerSpawn.lane, this.animationSystem, this.combat, combat)
+    const spawner = new SpawnSystem(this, this.animationSystem, this.combat, enemies.roles, bosses.bosses)
+    this.enemies = spawner.spawnEnemies(this.level)
+
+    new CameraSystem(this, this.level.worldWidth).follow(this.player)
+    this.scene.launch(SceneKeys.UI)
+    this.audioSystem.unlock()
+    this.audioSystem.playMusic(this.level.music)
+    this.events.on('sfx', (key: string) => this.audioSystem.playSfx(key))
+
+    this.events.emit('hud:update', this.snapshot())
+    this.exposeDebug()
+  }
+
+  override update(_time: number, delta: number) {
+    if (this.frozen) return
+    const input = this.inputSystem.update()
+    if (input.pause) {
+      this.scene.pause()
+      this.scene.launch(SceneKeys.Pause)
+      return
+    }
+
+    this.player.updatePlayer(delta, input, this.level.worldWidth)
+    this.enemies.forEach((enemy) => enemy.updateEnemy(delta, this.player, this.level.worldWidth))
+    if (this.boss) this.boss.updateEnemy(delta, this.player, this.level.worldWidth)
+    this.handlePlayerAttack()
+    this.handleBossSpawn()
+    this.handleStageClear()
+
+    if (this.player.hp <= 0) this.scene.start(SceneKeys.GameOver)
+    this.events.emit('hud:update', this.snapshot())
+    this.exposeDebug()
+  }
+
+  press(action: Parameters<InputSystem['press']>[0], down: boolean) {
+    this.inputSystem.press(action, down)
+  }
+
+  toggleMute() {
+    return this.audioSystem.toggleMute()
+  }
+
+  private drawBackground() {
+    this.add.tileSprite(0, 0, this.level.worldWidth, GAME_HEIGHT, this.level.background)
+      .setOrigin(0)
+      .setScrollFactor(0.36, 1)
+      .setDepth(-100)
+    this.add.rectangle(this.level.worldWidth / 2, GAME_HEIGHT - 22, this.level.worldWidth, 44, 0x050711, 0.24).setDepth(-5)
+  }
+
+  private drawTiledCollisionDebug(map: TiledMapData) {
+    const collision = map.layers.find((layer) => layer.name === 'collision')
+    collision?.objects.forEach((object) => {
+      if (object.name !== 'floor') return
+      this.add.rectangle(object.x + (object.width || 0) / 2, object.y + (object.height || 0) / 2, object.width || 0, object.height || 0, 0x0b1028, 0.16).setDepth(-2)
+    })
+  }
+
+  private handlePlayerAttack() {
+    if (!this.player.canApplyAttackHit()) return
+    const attack = this.player.activeAttack
+    if (!attack) return
+    const targets = [...this.enemies, ...(this.boss ? [this.boss] : [])].filter((enemy) => enemy.hp > 0)
+    for (const target of targets) {
+      const result = this.combat.hit(this.player, target, attack, this.player.combo)
+      if (!result.hit) continue
+      target.hurt(result.damage, result.knockback)
+      this.score += target.isBoss ? this.combat.data.score.bossHit : this.combat.data.score.enemyHit
+      this.player.markHitApplied()
+      this.addHitSpark(target.x, target.y - 30)
+      break
+    }
+  }
+
+  private handleBossSpawn() {
+    if (this.bossSpawned || this.player.x < this.level.boss.spawnAfterX) return
+    const spawner = new SpawnSystem(
+      this,
+      this.animationSystem,
+      this.combat,
+      (this.cache.json.get('enemies') as EnemiesData).roles,
+      (this.cache.json.get('bosses') as BossesData).bosses,
+    )
+    this.boss = spawner.spawnBoss(this.level)
+    this.bossSpawned = true
+    this.events.emit('message', `BOSS  ${this.boss.bossName}`)
+  }
+
+  private handleStageClear() {
+    if (this.stageCleared) return
+    const livingEnemies = this.enemies.some((enemy) => enemy.hp > 0)
+    const livingBoss = this.boss && this.boss.hp > 0
+    if (this.player.x < this.level.stageClearX || livingEnemies || livingBoss) return
+    this.stageCleared = true
+    this.save.publishResult({ score: this.score, stage: this.level.id, completed: true })
+    this.scene.stop(SceneKeys.UI)
+    this.scene.start(SceneKeys.StageClear, { score: this.score })
+  }
+
+  private addHitSpark(x: number, y: number) {
+    const spark = this.add.star(x, y, 7, 3, 13, 0xffd166).setDepth(999)
+    this.tweens.add({ targets: spark, scale: 1.8, alpha: 0, duration: 220, onComplete: () => spark.destroy() })
+  }
+
+  private snapshot() {
+    return {
+      hp: this.player.hp,
+      maxHp: this.combat.data.player.maxHp,
+      score: this.score,
+      level: this.level.name,
+      enemies: this.enemies.filter((enemy) => enemy.hp > 0).length + (this.boss && this.boss.hp > 0 ? 1 : 0),
+      boss: this.boss ? { name: this.boss.bossName, hp: this.boss.hp } : null,
+    }
+  }
+
+  private exposeDebug() {
+    ;(window as typeof window & { __NEON_DEBUG__?: unknown; player?: unknown; enemies?: unknown; level?: unknown; assets?: unknown }).__NEON_DEBUG__ = {
+      title: 'Neon Gauntlet',
+      player: { x: this.player.x, hp: this.player.hp },
+      level: this.level,
+      enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({ x: enemy.x, hp: enemy.hp })),
+      assets: {
+        stage1: this.textures.exists('stage-01-bg'),
+        player: this.textures.exists('player-sheet'),
+        enemy: this.textures.exists('enemy-sheet'),
+      },
+    }
+    ;(window as typeof window & { __NEON_FREEZE__?: () => void }).__NEON_FREEZE__ = () => {
+      this.frozen = true
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "type": "map",
+  "version": "1.10",
+  "tiledversion": "1.10.2",
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "width": 88,
+  "height": 15,
+  "tilewidth": 16,
+  "tileheight": 16,
+  "infinite": false,
+  "nextlayerid": 4,
+  "nextobjectid": 12,
+  "layers": [
+    {
+      "id": 1,
+      "name": "collision",
+      "type": "objectgroup",
+      "objects": [
+        { "id": 1, "name": "floor", "type": "collision", "x": 0, "y": 184, "width": 1400, "height": 56 },
+        { "id": 2, "name": "left-wall", "type": "collision", "x": 0, "y": 0, "width": 16, "height": 240 },
+        { "id": 3, "name": "right-wall", "type": "collision", "x": 1384, "y": 0, "width": 16, "height": 240 }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "spawns",
+      "type": "objectgroup",
+      "objects": [
+        { "id": 4, "name": "player", "type": "player_spawn", "x": 76, "y": 173, "properties": [{ "name": "lane", "type": "float", "value": 0.72 }] },
+        { "id": 5, "name": "striker", "type": "enemy_spawn", "x": 330, "y": 168, "properties": [{ "name": "role", "type": "string", "value": "striker" }, { "name": "lane", "type": "float", "value": 0.7 }] },
+        { "id": 6, "name": "runner", "type": "enemy_spawn", "x": 450, "y": 182, "properties": [{ "name": "role", "type": "string", "value": "runner" }, { "name": "lane", "type": "float", "value": 0.76 }] },
+        { "id": 7, "name": "bruiser", "type": "enemy_spawn", "x": 570, "y": 163, "properties": [{ "name": "role", "type": "string", "value": "bruiser" }, { "name": "lane", "type": "float", "value": 0.68 }] },
+        { "id": 8, "name": "thrower", "type": "enemy_spawn", "x": 700, "y": 187, "properties": [{ "name": "role", "type": "string", "value": "thrower" }, { "name": "lane", "type": "float", "value": 0.78 }] },
+        { "id": 9, "name": "switchblade-sora", "type": "boss_spawn", "x": 1120, "y": 173, "properties": [{ "name": "boss", "type": "string", "value": "switchblade-sora" }, { "name": "lane", "type": "float", "value": 0.72 }] }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "triggers",
+      "type": "objectgroup",
+      "objects": [
+        { "id": 10, "name": "boss-trigger", "type": "boss_trigger", "x": 850, "y": 0, "width": 20, "height": 240 },
+        { "id": 11, "name": "stage-clear", "type": "stage_clear", "x": 1320, "y": 0, "width": 40, "height": 240 }
+      ]
+    }
+  ]
+}

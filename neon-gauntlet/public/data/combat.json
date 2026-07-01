@@ -1,0 +1,38 @@
+{
+  "player": {
+    "maxHp": 150,
+    "speed": 96,
+    "laneSpeed": 0.34,
+    "jumpVelocity": 185,
+    "gravity": 520,
+    "invincibleMs": 470,
+    "comboWindowMs": 760
+  },
+  "attacks": {
+    "punch": {
+      "damage": 16,
+      "comboFinisherDamage": 28,
+      "range": 42,
+      "laneRange": 0.095,
+      "durationMs": 230,
+      "activeAfterMs": 40,
+      "knockback": 18
+    },
+    "kick": {
+      "damage": 25,
+      "range": 58,
+      "laneRange": 0.095,
+      "durationMs": 330,
+      "activeAfterMs": 55,
+      "knockback": 30
+    }
+  },
+  "guard": {
+    "blockRequiresFacingAttack": true
+  },
+  "score": {
+    "enemyHit": 10,
+    "bossHit": 35,
+    "comboBonusMax": 30
+  }
+}

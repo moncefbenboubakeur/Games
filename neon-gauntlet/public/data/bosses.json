@@ -1,0 +1,15 @@
+{
+  "bosses": [
+    {
+      "id": "switchblade-sora",
+      "name": "Switchblade Sora",
+      "hp": 170,
+      "speed": 42,
+      "damage": 18,
+      "range": 62,
+      "cooldownMinMs": 720,
+      "cooldownMaxMs": 1180,
+      "stageIntro": "BOSS  Switchblade Sora"
+    }
+  ]
+}

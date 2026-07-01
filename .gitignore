@@ -3,4 +3,6 @@ node_modules/
 dist/
 coverage/
 test-results/*.png
+**/test-results/
+**/tsconfig.tsbuildinfo
 *.log

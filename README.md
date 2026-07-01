@@ -16,3 +16,18 @@ npm start
 ```
 
 Then open the local URL printed by the server.
+
+## Verify A Game
+
+```sh
+npm run smoke:neon
+```
+
+For Neon Gauntlet's full local checks:
+
+```sh
+cd neon-gauntlet
+npm run test
+npm run build
+npm run test:screenshots
+```

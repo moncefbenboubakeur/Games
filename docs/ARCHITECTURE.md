@@ -11,10 +11,10 @@ Games/
   test-results/
   neon-gauntlet/
     index.html
-    serve.mjs
-    _harness.js
-    _game.css
-    neon/assets/
+    vite.config.ts
+    src/
+    public/
+    legacy/
 ```
 
 ## New Phaser Game Layout

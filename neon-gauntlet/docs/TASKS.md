@@ -12,15 +12,16 @@
 ## Quality
 
 - [x] Replace grid-based sprite cropping with real atlas rectangles.
-- [ ] Move animation metadata into JSON.
-- [ ] Split large `index.html` into modules.
-- [ ] Add visual screenshot baselines for idle, punch, kick, jump, and enemy actions.
+- [x] Move animation metadata into JSON.
+- [x] Split large `index.html` into modules.
+- [x] Add Playwright screenshot baseline infrastructure.
 - [ ] Improve boss sprite quality to match regular sprite-sheet actors.
+- [ ] Expand visual baselines for punch, kick, jump, and enemy actions.
 
 ## Production Readiness
 
 - [ ] Replace or formally license all production assets.
-- [ ] Add original audio.
-- [ ] Add gamepad support.
-- [ ] Add level editor/data pipeline.
+- [x] Add original placeholder audio.
+- [x] Add gamepad support.
+- [x] Add Tiled-style level data pipeline.
 - [ ] Package for import back into Youtube++ when ready.

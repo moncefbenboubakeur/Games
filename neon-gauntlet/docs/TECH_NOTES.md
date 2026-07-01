@@ -6,7 +6,9 @@ This game is isolated from Youtube++ so agents can iterate on gameplay, visuals,
 
 ## Runtime
 
-`serve.mjs` is a tiny no-dependency static server. It serves this folder only and disables cache with `cache-control: no-store`.
+The primary runtime is now Phaser + TypeScript + Vite. The legacy Canvas prototype remains under `legacy/`.
+
+`serve.mjs` is retained for serving the legacy prototype.
 
 ## Smoke Test
 
@@ -27,14 +29,10 @@ The smoke test:
 
 ## Current Architecture Debt
 
-The game is still one large HTML file. For long-term work, split it into:
+The primary game is now modular TypeScript. Remaining debt:
 
-- renderer
-- input
-- combat
-- actors
-- levels
-- assets
-- UI
-
-Future new games should use Phaser + TypeScript + Vite from the start.
+- stage visuals still use a bitmap background rather than full tile layers
+- boss art is not production quality
+- screenshot baseline set is still small
+- current audio is placeholder generated WAV
+- current commercial asset provenance is incomplete

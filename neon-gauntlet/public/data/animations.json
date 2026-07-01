@@ -1,0 +1,80 @@
+{
+  "player": {
+    "texture": "player-sheet",
+    "scale": 0.38,
+    "animations": {
+      "idle": [
+        { "name": "player-idle-0", "x": 78, "y": 20, "w": 118, "h": 210, "ax": 59, "ay": 210 }
+      ],
+      "walk": [
+        { "name": "player-walk-0", "x": 66, "y": 271, "w": 137, "h": 204, "ax": 68, "ay": 204 },
+        { "name": "player-walk-1", "x": 263, "y": 268, "w": 142, "h": 207, "ax": 71, "ay": 207 },
+        { "name": "player-walk-2", "x": 471, "y": 267, "w": 146, "h": 208, "ax": 73, "ay": 208 },
+        { "name": "player-walk-3", "x": 696, "y": 275, "w": 133, "h": 200, "ax": 66, "ay": 200 }
+      ],
+      "punch": [
+        { "name": "player-punch-0", "x": 862, "y": 287, "w": 188, "h": 189, "ax": 74, "ay": 189 },
+        { "name": "player-punch-1", "x": 1067, "y": 284, "w": 194, "h": 191, "ax": 76, "ay": 191 },
+        { "name": "player-punch-2", "x": 1266, "y": 303, "w": 219, "h": 173, "ax": 73, "ay": 173 }
+      ],
+      "kick": [
+        { "name": "player-kick-0", "x": 59, "y": 523, "w": 169, "h": 195, "ax": 67, "ay": 195 },
+        { "name": "player-kick-1", "x": 275, "y": 533, "w": 176, "h": 185, "ax": 70, "ay": 185 },
+        { "name": "player-kick-2", "x": 496, "y": 531, "w": 255, "h": 186, "ax": 82, "ay": 186 }
+      ],
+      "guard": [
+        { "name": "player-guard-0", "x": 879, "y": 533, "w": 121, "h": 184, "ax": 60, "ay": 184 },
+        { "name": "player-guard-1", "x": 1085, "y": 534, "w": 125, "h": 183, "ax": 62, "ay": 183 },
+        { "name": "player-guard-2", "x": 1307, "y": 540, "w": 118, "h": 177, "ax": 59, "ay": 177 }
+      ],
+      "hurt": [
+        { "name": "player-hurt-0", "x": 47, "y": 770, "w": 142, "h": 204, "ax": 79, "ay": 204 },
+        { "name": "player-hurt-1", "x": 238, "y": 777, "w": 174, "h": 197, "ax": 88, "ay": 197 }
+      ],
+      "jump": [
+        { "name": "player-jump-0", "x": 475, "y": 744, "w": 117, "h": 168, "ax": 59, "ay": 168 },
+        { "name": "player-jump-1", "x": 660, "y": 732, "w": 144, "h": 192, "ax": 72, "ay": 192 }
+      ]
+    }
+  },
+  "enemy": {
+    "texture": "enemy-sheet",
+    "scale": 0.38,
+    "animations": {
+      "idle": [
+        { "name": "enemy-idle-0", "x": 75, "y": 20, "w": 129, "h": 210, "ax": 64, "ay": 210 }
+      ],
+      "walk": [
+        { "name": "enemy-walk-0", "x": 75, "y": 268, "w": 137, "h": 206, "ax": 68, "ay": 206 },
+        { "name": "enemy-walk-1", "x": 275, "y": 270, "w": 141, "h": 204, "ax": 70, "ay": 204 },
+        { "name": "enemy-walk-2", "x": 487, "y": 268, "w": 130, "h": 206, "ax": 65, "ay": 206 }
+      ],
+      "punch": [
+        { "name": "enemy-punch-0", "x": 885, "y": 293, "w": 193, "h": 181, "ax": 82, "ay": 181 },
+        { "name": "enemy-punch-1", "x": 1112, "y": 293, "w": 173, "h": 181, "ax": 76, "ay": 181 },
+        { "name": "enemy-punch-2", "x": 1298, "y": 298, "w": 203, "h": 176, "ax": 78, "ay": 176 }
+      ],
+      "kick": [
+        { "name": "enemy-kick-0", "x": 61, "y": 524, "w": 164, "h": 195, "ax": 70, "ay": 195 },
+        { "name": "enemy-kick-1", "x": 278, "y": 533, "w": 175, "h": 186, "ax": 73, "ay": 186 },
+        { "name": "enemy-kick-2", "x": 501, "y": 527, "w": 226, "h": 192, "ax": 79, "ay": 192 }
+      ],
+      "guard": [
+        { "name": "enemy-guard-0", "x": 867, "y": 533, "w": 135, "h": 186, "ax": 67, "ay": 186 },
+        { "name": "enemy-guard-1", "x": 1085, "y": 533, "w": 129, "h": 186, "ax": 64, "ay": 186 },
+        { "name": "enemy-guard-2", "x": 1305, "y": 538, "w": 127, "h": 181, "ax": 63, "ay": 181 }
+      ],
+      "hurt": [
+        { "name": "enemy-hurt-0", "x": 45, "y": 765, "w": 147, "h": 211, "ax": 82, "ay": 211 },
+        { "name": "enemy-hurt-1", "x": 242, "y": 785, "w": 165, "h": 191, "ax": 84, "ay": 191 }
+      ],
+      "jump": [
+        { "name": "enemy-jump-0", "x": 462, "y": 737, "w": 112, "h": 178, "ax": 56, "ay": 178 },
+        { "name": "enemy-jump-1", "x": 645, "y": 729, "w": 136, "h": 196, "ax": 68, "ay": 196 }
+      ],
+      "down": [
+        { "name": "enemy-down-0", "x": 962, "y": 914, "w": 191, "h": 73, "ax": 95, "ay": 73 }
+      ]
+    }
+  }
+}

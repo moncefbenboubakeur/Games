@@ -1,0 +1,14 @@
+{
+  "music": {
+    "stage-01": { "file": "/assets/audio/music/stage-01-loop.wav", "volume": 0.26, "loop": true }
+  },
+  "sfx": {
+    "punch": { "file": "/assets/audio/sfx/punch.wav", "volume": 0.55 },
+    "kick": { "file": "/assets/audio/sfx/kick.wav", "volume": 0.58 },
+    "hit": { "file": "/assets/audio/sfx/hit.wav", "volume": 0.5 },
+    "jump": { "file": "/assets/audio/sfx/jump.wav", "volume": 0.42 },
+    "hurt": { "file": "/assets/audio/sfx/hurt.wav", "volume": 0.48 },
+    "guard": { "file": "/assets/audio/sfx/guard.wav", "volume": 0.4 },
+    "stageClear": { "file": "/assets/audio/sfx/stage-clear.wav", "volume": 0.62 }
+  }
+}

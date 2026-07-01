@@ -59,19 +59,20 @@ async function main() {
   await page.goto(game.entryUrl, { waitUntil: 'networkidle' })
   const startButton = page.locator('#start-play')
   if (await startButton.count()) await startButton.click()
+  else {
+    await page.evaluate(() => window.__NEON_START__?.())
+    await page.locator('canvas').click()
+    await page.keyboard.press('Enter')
+  }
   await page.waitForTimeout(1000)
 
   mkdirSync(resolve(root, 'test-results'), { recursive: true })
   const screenshot = resolve(root, 'test-results', `${game.id}-smoke.png`)
   await page.screenshot({ path: screenshot, fullPage: false })
 
-  const state = await page.evaluate(() => ({
-    title: document.title,
-    hasCanvas: !!document.querySelector('canvas'),
-    player: typeof player !== 'undefined' && player ? { x: Math.round(player.x), hp: player.hp } : null,
-    level: typeof level !== 'undefined' && level ? level.name : null,
-    enemies: typeof enemies !== 'undefined' && Array.isArray(enemies) ? enemies.filter((enemy) => enemy.hp > 0).length : null,
-    assets: typeof assets !== 'undefined'
+  const state = await page.evaluate(() => {
+    const debug = window.__NEON_DEBUG__
+    const legacyAssets = typeof assets !== 'undefined'
       ? Object.fromEntries(Object.entries(assets).map(([key, value]) => [
         key,
         {
@@ -79,11 +80,22 @@ async function main() {
           src: value.src,
         },
       ]))
-      : null,
-    youtubeImports: performance.getEntriesByType('resource')
-      .map((entry) => entry.name)
-      .filter((name) => name.includes('/Youtube++') || name.includes('/public/games/')),
-  }))
+      : null
+
+    return {
+      title: document.title,
+      hasCanvas: !!document.querySelector('canvas'),
+      player: debug?.player || (typeof player !== 'undefined' && player ? { x: Math.round(player.x), hp: player.hp } : null),
+      level: debug?.level?.name || (typeof level !== 'undefined' && level ? level.name : null),
+      enemies: debug?.enemies?.filter((enemy) => enemy.hp > 0).length ?? (typeof enemies !== 'undefined' && Array.isArray(enemies) ? enemies.filter((enemy) => enemy.hp > 0).length : null),
+      assets: debug?.assets
+        ? Object.fromEntries(Object.entries(debug.assets).map(([key, loaded]) => [key, { loaded, src: 'phaser-texture-cache' }]))
+        : legacyAssets,
+      youtubeImports: performance.getEntriesByType('resource')
+        .map((entry) => entry.name)
+        .filter((name) => name.includes('/Youtube++') || name.includes('/public/games/')),
+    }
+  })
 
   await browser.close()
 
