@@ -52,3 +52,41 @@ test('touch direction buttons stop moving after pointer release', async ({ page 
   expect(afterRelease).toBeGreaterThan(start + 8)
   expect(later).toBeLessThanOrEqual(afterRelease + 2)
 })
+
+test('touch buttons trigger only their intended actions', async ({ page }) => {
+  await startGame(page)
+  const canvas = await page.locator('canvas').boundingBox()
+  if (!canvas) throw new Error('Missing game canvas')
+  const screen = (x: number, y: number) => ({
+    x: canvas.x + (x / 426) * canvas.width,
+    y: canvas.y + (y / 240) * canvas.height,
+  })
+  const buttons: Array<[number, number, string]> = [
+    [63, 179, 'up'],
+    [63, 223, 'down'],
+    [39, 201, 'left'],
+    [87, 201, 'right'],
+    [314, 195, 'punch'],
+    [350, 195, 'kick'],
+    [332, 220, 'jump'],
+    [386, 212, 'guard'],
+  ]
+
+  for (const [x, y, action] of buttons) {
+    const point = screen(x, y)
+    await page.mouse.move(point.x, point.y)
+    await page.mouse.down()
+    await page.waitForTimeout(30)
+    const activeActions = await page.evaluate(() => {
+      const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+        inputSystem?: { held: Record<string, boolean> }
+      }
+      return Object.entries(world.inputSystem?.held || {})
+        .filter(([, active]) => active)
+        .map(([name]) => name)
+    })
+    expect(activeActions, `${action} should be the only active touch action`).toEqual([action])
+    await page.mouse.up()
+    await page.waitForTimeout(30)
+  }
+})

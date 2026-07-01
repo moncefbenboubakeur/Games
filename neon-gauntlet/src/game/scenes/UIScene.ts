@@ -125,7 +125,7 @@ export class UIScene extends Phaser.Scene {
         strokeThickness: 2,
       }).setOrigin(0.5).setDepth(954)
       : undefined
-    const hit = this.add.circle(x, y, radius + 10, 0xffffff, 0.001).setDepth(955).setInteractive({ useHandCursor: true })
+    const hit = this.add.circle(x, y, radius + 1, 0xffffff, 0.001).setDepth(955).setInteractive({ useHandCursor: true })
     const visuals = [glow, rim, core, shine, text, ...(captionText ? [captionText] : [])]
     const press = () => {
       input.press(action, true)
