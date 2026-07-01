@@ -1,0 +1,14 @@
+{
+  "name": "samitube-games-lab",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev:neon": "npm --prefix neon-gauntlet start",
+    "smoke:neon": "node tools/smoke-game.mjs neon-gauntlet",
+    "smoke": "npm run smoke:neon"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

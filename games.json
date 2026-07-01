@@ -1,0 +1,12 @@
+[
+  {
+    "id": "neon-gauntlet",
+    "title": "Neon Gauntlet",
+    "path": "neon-gauntlet",
+    "port": 4177,
+    "startCommand": "npm start",
+    "entryUrl": "http://127.0.0.1:4177/",
+    "type": "standalone-canvas",
+    "status": "prototype"
+  }
+]
