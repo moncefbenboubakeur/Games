@@ -13,6 +13,7 @@
     "test:assets": "node tools/validate-contact-sheets.mjs",
     "test:maps": "node tools/inspect-map-art.mjs --check",
     "test:map-art": "node tools/validate-map-art.mjs",
+    "test:levels": "node tools/validate-level-production-plan.mjs",
     "inspect:map": "node tools/inspect-map-art.mjs",
     "create:level": "node tools/create-level-from-template.mjs",
     "capture:map": "node tools/capture-map-preview.mjs",
