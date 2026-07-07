@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import type { EnemyDefinition } from '../data/types'
 import type { AnimationSystem } from '../systems/AnimationSystem'
+import { ActorStateMachine, type ActorVisualState } from '../systems/ActorStateMachine'
 import type { CombatSystem, FighterState } from '../systems/CombatSystem'
 import { clamp } from '../utils/math'
 import { laneToY } from '../utils/lane'
@@ -126,21 +127,23 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
 
   protected updateFrame(force?: 'down') {
     const tick = Math.floor(this.scene.time.now / 130)
-    let action: 'idle' | 'walk' | 'punch' | 'kick' | 'guard' | 'hurt' | 'down' = 'idle'
+    const action: ActorVisualState = force ?? ActorStateMachine.enemyVisualState({
+      hp: this.hp,
+      invincibleMs: this.invincibleMs,
+      telegraphMs: this.telegraphMs,
+      attackMs: this.attackMs,
+      moving: this.moving,
+      preferredAttack: this.def.id === 'bruiser' ? 'kick' : 'punch',
+    })
     let index = 0
 
-    if (force === 'down') action = 'down'
-    else if (this.invincibleMs > 0) {
-      action = 'hurt'
+    if (action === 'hurt') {
       index = this.invincibleMs > 90 ? 0 : 1
-    } else if (this.telegraphMs > 0) {
-      action = 'guard'
+    } else if (action === 'guard') {
       index = tick % 3
-    } else if (this.attackMs > 0) {
-      action = this.def.id === 'bruiser' ? 'kick' : 'punch'
+    } else if (action === 'punch' || action === 'kick') {
       index = this.attackMs > 170 ? 0 : 1
-    } else if (this.moving) {
-      action = 'walk'
+    } else if (action === 'walk') {
       index = tick % 4
     }
 
@@ -150,7 +153,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     this.alpha = this.invincibleMs > 0 && Math.floor(this.invincibleMs / 55) % 2 ? 0.62 : 1
   }
 
-  private applyFacing(action: 'idle' | 'walk' | 'punch' | 'kick' | 'guard' | 'hurt' | 'down') {
+  private applyFacing(action: ActorVisualState) {
     const attackArtFacesRight = action === 'punch' || action === 'kick'
     const direction = attackArtFacesRight ? this.face : (this.face === -1 ? 1 : -1)
     this.scaleX = Math.abs(this.scaleX) * direction

@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import type { CombatData, NormalizedInput } from '../data/types'
 import type { AnimationSystem } from '../systems/AnimationSystem'
+import { ActorStateMachine } from '../systems/ActorStateMachine'
 import type { CombatSystem, FighterState } from '../systems/CombatSystem'
 import { clamp, choose } from '../utils/math'
 import { laneToY } from '../utils/lane'
@@ -132,31 +133,31 @@ export class Player extends Phaser.GameObjects.Sprite implements FighterState {
   }
 
   private updateFrame() {
-    let action: 'idle' | 'walk' | 'punch' | 'kick' | 'guard' | 'hurt' | 'jump' = 'idle'
+    const action = ActorStateMachine.playerVisualState({
+      invincibleMs: this.invincibleMs,
+      z: this.z,
+      guard: this.guard,
+      attackKind: this.attackKind,
+      attacking: this.attacking,
+      moving: this.moving,
+    })
     let index = 0
     const tick = Math.floor(this.scene.time.now / 130)
 
-    if (this.invincibleMs > 0) {
-      action = 'hurt'
+    if (action === 'hurt') {
       index = this.invincibleMs > 240 ? 0 : 1
       this.alpha = Math.floor(this.invincibleMs / 60) % 2 ? 0.62 : 1
     } else {
       this.alpha = 1
-      if (this.z > 0) {
-        action = 'jump'
+      if (action === 'jump') {
         index = this.z > 45 ? 1 : 0
-      } else if (this.guard) {
-        action = 'guard'
+      } else if (action === 'guard') {
         index = tick % 3
-      } else if (this.attackKind) {
-        action = this.attackKind
-        const frames = this.attackKind === 'kick' ? [0, 1, 2] : [0, 1, 2]
-        index = choose(frames, Math.floor((1 - this.attackMs / this.combat.getAttack(this.attackKind).durationMs) * frames.length))
-      } else if (this.moving) {
-        action = 'walk'
+      } else if (action === 'punch' || action === 'kick') {
+        const frames = action === 'kick' ? [0, 1, 2] : [0, 1, 2]
+        index = choose(frames, Math.floor((1 - this.attackMs / this.combat.getAttack(action).durationMs) * frames.length))
+      } else if (action === 'walk') {
         index = tick % 4
-      } else {
-        action = 'idle'
       }
     }
 
