@@ -35,7 +35,7 @@ declare global {
           buttons: Array<{ index: number; pressed: boolean; value: number }>
         }
       }
-      assets: Record<string, boolean>
+      assets: Record<string, boolean | number>
     }
   }
 }

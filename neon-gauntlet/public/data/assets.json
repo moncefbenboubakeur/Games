@@ -17,6 +17,16 @@
       "commercialUse": "blocked until replaced or documented",
       "notes": "Currently one large bitmap background. Migration target is real Tiled/LDtk layers plus licensed tilesets."
     },
+    "metro-tiles": {
+      "file": "/assets/tilesets/metro-tiles.svg",
+      "kind": "tileset",
+      "status": "prototype",
+      "source": "project-created prototype tileset",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "notes": "First real Tiled-style tileset for Stage 1. It proves the map pipeline; final production art still needs review or replacement."
+    },
     "player-sheet": {
       "file": "/assets/sprites/player-sheet.png",
       "kind": "sprite-sheet",

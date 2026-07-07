@@ -80,19 +80,35 @@ const animations = (): AnimationData => {
 }
 
 const map = (): TiledMapData => ({
+  tilesets: [
+    {
+      firstgid: 1,
+      name: 'metro-tiles',
+      tilewidth: 16,
+      tileheight: 16,
+      tilecount: 32,
+      columns: 8,
+      image: '../tilesets/metro-tiles.svg',
+      imagewidth: 128,
+      imageheight: 64,
+    },
+  ],
   width: 88,
   height: 15,
   tilewidth: 16,
   tileheight: 16,
   layers: [
     { id: 1, name: 'BackgroundFar', type: 'imagelayer' },
-    { id: 2, name: 'Ground', type: 'objectgroup', objects: [] },
-    { id: 3, name: 'Collision', type: 'objectgroup', objects: [] },
-    { id: 4, name: 'PlayerSpawn', type: 'objectgroup', objects: [{ id: 1, name: 'player', type: 'player_spawn', x: 76, y: 173 }] },
-    { id: 5, name: 'EnemySpawns', type: 'objectgroup', objects: [{ id: 2, name: 'striker', type: 'enemy_spawn', x: 330, y: 168 }] },
-    { id: 6, name: 'BossSpawn', type: 'objectgroup', objects: [{ id: 3, name: 'switchblade-sora', type: 'boss_spawn', x: 1120, y: 173 }] },
+    { id: 2, name: 'BackgroundMid', type: 'tilelayer', width: 88, height: 15, data: Array(88 * 15).fill(1) },
+    { id: 3, name: 'Decor', type: 'tilelayer', width: 88, height: 15, data: Array(88 * 15).fill(2) },
+    { id: 4, name: 'Ground', type: 'tilelayer', width: 88, height: 15, data: Array(88 * 15).fill(9) },
+    { id: 5, name: 'Foreground', type: 'tilelayer', width: 88, height: 15, data: Array(88 * 15).fill(21) },
+    { id: 6, name: 'Collision', type: 'objectgroup', objects: [] },
+    { id: 7, name: 'PlayerSpawn', type: 'objectgroup', objects: [{ id: 1, name: 'player', type: 'player_spawn', x: 76, y: 173 }] },
+    { id: 8, name: 'EnemySpawns', type: 'objectgroup', objects: [{ id: 2, name: 'striker', type: 'enemy_spawn', x: 330, y: 168 }] },
+    { id: 9, name: 'BossSpawn', type: 'objectgroup', objects: [{ id: 3, name: 'switchblade-sora', type: 'boss_spawn', x: 1120, y: 173 }] },
     {
-      id: 7,
+      id: 10,
       name: 'Triggers',
       type: 'objectgroup',
       objects: [
@@ -100,7 +116,9 @@ const map = (): TiledMapData => ({
         { id: 5, name: 'stage-clear', type: 'stage_clear', x: 1320, y: 0 },
       ],
     },
-    { id: 8, name: 'CameraZones', type: 'objectgroup', objects: [] },
+    { id: 11, name: 'CameraZones', type: 'objectgroup', objects: [] },
+    { id: 12, name: 'Props', type: 'objectgroup', objects: [] },
+    { id: 13, name: 'NPCs', type: 'objectgroup', objects: [] },
   ],
 })
 
@@ -129,6 +147,16 @@ describe('DataValidationSystem', () => {
     const badMap = map()
     badMap.layers = badMap.layers.filter((layer) => layer.name !== 'EnemySpawns')
     expect(() => DataValidationSystem.validateMap(badMap)).toThrow(/EnemySpawns/)
+  })
+
+  it('rejects maps without real tile layers and tilesets', () => {
+    const noTileset = map()
+    noTileset.tilesets = []
+    expect(() => DataValidationSystem.validateMap(noTileset)).toThrow(/tileset/)
+
+    const badGround = map()
+    badGround.layers = badGround.layers.map((layer) => (layer.name === 'Ground' ? { id: layer.id, name: 'Ground', type: 'objectgroup', objects: [] } : layer))
+    expect(() => DataValidationSystem.validateMap(badGround)).toThrow(/tilelayer: Ground/)
   })
 
   it('rejects unknown enemy roles in level spawns', () => {

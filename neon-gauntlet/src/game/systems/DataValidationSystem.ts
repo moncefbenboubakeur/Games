@@ -10,7 +10,8 @@ interface GameDataBundle {
   map: TiledMapData
 }
 
-const requiredMapLayers = ['BackgroundFar', 'Ground', 'Collision', 'PlayerSpawn', 'EnemySpawns', 'BossSpawn', 'Triggers', 'CameraZones']
+const requiredMapLayers = ['BackgroundFar', 'BackgroundMid', 'Decor', 'Ground', 'Foreground', 'Collision', 'PlayerSpawn', 'EnemySpawns', 'BossSpawn', 'Triggers', 'CameraZones', 'Props', 'NPCs']
+const requiredTileLayers = ['BackgroundMid', 'Decor', 'Ground', 'Foreground']
 const requiredActorAnimations = ['idle', 'walk', 'punch', 'kick', 'guard', 'hurt', 'jump']
 const requiredSfx = ['punch', 'kick', 'hit', 'jump', 'hurt', 'guard', 'stageClear']
 
@@ -110,8 +111,23 @@ export class DataValidationSystem {
   static validateMap(map: TiledMapData) {
     this.require(map.width > 0 && map.height > 0, 'Map width/height must be positive')
     this.require(map.tilewidth > 0 && map.tileheight > 0, 'Map tile dimensions must be positive')
+    this.require(Array.isArray(map.tilesets) && map.tilesets.length > 0, 'Map needs at least one tileset')
+    map.tilesets?.forEach((tileset) => {
+      this.require(Boolean(tileset.name), 'Tileset name is required')
+      this.require(tileset.tilewidth === map.tilewidth && tileset.tileheight === map.tileheight, `${tileset.name} tile size must match the map`)
+      this.require(Boolean(tileset.image), `${tileset.name} image is required`)
+      this.require(tileset.tilecount > 0 && tileset.columns > 0, `${tileset.name} tilecount/columns must be positive`)
+    })
     const layerNames = new Set(map.layers.map((layer) => layer.name))
     requiredMapLayers.forEach((name) => this.require(layerNames.has(name), `Map layer is required: ${name}`))
+    requiredTileLayers.forEach((name) => {
+      const layer = map.layers.find((item) => item.name === name)
+      this.require(layer?.type === 'tilelayer', `Map layer must be a tilelayer: ${name}`)
+      if (layer?.type !== 'tilelayer') return
+      this.require(layer.width === map.width && layer.height === map.height, `${name} dimensions must match the map`)
+      this.require(layer.data.length === map.width * map.height, `${name} data length must match map dimensions`)
+      this.require(layer.data.some((tile) => tile > 0), `${name} needs at least one visible tile`)
+    })
     this.require(this.hasObject(map, 'PlayerSpawn', 'player_spawn'), 'Map needs a player_spawn object')
     this.require(this.hasObject(map, 'EnemySpawns', 'enemy_spawn'), 'Map needs at least one enemy_spawn object')
     this.require(this.hasObject(map, 'BossSpawn', 'boss_spawn'), 'Map needs a boss_spawn object')

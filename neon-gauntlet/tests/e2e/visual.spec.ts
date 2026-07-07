@@ -21,4 +21,6 @@ test('gameplay state is available for agents', async ({ page }) => {
   expect(state?.player?.hp).toBe(150)
   expect(state?.level?.name).toBe('Metro Arcade')
   expect(state?.enemies.length).toBeGreaterThanOrEqual(4)
+  expect(state?.assets.tileset).toBe(true)
+  expect(state?.assets.tileLayers).toBeGreaterThanOrEqual(4)
 })

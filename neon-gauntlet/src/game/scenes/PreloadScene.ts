@@ -10,6 +10,7 @@ export class PreloadScene extends Phaser.Scene {
 
   preload() {
     this.load.image('stage-01-bg', '/assets/backgrounds/stage-01-metro-arcade.png')
+    this.load.svg('metro-tiles', '/assets/tilesets/metro-tiles.svg', { width: 128, height: 64 })
     this.load.image('player-sheet', '/assets/sprites/player-sheet.png')
     this.load.image('enemy-sheet', '/assets/sprites/enemy-rival-sheet.png')
     this.load.json('animations', '/data/animations.json')
@@ -19,6 +20,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json('audio', '/data/audio.json')
     this.load.json('stage-01', '/data/levels/stage-01-metro-arcade.json')
     this.load.json('stage-01-map', '/assets/maps/stage-01-metro-arcade.json')
+    this.load.tilemapTiledJSON('stage-01-tilemap', '/assets/maps/stage-01-metro-arcade.json')
   }
 
   create() {

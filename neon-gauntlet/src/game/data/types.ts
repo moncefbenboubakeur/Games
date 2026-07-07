@@ -156,10 +156,39 @@ export interface TiledImageLayer {
   properties?: TiledProperty[]
 }
 
-export type TiledLayer = TiledObjectLayer | TiledImageLayer
+export interface TiledTileLayer {
+  id: number
+  name: string
+  type: 'tilelayer'
+  visible?: boolean
+  opacity?: number
+  x?: number
+  y?: number
+  width: number
+  height: number
+  data: number[]
+  properties?: TiledProperty[]
+}
+
+export interface TiledTileset {
+  firstgid: number
+  name: string
+  tilewidth: number
+  tileheight: number
+  spacing?: number
+  margin?: number
+  tilecount: number
+  columns: number
+  image: string
+  imagewidth: number
+  imageheight: number
+}
+
+export type TiledLayer = TiledObjectLayer | TiledImageLayer | TiledTileLayer
 
 export interface TiledMapData {
   properties?: TiledProperty[]
+  tilesets?: TiledTileset[]
   width: number
   height: number
   tilewidth: number

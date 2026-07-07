@@ -196,9 +196,11 @@ export class WorldScene extends Phaser.Scene {
       input: this.inputSystem.debugSnapshot(),
       assets: {
         stage1: this.textures.exists('stage-01-bg'),
+        tileset: this.textures.exists('metro-tiles'),
         player: this.textures.exists('player-sheet'),
         enemy: this.textures.exists('enemy-sheet'),
         mapDrivenStage: Boolean(this.mapSystem),
+        tileLayers: this.mapSystem.renderedTileLayers(),
       },
     }
     ;(window as typeof window & { __NEON_FREEZE__?: () => void }).__NEON_FREEZE__ = () => {

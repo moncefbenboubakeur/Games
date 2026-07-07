@@ -1,6 +1,6 @@
 # Neon Gauntlet Asset Ledger
 
-Last updated: 2026-07-02
+Last updated: 2026-07-07
 
 This ledger is the human-readable companion to `public/data/assets.json`.
 
@@ -22,6 +22,7 @@ Unknown assets are allowed only for internal prototype work.
 | Key | File | Current status | Commercial status | Action |
 | --- | --- | --- | --- | --- |
 | `stage-01-bg` | `public/assets/backgrounds/stage-01-metro-arcade.png` | Prototype | Blocked | Replace with licensed Tiled/LDtk tilesets/layers or document source/license. |
+| `metro-tiles` | `public/assets/tilesets/metro-tiles.svg` | Prototype | Blocked | Project-created pipeline tileset. Approve formally or replace with final licensed tileset art before release. |
 | `player-sheet` | `public/assets/sprites/player-sheet.png` | Prototype | Blocked | Replace or formally document. Generate contact sheets for every cycle. |
 | `enemy-sheet` | `public/assets/sprites/enemy-rival-sheet.png` | Prototype | Blocked | Replace or formally document. Contact sheet review required after every crop/frame edit. |
 

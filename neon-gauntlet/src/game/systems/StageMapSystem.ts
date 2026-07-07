@@ -1,17 +1,20 @@
 import Phaser from 'phaser'
 import { GAME_HEIGHT } from '../constants'
-import type { EnemyRole, EnemySpawnData, LevelData, TiledImageLayer, TiledMapData, TiledObject, TiledObjectLayer, TiledProperty } from '../data/types'
+import type { EnemyRole, EnemySpawnData, LevelData, TiledImageLayer, TiledMapData, TiledObject, TiledObjectLayer, TiledProperty, TiledTileLayer } from '../data/types'
 
 type PropertyValue = TiledProperty['value']
 
 export class StageMapSystem {
   readonly worldWidth: number
   readonly worldHeight: number
+  private phaserMap?: Phaser.Tilemaps.Tilemap
+  private tileLayerCount = 0
 
   constructor(
     private readonly scene: Phaser.Scene,
     private readonly map: TiledMapData,
     private readonly fallbackLevel: LevelData,
+    private readonly tilemapKey = 'stage-01-tilemap',
   ) {
     this.worldWidth = map.width * map.tilewidth
     this.worldHeight = map.height * map.tileheight
@@ -42,11 +45,18 @@ export class StageMapSystem {
   }
 
   render() {
+    this.tileLayerCount = 0
+    this.phaserMap = this.scene.make.tilemap({ key: this.tilemapKey })
     this.map.layers.forEach((layer) => {
       if (layer.visible === false) return
       if (layer.type === 'imagelayer') this.renderImageLayer(layer)
+      if (layer.type === 'tilelayer') this.renderTileLayer(layer)
       if (layer.type === 'objectgroup') this.renderObjectLayer(layer)
     })
+  }
+
+  renderedTileLayers() {
+    return this.tileLayerCount
   }
 
   objectLayer(name: string) {
@@ -68,6 +78,22 @@ export class StageMapSystem {
       : this.scene.add.image(x, y, texture).setOrigin(0)
 
     image.setScrollFactor(scrollX, scrollY).setDepth(depth).setAlpha(opacity)
+  }
+
+  private renderTileLayer(layer: TiledTileLayer) {
+    if (!this.phaserMap) return
+    const tilesets = this.map.tilesets
+      ?.map((tileset) => this.phaserMap?.addTilesetImage(tileset.name, tileset.name))
+      .filter((tileset): tileset is Phaser.Tilemaps.Tileset => Boolean(tileset)) || []
+    if (!tilesets.length) return
+
+    const tileLayer = this.phaserMap.createLayer(layer.name, tilesets, layer.x ?? 0, layer.y ?? 0)
+    if (!tileLayer) return
+    const depth = this.layerNumber(layer, 'depth', -10)
+    tileLayer.setDepth(depth)
+    tileLayer.setAlpha(this.layerNumber(layer, 'opacity', layer.opacity ?? 1))
+    tileLayer.setScrollFactor(1, 1)
+    this.tileLayerCount += 1
   }
 
   private renderObjectLayer(layer: TiledObjectLayer) {
@@ -129,15 +155,15 @@ export class StageMapSystem {
     return String(this.property(this.map.properties, name, fallback))
   }
 
-  private layerString(layer: TiledImageLayer | TiledObjectLayer, name: string, fallback: string) {
+  private layerString(layer: TiledImageLayer | TiledObjectLayer | TiledTileLayer, name: string, fallback: string) {
     return String(this.property(layer.properties, name, fallback))
   }
 
-  private layerNumber(layer: TiledImageLayer | TiledObjectLayer, name: string, fallback: number) {
+  private layerNumber(layer: TiledImageLayer | TiledObjectLayer | TiledTileLayer, name: string, fallback: number) {
     return Number(this.property(layer.properties, name, fallback))
   }
 
-  private layerBoolean(layer: TiledImageLayer | TiledObjectLayer, name: string, fallback: boolean) {
+  private layerBoolean(layer: TiledImageLayer | TiledObjectLayer | TiledTileLayer, name: string, fallback: boolean) {
     return Boolean(this.property(layer.properties, name, fallback))
   }
 
