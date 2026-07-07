@@ -9,6 +9,7 @@ import { AudioSystem } from '../systems/AudioSystem'
 import { CameraSystem } from '../systems/CameraSystem'
 import { CombatDebugSystem } from '../systems/CombatDebugSystem'
 import { attackBounds, CombatSystem } from '../systems/CombatSystem'
+import { DataValidationSystem } from '../systems/DataValidationSystem'
 import { InputSystem } from '../systems/InputSystem'
 import { SaveAdapter } from '../systems/SaveAdapter'
 import { SpawnSystem } from '../systems/SpawnSystem'
@@ -45,6 +46,7 @@ export class WorldScene extends Phaser.Scene {
     const audio = this.cache.json.get('audio') as AudioData
     const fallbackLevel = this.cache.json.get('stage-01') as LevelData
     const map = this.cache.json.get('stage-01-map') as TiledMapData
+    DataValidationSystem.validateAll({ animations, combat, enemies, bosses, level: fallbackLevel, map })
     this.mapSystem = new StageMapSystem(this, map, fallbackLevel)
     this.level = this.mapSystem.resolveLevel()
 
