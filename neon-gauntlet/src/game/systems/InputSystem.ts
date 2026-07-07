@@ -64,6 +64,22 @@ export class InputSystem {
     return active
   }
 
+  debugSnapshot() {
+    return {
+      normalized: { ...this.state },
+      touchHeld: { ...this.held },
+      keyboard: {
+        phaser: Object.fromEntries(Object.entries(this.keys).map(([name, key]) => [name, key.isDown])),
+        windowKeys: [...this.windowKeys].sort(),
+        oneShot: [...this.oneShot].sort(),
+        windowShots: [...this.windowShots].sort(),
+        lastHorizontal: this.lastHorizontal,
+        lastVertical: this.lastVertical,
+      },
+      gamepad: this.gamepad.snapshot(),
+    }
+  }
+
   update() {
     const next = emptyInput()
     const left = this.keys.left.isDown || this.keys.a.isDown || this.down('ArrowLeft', 'a', 'A') || this.held.left

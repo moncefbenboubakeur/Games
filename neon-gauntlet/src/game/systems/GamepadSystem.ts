@@ -19,4 +19,14 @@ export class GamepadSystem {
     input.guard ||= !!pad.buttons[5]?.pressed || !!pad.buttons[7]?.pressed
     input.pause ||= !!pad.buttons[9]?.pressed
   }
+
+  snapshot() {
+    const pad = navigator.getGamepads?.().find(Boolean)
+    if (!pad) return { connected: false, axes: [], buttons: [] }
+    return {
+      connected: true,
+      axes: [pad.axes[0] || 0, pad.axes[1] || 0],
+      buttons: pad.buttons.map((button, index) => ({ index, pressed: button.pressed, value: button.value })).filter((button) => button.pressed || button.value > 0),
+    }
+  }
 }

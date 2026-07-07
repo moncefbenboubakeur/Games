@@ -18,6 +18,23 @@ declare global {
           lane: number
         }
       }
+      input?: {
+        normalized: Record<string, boolean>
+        touchHeld: Record<string, boolean>
+        keyboard: {
+          phaser: Record<string, boolean>
+          windowKeys: string[]
+          oneShot: string[]
+          windowShots: string[]
+          lastHorizontal: string | null
+          lastVertical: string | null
+        }
+        gamepad: {
+          connected: boolean
+          axes: number[]
+          buttons: Array<{ index: number; pressed: boolean; value: number }>
+        }
+      }
       assets: Record<string, boolean>
     }
   }

@@ -27,6 +27,10 @@ test('keyboard arrows stop moving after key release', async ({ page }) => {
 
   expect(afterRelease).toBeGreaterThan(start + 8)
   expect(later).toBeLessThanOrEqual(afterRelease + 2)
+  await expect
+    .poll(() => page.evaluate(() => window.__NEON_DEBUG__?.input?.normalized.right))
+    .toBe(false)
+  expect(await page.evaluate(() => window.__NEON_DEBUG__?.input?.keyboard.windowKeys)).toEqual([])
 })
 
 test('touch direction buttons stop moving after pointer release', async ({ page }) => {

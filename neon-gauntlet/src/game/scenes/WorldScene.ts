@@ -193,6 +193,7 @@ export class WorldScene extends Phaser.Scene {
           }
           : null,
       },
+      input: this.inputSystem.debugSnapshot(),
       assets: {
         stage1: this.textures.exists('stage-01-bg'),
         player: this.textures.exists('player-sheet'),
