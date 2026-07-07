@@ -165,6 +165,20 @@ describe('DataValidationSystem', () => {
     expect(() => DataValidationSystem.validateMap(badMap)).toThrow(/scenePlate/)
   })
 
+  it('rejects visible image layers without explicit valid modes', () => {
+    const missingMode = map()
+    missingMode.layers = missingMode.layers.map((layer) => (layer.name === 'BackgroundFar' ? { id: 1, name: 'BackgroundFar', type: 'imagelayer', visible: true } : layer))
+    expect(() => DataValidationSystem.validateMap(missingMode)).toThrow(/explicit mode/)
+
+    const badMode = map()
+    badMode.layers = badMode.layers.map((layer) => (
+      layer.name === 'BackgroundFar'
+        ? { id: 1, name: 'BackgroundFar', type: 'imagelayer', visible: true, properties: [{ name: 'mode', type: 'string', value: 'stretchyMess' }] }
+        : layer
+    ))
+    expect(() => DataValidationSystem.validateMap(badMode)).toThrow(/invalid/)
+  })
+
   it('rejects unknown enemy roles in level spawns', () => {
     const badLevel = level()
     badLevel.enemyWaves = [{ x: 300, lane: 0.72, role: 'runner' }]

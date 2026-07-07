@@ -12,6 +12,7 @@ interface GameDataBundle {
 
 const requiredMapLayers = ['BackgroundFar', 'BackgroundMid', 'Decor', 'Ground', 'Foreground', 'Collision', 'PlayerSpawn', 'EnemySpawns', 'BossSpawn', 'Triggers', 'CameraZones', 'Props', 'NPCs']
 const requiredTileLayers = ['BackgroundMid', 'Decor', 'Ground', 'Foreground']
+const allowedImageLayerModes = ['scenePlate', 'parallaxPlate', 'tile']
 const requiredActorAnimations = ['idle', 'walk', 'punch', 'kick', 'guard', 'hurt', 'jump']
 const requiredSfx = ['punch', 'kick', 'hit', 'jump', 'hurt', 'guard', 'stageClear']
 
@@ -120,6 +121,12 @@ export class DataValidationSystem {
     })
     const layerNames = new Set(map.layers.map((layer) => layer.name))
     requiredMapLayers.forEach((name) => this.require(layerNames.has(name), `Map layer is required: ${name}`))
+    map.layers.forEach((layer) => {
+      if (layer.type !== 'imagelayer' || layer.visible === false) return
+      const mode = this.layerString(layer, 'mode')
+      this.require(Boolean(mode), `${layer.name} image layer needs explicit mode`)
+      this.require(allowedImageLayerModes.includes(mode), `${layer.name} image layer mode is invalid: ${mode}`)
+    })
     this.require(this.hasScenePlate(map), 'Map needs at least one visible scenePlate image layer for production-quality art')
     requiredTileLayers.forEach((name) => {
       const layer = map.layers.find((item) => item.name === name)
@@ -152,6 +159,11 @@ export class DataValidationSystem {
       && layer.visible !== false
       && layer.properties?.some((property) => property.name === 'mode' && property.value === 'scenePlate')
     ))
+  }
+
+  private static layerString(layer: { properties?: Array<{ name: string; value: string | number | boolean }> }, name: string) {
+    const value = layer.properties?.find((property) => property.name === name)?.value
+    return value === undefined ? '' : String(value)
   }
 
   private static validateAudioCue(label: string, file: string, volume: number) {
