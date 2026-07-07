@@ -28,6 +28,13 @@ export interface AttackDefinition {
   comboFinisherDamage?: number
   range: number
   laneRange: number
+  hitbox?: {
+    forwardOffset: number
+    width: number
+    targetHalfWidth: number
+    laneRange: number
+    activeFrame: number
+  }
   durationMs: number
   activeAfterMs: number
   knockback: number

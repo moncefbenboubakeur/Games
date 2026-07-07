@@ -7,7 +7,8 @@ import { Player } from '../entities/Player'
 import { AnimationSystem } from '../systems/AnimationSystem'
 import { AudioSystem } from '../systems/AudioSystem'
 import { CameraSystem } from '../systems/CameraSystem'
-import { CombatSystem } from '../systems/CombatSystem'
+import { CombatDebugSystem } from '../systems/CombatDebugSystem'
+import { attackBounds, CombatSystem } from '../systems/CombatSystem'
 import { InputSystem } from '../systems/InputSystem'
 import { SaveAdapter } from '../systems/SaveAdapter'
 import { SpawnSystem } from '../systems/SpawnSystem'
@@ -18,6 +19,7 @@ export class WorldScene extends Phaser.Scene {
   private animationSystem!: AnimationSystem
   private audioSystem!: AudioSystem
   private combat!: CombatSystem
+  private combatDebug!: CombatDebugSystem
   private player!: Player
   private enemies: Enemy[] = []
   private boss?: Boss
@@ -49,6 +51,7 @@ export class WorldScene extends Phaser.Scene {
     this.animationSystem = new AnimationSystem(this, animations)
     this.animationSystem.registerFrames()
     this.combat = new CombatSystem(combat)
+    this.combatDebug = new CombatDebugSystem(this, this.combat)
     this.audioSystem = new AudioSystem(this, audio)
     this.inputSystem = new InputSystem(this)
     this.registry.set('inputSystem', this.inputSystem)
@@ -89,6 +92,7 @@ export class WorldScene extends Phaser.Scene {
     this.handlePlayerAttack()
     this.handleBossSpawn()
     this.handleStageClear()
+    this.combatDebug.update(this.player, [...this.enemies, ...(this.boss ? [this.boss] : [])])
 
     if (this.player.hp <= 0) this.scene.start(SceneKeys.GameOver)
     this.events.emit('hud:update', this.snapshot())
@@ -111,6 +115,7 @@ export class WorldScene extends Phaser.Scene {
     this.stageCleared = false
     this.frozen = false
     this.events.off('sfx', this.playSfx)
+    this.combatDebug?.destroy()
   }
 
   private handlePlayerAttack() {
@@ -171,11 +176,21 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private exposeDebug() {
+    const activeAttack = this.player.activeAttack
     ;(window as typeof window & { __NEON_DEBUG__?: unknown; player?: unknown; enemies?: unknown; level?: unknown; assets?: unknown }).__NEON_DEBUG__ = {
       title: 'Neon Gauntlet',
       player: { x: this.player.x, hp: this.player.hp },
       level: this.level,
       enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({ x: enemy.x, hp: enemy.hp, active: enemy.active })),
+      combat: {
+        playerAttack: activeAttack
+          ? {
+            kind: activeAttack,
+            bounds: attackBounds(this.player, this.combat.getAttack(activeAttack)),
+            lane: this.player.lane,
+          }
+          : null,
+      },
       assets: {
         stage1: this.textures.exists('stage-01-bg'),
         player: this.textures.exists('player-sheet'),
@@ -186,5 +201,6 @@ export class WorldScene extends Phaser.Scene {
     ;(window as typeof window & { __NEON_FREEZE__?: () => void }).__NEON_FREEZE__ = () => {
       this.frozen = true
     }
+    ;(window as typeof window & { __NEON_TOGGLE_HITBOXES__?: () => boolean }).__NEON_TOGGLE_HITBOXES__ = () => this.combatDebug.toggle()
   }
 }

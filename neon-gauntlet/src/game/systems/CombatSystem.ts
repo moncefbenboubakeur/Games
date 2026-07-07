@@ -18,7 +18,44 @@ export function isInFront(attacker: FighterState, defender: FighterState) {
 }
 
 export function canHit(attacker: FighterState, defender: FighterState, attack: AttackDefinition) {
+  if (attack.hitbox) return hitboxesOverlap(attacker, defender, attack)
   return Math.abs(attacker.x - defender.x) <= attack.range && sameLane(attacker, defender, attack.laneRange) && isInFront(attacker, defender)
+}
+
+export function attackBounds(attacker: FighterState, attack: AttackDefinition) {
+  const hitbox = attack.hitbox
+  if (!hitbox) {
+    return attacker.face === 1
+      ? { left: attacker.x, right: attacker.x + attack.range }
+      : { left: attacker.x - attack.range, right: attacker.x }
+  }
+
+  if (attacker.face === 1) {
+    return {
+      left: attacker.x + hitbox.forwardOffset,
+      right: attacker.x + hitbox.forwardOffset + hitbox.width,
+    }
+  }
+
+  return {
+    left: attacker.x - hitbox.forwardOffset - hitbox.width,
+    right: attacker.x - hitbox.forwardOffset,
+  }
+}
+
+export function hurtBounds(defender: FighterState, attack: AttackDefinition) {
+  const halfWidth = attack.hitbox?.targetHalfWidth ?? 0
+  return {
+    left: defender.x - halfWidth,
+    right: defender.x + halfWidth,
+  }
+}
+
+export function hitboxesOverlap(attacker: FighterState, defender: FighterState, attack: AttackDefinition) {
+  const attackBox = attackBounds(attacker, attack)
+  const hurtBox = hurtBounds(defender, attack)
+  const laneRange = attack.hitbox?.laneRange ?? attack.laneRange
+  return attackBox.left <= hurtBox.right && attackBox.right >= hurtBox.left && sameLane(attacker, defender, laneRange) && isInFront(attacker, defender)
 }
 
 export function applyDamage(target: FighterState, damage: number) {

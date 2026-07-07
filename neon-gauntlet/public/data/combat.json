@@ -14,6 +14,13 @@
       "comboFinisherDamage": 28,
       "range": 42,
       "laneRange": 0.095,
+      "hitbox": {
+        "forwardOffset": 10,
+        "width": 38,
+        "targetHalfWidth": 14,
+        "laneRange": 0.095,
+        "activeFrame": 1
+      },
       "durationMs": 230,
       "activeAfterMs": 40,
       "knockback": 18
@@ -22,6 +29,13 @@
       "damage": 25,
       "range": 58,
       "laneRange": 0.095,
+      "hitbox": {
+        "forwardOffset": 16,
+        "width": 54,
+        "targetHalfWidth": 14,
+        "laneRange": 0.095,
+        "activeFrame": 2
+      },
       "durationMs": 330,
       "activeAfterMs": 55,
       "knockback": 30
