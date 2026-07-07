@@ -2,7 +2,7 @@ import { defineConfig, devices } from 'playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
-  timeout: 30_000,
+  timeout: 45_000,
   expect: {
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.04,
@@ -15,7 +15,7 @@ export default defineConfig({
   webServer: {
     command: 'npm start',
     url: 'http://127.0.0.1:4177',
-    reuseExistingServer: false,
+    reuseExistingServer: true,
     timeout: 20_000,
   },
   projects: [

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="790" height="414" viewBox="0 0 790 414">
+  <rect width="100%" height="100%" fill="#090b10"/>
+  <text x="28" y="34" fill="#ffffff" font-size="24" font-family="Menlo, Consolas, monospace">player / kick</text>
+  <text x="28" y="61" fill="#8fa0b8" font-size="15" font-family="Menlo, Consolas, monospace">texture: player-sheet | frames: 3 | No repeated metadata rectangles detected. Human visual review is still required.</text>
+  
+      <g>
+        <rect x="28" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="42" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">0: player-kick-0</text>
+        <g transform="translate(49 118) scale(1.117948717948718)">
+          <clipPath id="player-kick-0" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="169" height="195"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/player-sheet.png" x="-59" y="-523" clip-path="url(#player-kick-0)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="169" height="195" fill="none" stroke="#46d9ff" stroke-width="1.341743119266055"/>
+          <line x1="0" y1="195" x2="169" y2="195" stroke="#ffd166" stroke-width="0.8944954128440367" stroke-dasharray="4.472477064220183 3.5779816513761467"/>
+          <circle cx="67" cy="195" r="3.5779816513761467" fill="#ff5c8a"/>
+        </g>
+        <text x="42" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 59,523,169,195</text>
+        <text x="42" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 67,195</text>
+      </g>
+
+      <g>
+        <rect x="280" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="294" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">1: player-kick-1</text>
+        <g transform="translate(294 121) scale(1.1477272727272727)">
+          <clipPath id="player-kick-1" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="176" height="185"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/player-sheet.png" x="-275" y="-533" clip-path="url(#player-kick-1)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="176" height="185" fill="none" stroke="#46d9ff" stroke-width="1.306930693069307"/>
+          <line x1="0" y1="185" x2="176" y2="185" stroke="#ffd166" stroke-width="0.8712871287128713" stroke-dasharray="4.356435643564357 3.485148514851485"/>
+          <circle cx="70" cy="185" r="3.485148514851485" fill="#ff5c8a"/>
+        </g>
+        <text x="294" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 275,533,176,185</text>
+        <text x="294" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 70,185</text>
+      </g>
+
+      <g>
+        <rect x="532" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="546" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">2: player-kick-2</text>
+        <g transform="translate(546 154) scale(0.792156862745098)">
+          <clipPath id="player-kick-2" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="255" height="186"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/player-sheet.png" x="-496" y="-531" clip-path="url(#player-kick-2)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="255" height="186" fill="none" stroke="#46d9ff" stroke-width="1.8935643564356437"/>
+          <line x1="0" y1="186" x2="255" y2="186" stroke="#ffd166" stroke-width="1.2623762376237624" stroke-dasharray="6.311881188118813 5.0495049504950495"/>
+          <circle cx="82" cy="186" r="5.0495049504950495" fill="#ff5c8a"/>
+        </g>
+        <text x="546" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 496,531,255,186</text>
+        <text x="546" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 82,186</text>
+      </g>
+</svg>

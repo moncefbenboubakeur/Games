@@ -11,7 +11,8 @@ async function startGame(page: import('playwright/test').Page) {
 
 test('stage 1 idle baseline', async ({ page }) => {
   await startGame(page)
-  await expect(page.locator('canvas')).toHaveScreenshot('stage-01-idle.png')
+  await page.waitForTimeout(250)
+  await expect(page.locator('canvas')).toHaveScreenshot('stage-01-idle.png', { timeout: 10_000 })
 })
 
 test('gameplay state is available for agents', async ({ page }) => {

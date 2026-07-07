@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="538" height="414" viewBox="0 0 538 414">
+  <rect width="100%" height="100%" fill="#090b10"/>
+  <text x="28" y="34" fill="#ffffff" font-size="24" font-family="Menlo, Consolas, monospace">player / jump</text>
+  <text x="28" y="61" fill="#8fa0b8" font-size="15" font-family="Menlo, Consolas, monospace">texture: player-sheet | frames: 2 | No repeated metadata rectangles detected. Human visual review is still required.</text>
+  
+      <g>
+        <rect x="28" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="42" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">0: player-jump-0</text>
+        <g transform="translate(67 118) scale(1.2976190476190477)">
+          <clipPath id="player-jump-0" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="117" height="168"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/player-sheet.png" x="-475" y="-744" clip-path="url(#player-jump-0)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="117" height="168" fill="none" stroke="#46d9ff" stroke-width="1.1559633027522935"/>
+          <line x1="0" y1="168" x2="117" y2="168" stroke="#ffd166" stroke-width="0.7706422018348623" stroke-dasharray="3.853211009174312 3.0825688073394493"/>
+          <circle cx="59" cy="168" r="3.0825688073394493" fill="#ff5c8a"/>
+        </g>
+        <text x="42" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 475,744,117,168</text>
+        <text x="42" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 59,168</text>
+      </g>
+
+      <g>
+        <rect x="280" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="294" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">1: player-jump-1</text>
+        <g transform="translate(313 118) scale(1.1354166666666667)">
+          <clipPath id="player-jump-1" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="144" height="192"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/player-sheet.png" x="-660" y="-732" clip-path="url(#player-jump-1)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="144" height="192" fill="none" stroke="#46d9ff" stroke-width="1.3211009174311925"/>
+          <line x1="0" y1="192" x2="144" y2="192" stroke="#ffd166" stroke-width="0.8807339449541284" stroke-dasharray="4.403669724770642 3.5229357798165135"/>
+          <circle cx="72" cy="192" r="3.5229357798165135" fill="#ff5c8a"/>
+        </g>
+        <text x="294" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 660,732,144,192</text>
+        <text x="294" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 72,192</text>
+      </g>
+</svg>

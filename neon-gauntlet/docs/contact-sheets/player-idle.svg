@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="286" height="414" viewBox="0 0 286 414">
+  <rect width="100%" height="100%" fill="#090b10"/>
+  <text x="28" y="34" fill="#ffffff" font-size="24" font-family="Menlo, Consolas, monospace">player / idle</text>
+  <text x="28" y="61" fill="#8fa0b8" font-size="15" font-family="Menlo, Consolas, monospace">texture: player-sheet | frames: 1 | No repeated metadata rectangles detected. Human visual review is still required.</text>
+  
+      <g>
+        <rect x="28" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="42" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">0: player-idle-0</text>
+        <g transform="translate(82 118) scale(1.0380952380952382)">
+          <clipPath id="player-idle-0" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="118" height="210"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/player-sheet.png" x="-78" y="-20" clip-path="url(#player-idle-0)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="118" height="210" fill="none" stroke="#46d9ff" stroke-width="1.4449541284403669"/>
+          <line x1="0" y1="210" x2="118" y2="210" stroke="#ffd166" stroke-width="0.9633027522935779" stroke-dasharray="4.816513761467889 3.8532110091743115"/>
+          <circle cx="59" cy="210" r="3.8532110091743115" fill="#ff5c8a"/>
+        </g>
+        <text x="42" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 78,20,118,210</text>
+        <text x="42" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 59,210</text>
+      </g>
+</svg>

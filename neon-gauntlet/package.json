@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "test:screenshots": "playwright test tests/e2e/visual.spec.ts",
     "update:screenshots": "playwright test tests/e2e/visual.spec.ts --update-snapshots",
+    "contact-sheets": "node tools/generate-contact-sheets.mjs",
     "serve:legacy": "node serve.mjs"
   },
   "dependencies": {

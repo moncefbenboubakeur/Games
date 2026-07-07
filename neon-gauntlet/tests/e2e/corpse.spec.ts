@@ -10,24 +10,31 @@ async function startGame(page: import('playwright/test').Page) {
 
 test('defeated enemies linger briefly as corpses then disappear', async ({ page }) => {
   await startGame(page)
-  await page.evaluate(() => {
+
+  const timeline = await page.evaluate(async () => {
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+    const waitFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ hp: number; hurt: (amount: number, knockback: number) => boolean }>
+      enemies: Array<{ active: boolean; alpha: number; hp: number; hurt: (amount: number, knockback: number) => boolean }>
     }
     world.enemies[0]?.hurt(999, 0)
-    ;(window as Window & { __NEON_DEATH_TEST_STARTED__?: number }).__NEON_DEATH_TEST_STARTED__ = performance.now()
+
+    const sample = () => world.enemies.map((enemy) => ({
+      active: enemy.active,
+      alpha: enemy.alpha,
+      hp: enemy.hp,
+    }))
+
+    await waitFrame()
+    const immediate = sample()
+    await wait(700)
+    const lingering = sample()
+    await wait(1_200)
+    const cleared = sample()
+    return { immediate, lingering, cleared }
   })
 
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.find((enemy) => enemy.hp <= 0)?.active)).toBe(true)
-  await page.waitForFunction(() => {
-    const started = (window as Window & { __NEON_DEATH_TEST_STARTED__?: number }).__NEON_DEATH_TEST_STARTED__
-    return !!started && performance.now() - started >= 700
-  })
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.some((enemy) => enemy.hp <= 0 && enemy.active))).toBe(true)
-
-  await page.waitForFunction(() => {
-    const started = (window as Window & { __NEON_DEATH_TEST_STARTED__?: number }).__NEON_DEATH_TEST_STARTED__
-    return !!started && performance.now() - started >= 1_800
-  })
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.every((enemy) => enemy.hp > 0))).toBe(true)
+  expect(timeline.immediate.some((enemy) => enemy.hp <= 0 && enemy.active)).toBe(true)
+  expect(timeline.lingering.some((enemy) => enemy.hp <= 0 && enemy.active)).toBe(true)
+  expect(timeline.cleared.every((enemy) => enemy.hp > 0)).toBe(true)
 })

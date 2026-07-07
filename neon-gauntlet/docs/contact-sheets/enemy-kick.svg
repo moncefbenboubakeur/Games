@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="790" height="414" viewBox="0 0 790 414">
+  <rect width="100%" height="100%" fill="#090b10"/>
+  <text x="28" y="34" fill="#ffffff" font-size="24" font-family="Menlo, Consolas, monospace">enemy / kick</text>
+  <text x="28" y="61" fill="#8fa0b8" font-size="15" font-family="Menlo, Consolas, monospace">texture: enemy-sheet | frames: 3 | No repeated metadata rectangles detected. Human visual review is still required.</text>
+  
+      <g>
+        <rect x="28" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="42" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">0: enemy-kick-0</text>
+        <g transform="translate(52 118) scale(1.117948717948718)">
+          <clipPath id="enemy-kick-0" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="164" height="195"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-61" y="-524" clip-path="url(#enemy-kick-0)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="164" height="195" fill="none" stroke="#46d9ff" stroke-width="1.341743119266055"/>
+          <line x1="0" y1="195" x2="164" y2="195" stroke="#ffd166" stroke-width="0.8944954128440367" stroke-dasharray="4.472477064220183 3.5779816513761467"/>
+          <circle cx="70" cy="195" r="3.5779816513761467" fill="#ff5c8a"/>
+        </g>
+        <text x="42" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 61,524,164,195</text>
+        <text x="42" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 70,195</text>
+      </g>
+
+      <g>
+        <rect x="280" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="294" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">1: enemy-kick-1</text>
+        <g transform="translate(294 120) scale(1.1542857142857144)">
+          <clipPath id="enemy-kick-1" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="175" height="186"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-278" y="-533" clip-path="url(#enemy-kick-1)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="175" height="186" fill="none" stroke="#46d9ff" stroke-width="1.2995049504950493"/>
+          <line x1="0" y1="186" x2="175" y2="186" stroke="#ffd166" stroke-width="0.8663366336633663" stroke-dasharray="4.3316831683168315 3.4653465346534653"/>
+          <circle cx="73" cy="186" r="3.4653465346534653" fill="#ff5c8a"/>
+        </g>
+        <text x="294" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 278,533,175,186</text>
+        <text x="294" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 73,186</text>
+      </g>
+
+      <g>
+        <rect x="532" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="546" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">2: enemy-kick-2</text>
+        <g transform="translate(546 141) scale(0.8938053097345132)">
+          <clipPath id="enemy-kick-2" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="226" height="192"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-501" y="-527" clip-path="url(#enemy-kick-2)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="226" height="192" fill="none" stroke="#46d9ff" stroke-width="1.6782178217821784"/>
+          <line x1="0" y1="192" x2="226" y2="192" stroke="#ffd166" stroke-width="1.118811881188119" stroke-dasharray="5.594059405940595 4.475247524752476"/>
+          <circle cx="79" cy="192" r="4.475247524752476" fill="#ff5c8a"/>
+        </g>
+        <text x="546" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 501,527,226,192</text>
+        <text x="546" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 79,192</text>
+      </g>
+</svg>

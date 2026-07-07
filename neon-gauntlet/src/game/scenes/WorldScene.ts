@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
+import { SceneKeys } from '../constants'
 import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData } from '../data/types'
 import { Boss } from '../entities/Boss'
 import { Enemy } from '../entities/Enemy'
@@ -11,6 +11,7 @@ import { CombatSystem } from '../systems/CombatSystem'
 import { InputSystem } from '../systems/InputSystem'
 import { SaveAdapter } from '../systems/SaveAdapter'
 import { SpawnSystem } from '../systems/SpawnSystem'
+import { StageMapSystem } from '../systems/StageMapSystem'
 
 export class WorldScene extends Phaser.Scene {
   private inputSystem!: InputSystem
@@ -21,6 +22,7 @@ export class WorldScene extends Phaser.Scene {
   private enemies: Enemy[] = []
   private boss?: Boss
   private level!: LevelData
+  private mapSystem!: StageMapSystem
   private score = 0
   private bossSpawned = false
   private stageCleared = false
@@ -39,8 +41,10 @@ export class WorldScene extends Phaser.Scene {
     const enemies = this.cache.json.get('enemies') as EnemiesData
     const bosses = this.cache.json.get('bosses') as BossesData
     const audio = this.cache.json.get('audio') as AudioData
-    this.level = this.cache.json.get('stage-01') as LevelData
+    const fallbackLevel = this.cache.json.get('stage-01') as LevelData
     const map = this.cache.json.get('stage-01-map') as TiledMapData
+    this.mapSystem = new StageMapSystem(this, map, fallbackLevel)
+    this.level = this.mapSystem.resolveLevel()
 
     this.animationSystem = new AnimationSystem(this, animations)
     this.animationSystem.registerFrames()
@@ -50,8 +54,7 @@ export class WorldScene extends Phaser.Scene {
     this.registry.set('inputSystem', this.inputSystem)
     this.registry.set('worldScene', this)
 
-    this.drawBackground()
-    this.drawTiledCollisionDebug(map)
+    this.mapSystem.render()
 
     this.player = new Player(this, this.level.playerSpawn.x, this.level.playerSpawn.lane, this.animationSystem, this.combat, combat)
     const spawner = new SpawnSystem(this, this.animationSystem, this.combat, enemies.roles, bosses.bosses)
@@ -108,22 +111,6 @@ export class WorldScene extends Phaser.Scene {
     this.stageCleared = false
     this.frozen = false
     this.events.off('sfx', this.playSfx)
-  }
-
-  private drawBackground() {
-    this.add.tileSprite(0, 0, this.level.worldWidth, GAME_HEIGHT, this.level.background)
-      .setOrigin(0)
-      .setScrollFactor(0.36, 1)
-      .setDepth(-100)
-    this.add.rectangle(this.level.worldWidth / 2, GAME_HEIGHT - 22, this.level.worldWidth, 44, 0x050711, 0.24).setDepth(-5)
-  }
-
-  private drawTiledCollisionDebug(map: TiledMapData) {
-    const collision = map.layers.find((layer) => layer.name === 'collision')
-    collision?.objects.forEach((object) => {
-      if (object.name !== 'floor') return
-      this.add.rectangle(object.x + (object.width || 0) / 2, object.y + (object.height || 0) / 2, object.width || 0, object.height || 0, 0x0b1028, 0.16).setDepth(-2)
-    })
   }
 
   private handlePlayerAttack() {
@@ -193,6 +180,7 @@ export class WorldScene extends Phaser.Scene {
         stage1: this.textures.exists('stage-01-bg'),
         player: this.textures.exists('player-sheet'),
         enemy: this.textures.exists('enemy-sheet'),
+        mapDrivenStage: Boolean(this.mapSystem),
       },
     }
     ;(window as typeof window & { __NEON_FREEZE__?: () => void }).__NEON_FREEZE__ = () => {

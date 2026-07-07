@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="286" height="414" viewBox="0 0 286 414">
+  <rect width="100%" height="100%" fill="#090b10"/>
+  <text x="28" y="34" fill="#ffffff" font-size="24" font-family="Menlo, Consolas, monospace">enemy / down</text>
+  <text x="28" y="61" fill="#8fa0b8" font-size="15" font-family="Menlo, Consolas, monospace">texture: enemy-sheet | frames: 1 | No repeated metadata rectangles detected. Human visual review is still required.</text>
+  
+      <g>
+        <rect x="28" y="86" width="230" height="300" rx="10" fill="#171a1f" stroke="#303844" stroke-width="2"/>
+        <text x="42" y="110" fill="#e8f0ff" font-size="15" font-family="Menlo, Consolas, monospace">0: enemy-down-0</text>
+        <g transform="translate(42 189) scale(1.057591623036649)">
+          <clipPath id="enemy-down-0" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="191" height="73"/>
+          </clipPath>
+          <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-962" y="-914" clip-path="url(#enemy-down-0)" style="image-rendering: pixelated"/>
+          <rect x="0" y="0" width="191" height="73" fill="none" stroke="#46d9ff" stroke-width="1.4183168316831685"/>
+          <line x1="0" y1="73" x2="191" y2="73" stroke="#ffd166" stroke-width="0.9455445544554456" stroke-dasharray="4.727722772277228 3.7821782178217824"/>
+          <circle cx="95" cy="73" r="3.7821782178217824" fill="#ff5c8a"/>
+        </g>
+        <text x="42" y="344" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">rect 962,914,191,73</text>
+        <text x="42" y="366" fill="#aab6ca" font-size="13" font-family="Menlo, Consolas, monospace">anchor 95,73</text>
+      </g>
+</svg>

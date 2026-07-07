@@ -123,6 +123,7 @@ export interface TiledObject {
   y: number
   width?: number
   height?: number
+  visible?: boolean
   properties?: TiledProperty[]
 }
 
@@ -130,15 +131,33 @@ export interface TiledObjectLayer {
   id: number
   name: string
   type: 'objectgroup'
+  visible?: boolean
+  opacity?: number
+  properties?: TiledProperty[]
   objects: TiledObject[]
 }
 
+export interface TiledImageLayer {
+  id: number
+  name: string
+  type: 'imagelayer'
+  image?: string
+  offsetx?: number
+  offsety?: number
+  opacity?: number
+  visible?: boolean
+  properties?: TiledProperty[]
+}
+
+export type TiledLayer = TiledObjectLayer | TiledImageLayer
+
 export interface TiledMapData {
+  properties?: TiledProperty[]
   width: number
   height: number
   tilewidth: number
   tileheight: number
-  layers: TiledObjectLayer[]
+  layers: TiledLayer[]
 }
 
 export interface NormalizedInput {

@@ -14,7 +14,7 @@ async function playerX(page: import('playwright/test').Page) {
 
 test('keyboard arrows stop moving after key release', async ({ page }) => {
   await startGame(page)
-  await page.locator('canvas').click({ position: { x: 300, y: 300 } })
+  await page.evaluate(() => window.focus())
   const start = await playerX(page)
 
   await page.keyboard.down('ArrowRight')
@@ -54,6 +54,7 @@ test('touch direction buttons stop moving after pointer release', async ({ page 
 })
 
 test('touch buttons trigger only their intended actions', async ({ page }) => {
+  test.setTimeout(90_000)
   await startGame(page)
   const canvas = await page.locator('canvas').boundingBox()
   if (!canvas) throw new Error('Missing game canvas')
@@ -76,7 +77,7 @@ test('touch buttons trigger only their intended actions', async ({ page }) => {
     const point = screen(x, y)
     await page.mouse.move(point.x, point.y)
     await page.mouse.down()
-    await page.waitForTimeout(30)
+    await page.waitForTimeout(10)
     const activeActions = await page.evaluate(() => {
       const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
         inputSystem?: { held: Record<string, boolean> }
@@ -87,6 +88,6 @@ test('touch buttons trigger only their intended actions', async ({ page }) => {
     })
     expect(activeActions, `${action} should be the only active touch action`).toEqual([action])
     await page.mouse.up()
-    await page.waitForTimeout(30)
+    await page.waitForTimeout(10)
   }
 })

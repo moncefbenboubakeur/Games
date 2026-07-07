@@ -9,39 +9,130 @@
   "tilewidth": 16,
   "tileheight": 16,
   "infinite": false,
-  "nextlayerid": 4,
-  "nextobjectid": 12,
+  "nextlayerid": 9,
+  "nextobjectid": 17,
+  "properties": [
+    { "name": "backgroundTexture", "type": "string", "value": "stage-01-bg" },
+    { "name": "music", "type": "string", "value": "stage-01" }
+  ],
   "layers": [
     {
       "id": 1,
-      "name": "collision",
-      "type": "objectgroup",
-      "objects": [
-        { "id": 1, "name": "floor", "type": "collision", "x": 0, "y": 184, "width": 1400, "height": 56 },
-        { "id": 2, "name": "left-wall", "type": "collision", "x": 0, "y": 0, "width": 16, "height": 240 },
-        { "id": 3, "name": "right-wall", "type": "collision", "x": 1384, "y": 0, "width": 16, "height": 240 }
+      "name": "BackgroundFar",
+      "type": "imagelayer",
+      "image": "../backgrounds/stage-01-metro-arcade.png",
+      "visible": true,
+      "opacity": 1,
+      "offsetx": 0,
+      "offsety": 0,
+      "properties": [
+        { "name": "texture", "type": "string", "value": "stage-01-bg" },
+        { "name": "repeatX", "type": "bool", "value": true },
+        { "name": "scrollFactorX", "type": "float", "value": 0.36 },
+        { "name": "scrollFactorY", "type": "float", "value": 1 },
+        { "name": "depth", "type": "int", "value": -100 }
       ]
     },
     {
       "id": 2,
-      "name": "spawns",
+      "name": "Ground",
       "type": "objectgroup",
+      "visible": true,
+      "opacity": 1,
+      "properties": [
+        { "name": "depth", "type": "int", "value": -5 }
+      ],
       "objects": [
-        { "id": 4, "name": "player", "type": "player_spawn", "x": 76, "y": 173, "properties": [{ "name": "lane", "type": "float", "value": 0.72 }] },
-        { "id": 5, "name": "striker", "type": "enemy_spawn", "x": 330, "y": 168, "properties": [{ "name": "role", "type": "string", "value": "striker" }, { "name": "lane", "type": "float", "value": 0.7 }] },
-        { "id": 6, "name": "runner", "type": "enemy_spawn", "x": 450, "y": 182, "properties": [{ "name": "role", "type": "string", "value": "runner" }, { "name": "lane", "type": "float", "value": 0.76 }] },
-        { "id": 7, "name": "bruiser", "type": "enemy_spawn", "x": 570, "y": 163, "properties": [{ "name": "role", "type": "string", "value": "bruiser" }, { "name": "lane", "type": "float", "value": 0.68 }] },
-        { "id": 8, "name": "thrower", "type": "enemy_spawn", "x": 700, "y": 187, "properties": [{ "name": "role", "type": "string", "value": "thrower" }, { "name": "lane", "type": "float", "value": 0.78 }] },
-        { "id": 9, "name": "switchblade-sora", "type": "boss_spawn", "x": 1120, "y": 173, "properties": [{ "name": "boss", "type": "string", "value": "switchblade-sora" }, { "name": "lane", "type": "float", "value": 0.72 }] }
+        {
+          "id": 1,
+          "name": "floor-shadow",
+          "type": "visual_rect",
+          "x": 0,
+          "y": 196,
+          "width": 1400,
+          "height": 44,
+          "properties": [
+            { "name": "fill", "type": "string", "value": "#050711" },
+            { "name": "alpha", "type": "float", "value": 0.24 },
+            { "name": "depth", "type": "int", "value": -5 }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "floor-depth-shadow",
+          "type": "visual_rect",
+          "x": 0,
+          "y": 184,
+          "width": 1400,
+          "height": 56,
+          "properties": [
+            { "name": "fill", "type": "string", "value": "#0b1028" },
+            { "name": "alpha", "type": "float", "value": 0.16 },
+            { "name": "depth", "type": "int", "value": -2 }
+          ]
+        }
       ]
     },
     {
       "id": 3,
-      "name": "triggers",
+      "name": "Collision",
       "type": "objectgroup",
+      "visible": false,
       "objects": [
-        { "id": 10, "name": "boss-trigger", "type": "boss_trigger", "x": 850, "y": 0, "width": 20, "height": 240 },
-        { "id": 11, "name": "stage-clear", "type": "stage_clear", "x": 1320, "y": 0, "width": 40, "height": 240 }
+        { "id": 3, "name": "floor", "type": "collision", "x": 0, "y": 184, "width": 1400, "height": 56 },
+        { "id": 4, "name": "left-wall", "type": "collision", "x": 0, "y": 0, "width": 16, "height": 240 },
+        { "id": 5, "name": "right-wall", "type": "collision", "x": 1384, "y": 0, "width": 16, "height": 240 }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "PlayerSpawn",
+      "type": "objectgroup",
+      "visible": false,
+      "objects": [
+        { "id": 6, "name": "player", "type": "player_spawn", "x": 76, "y": 173, "properties": [{ "name": "lane", "type": "float", "value": 0.72 }] }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "EnemySpawns",
+      "type": "objectgroup",
+      "visible": false,
+      "objects": [
+        { "id": 7, "name": "striker", "type": "enemy_spawn", "x": 330, "y": 168, "properties": [{ "name": "role", "type": "string", "value": "striker" }, { "name": "lane", "type": "float", "value": 0.7 }] },
+        { "id": 8, "name": "runner", "type": "enemy_spawn", "x": 450, "y": 182, "properties": [{ "name": "role", "type": "string", "value": "runner" }, { "name": "lane", "type": "float", "value": 0.76 }] },
+        { "id": 9, "name": "bruiser", "type": "enemy_spawn", "x": 570, "y": 163, "properties": [{ "name": "role", "type": "string", "value": "bruiser" }, { "name": "lane", "type": "float", "value": 0.68 }] },
+        { "id": 10, "name": "thrower", "type": "enemy_spawn", "x": 700, "y": 187, "properties": [{ "name": "role", "type": "string", "value": "thrower" }, { "name": "lane", "type": "float", "value": 0.78 }] }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "BossSpawn",
+      "type": "objectgroup",
+      "visible": false,
+      "objects": [
+        { "id": 11, "name": "switchblade-sora", "type": "boss_spawn", "x": 1120, "y": 173, "properties": [{ "name": "boss", "type": "string", "value": "switchblade-sora" }, { "name": "lane", "type": "float", "value": 0.72 }] }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Triggers",
+      "type": "objectgroup",
+      "visible": false,
+      "objects": [
+        { "id": 12, "name": "boss-trigger", "type": "boss_trigger", "x": 850, "y": 0, "width": 20, "height": 240 },
+        { "id": 13, "name": "stage-clear", "type": "stage_clear", "x": 1320, "y": 0, "width": 40, "height": 240 }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "CameraZones",
+      "type": "objectgroup",
+      "visible": false,
+      "objects": [
+        { "id": 14, "name": "main-camera-bounds", "type": "camera_bounds", "x": 0, "y": 0, "width": 1400, "height": 240 },
+        { "id": 15, "name": "combat-lanes", "type": "lane_bounds", "x": 0, "y": 139, "width": 1400, "height": 72 },
+        { "id": 16, "name": "stage-view", "type": "camera_zone", "x": 0, "y": 0, "width": 1400, "height": 240 }
       ]
     }
   ]

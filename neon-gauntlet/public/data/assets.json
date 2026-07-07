@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "status": "prototype-ledger",
+  "rules": [
+    "Every image/audio asset needs source, author, license, and commercial-use status before release.",
+    "Unknown or placeholder assets must be replaced or formally approved.",
+    "Every gameplay animation cycle must have a generated contact sheet before it is approved."
+  ],
+  "textures": {
+    "stage-01-bg": {
+      "file": "/assets/backgrounds/stage-01-metro-arcade.png",
+      "kind": "background",
+      "status": "prototype",
+      "source": "local prototype asset",
+      "author": "unknown",
+      "license": "unknown",
+      "commercialUse": "blocked until replaced or documented",
+      "notes": "Currently one large bitmap background. Migration target is real Tiled/LDtk layers plus licensed tilesets."
+    },
+    "player-sheet": {
+      "file": "/assets/sprites/player-sheet.png",
+      "kind": "sprite-sheet",
+      "status": "prototype",
+      "source": "local prototype asset",
+      "author": "unknown",
+      "license": "unknown",
+      "commercialUse": "blocked until replaced or documented",
+      "notes": "Manual frame rectangles are defined in /data/animations.json. Requires contact-sheet approval for every cycle."
+    },
+    "enemy-sheet": {
+      "file": "/assets/sprites/enemy-rival-sheet.png",
+      "kind": "sprite-sheet",
+      "status": "prototype",
+      "source": "local prototype asset",
+      "author": "unknown",
+      "license": "unknown",
+      "commercialUse": "blocked until replaced or documented",
+      "notes": "Walk cycle was manually replaced during prototype work. Requires ongoing contact-sheet review."
+    }
+  },
+  "audio": {
+    "music:stage-01": {
+      "file": "/assets/audio/music/stage-01-loop.wav",
+      "kind": "music",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    },
+    "sfx:punch": {
+      "file": "/assets/audio/sfx/punch.wav",
+      "kind": "sfx",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    },
+    "sfx:kick": {
+      "file": "/assets/audio/sfx/kick.wav",
+      "kind": "sfx",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    },
+    "sfx:hit": {
+      "file": "/assets/audio/sfx/hit.wav",
+      "kind": "sfx",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    },
+    "sfx:jump": {
+      "file": "/assets/audio/sfx/jump.wav",
+      "kind": "sfx",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    },
+    "sfx:hurt": {
+      "file": "/assets/audio/sfx/hurt.wav",
+      "kind": "sfx",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    },
+    "sfx:guard": {
+      "file": "/assets/audio/sfx/guard.wav",
+      "kind": "sfx",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    },
+    "sfx:stageClear": {
+      "file": "/assets/audio/sfx/stage-clear.wav",
+      "kind": "sfx",
+      "status": "placeholder",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced"
+    }
+  }
+}
