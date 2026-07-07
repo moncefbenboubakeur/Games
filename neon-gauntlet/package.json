@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "test:assets": "node tools/validate-contact-sheets.mjs",
     "test:maps": "node tools/inspect-map-art.mjs --check",
+    "test:map-art": "node tools/validate-map-art.mjs",
     "inspect:map": "node tools/inspect-map-art.mjs",
     "create:level": "node tools/create-level-from-template.mjs",
     "test:screenshots": "playwright test tests/e2e/visual.spec.ts",

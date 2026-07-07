@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "rules": [
+    "Scene plates and large prefabs must be tracked before use.",
+    "Production-approved art must have source, author, license, and commercial-use permission.",
+    "Prototype helper art may exist but must not be treated as final."
+  ],
+  "assets": [
+    {
+      "key": "stage-01-bg",
+      "map": "stage-01-metro-arcade",
+      "file": "/assets/backgrounds/stage-01-metro-arcade.png",
+      "role": "scenePlate",
+      "width": 1680,
+      "height": 900,
+      "source": "local prototype asset",
+      "author": "unknown",
+      "license": "unknown",
+      "commercialUse": "blocked until documented or replaced",
+      "approvalStatus": "prototype",
+      "reviewNotes": "Current visual-quality target for Stage 1. Source/license must be resolved before release."
+    },
+    {
+      "key": "metro-tiles",
+      "map": "shared",
+      "file": "/assets/tilesets/metro-tiles.svg",
+      "role": "tileset",
+      "width": 128,
+      "height": 64,
+      "source": "project-created prototype helper",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "prototype",
+      "reviewNotes": "Editor/debug helper only. Not production-quality visible map art."
+    }
+  ]
+}
