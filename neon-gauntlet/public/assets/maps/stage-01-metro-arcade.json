@@ -40,24 +40,14 @@
           "value": "stage-01-bg"
         },
         {
-          "name": "repeatX",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "scrollFactorX",
-          "type": "float",
-          "value": 0.36
-        },
-        {
-          "name": "scrollFactorY",
-          "type": "float",
-          "value": 1
+          "name": "mode",
+          "type": "string",
+          "value": "scenePlate"
         },
         {
           "name": "depth",
           "type": "int",
-          "value": -100
+          "value": -110
         }
       ]
     },
@@ -65,7 +55,7 @@
       "id": 2,
       "name": "BackgroundMid",
       "type": "tilelayer",
-      "visible": true,
+      "visible": false,
       "opacity": 0.58,
       "x": 0,
       "y": 0,
@@ -1398,6 +1388,11 @@
           "name": "depth",
           "type": "int",
           "value": -90
+        },
+        {
+          "name": "prototype",
+          "type": "bool",
+          "value": true
         }
       ]
     },
@@ -1405,7 +1400,7 @@
       "id": 3,
       "name": "Decor",
       "type": "tilelayer",
-      "visible": true,
+      "visible": false,
       "opacity": 0.95,
       "x": 0,
       "y": 0,
@@ -2738,6 +2733,11 @@
           "name": "depth",
           "type": "int",
           "value": -30
+        },
+        {
+          "name": "prototype",
+          "type": "bool",
+          "value": true
         }
       ]
     },
@@ -2745,7 +2745,7 @@
       "id": 4,
       "name": "Ground",
       "type": "tilelayer",
-      "visible": true,
+      "visible": false,
       "opacity": 1,
       "x": 0,
       "y": 0,
@@ -4078,6 +4078,11 @@
           "name": "depth",
           "type": "int",
           "value": -8
+        },
+        {
+          "name": "prototype",
+          "type": "bool",
+          "value": true
         }
       ]
     },
@@ -4085,7 +4090,7 @@
       "id": 5,
       "name": "Foreground",
       "type": "tilelayer",
-      "visible": true,
+      "visible": false,
       "opacity": 0.92,
       "x": 0,
       "y": 0,
@@ -5418,6 +5423,11 @@
           "name": "depth",
           "type": "int",
           "value": 820
+        },
+        {
+          "name": "prototype",
+          "type": "bool",
+          "value": true
         }
       ]
     },

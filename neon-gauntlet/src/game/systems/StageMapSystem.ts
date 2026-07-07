@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { GAME_HEIGHT } from '../constants'
+import { GAME_HEIGHT, GAME_WIDTH } from '../constants'
 import type { EnemyRole, EnemySpawnData, LevelData, TiledImageLayer, TiledMapData, TiledObject, TiledObjectLayer, TiledProperty, TiledTileLayer } from '../data/types'
 
 type PropertyValue = TiledProperty['value']
@@ -9,6 +9,8 @@ export class StageMapSystem {
   readonly worldHeight: number
   private phaserMap?: Phaser.Tilemaps.Tilemap
   private tileLayerCount = 0
+  private scenePlateCount = 0
+  private visiblePrototypeTileLayerCount = 0
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -46,6 +48,8 @@ export class StageMapSystem {
 
   render() {
     this.tileLayerCount = 0
+    this.scenePlateCount = 0
+    this.visiblePrototypeTileLayerCount = 0
     this.phaserMap = this.scene.make.tilemap({ key: this.tilemapKey })
     this.map.layers.forEach((layer) => {
       if (layer.visible === false) return
@@ -59,19 +63,40 @@ export class StageMapSystem {
     return this.tileLayerCount
   }
 
+  renderedScenePlates() {
+    return this.scenePlateCount
+  }
+
+  visiblePrototypeTileLayers() {
+    return this.visiblePrototypeTileLayerCount
+  }
+
+  totalTileLayers() {
+    return this.map.layers.filter((layer) => layer.type === 'tilelayer').length
+  }
+
   objectLayer(name: string) {
     return this.map.layers.find((layer): layer is TiledObjectLayer => layer.type === 'objectgroup' && layer.name === name)
   }
 
   private renderImageLayer(layer: TiledImageLayer) {
     const texture = this.layerString(layer, 'texture', this.fallbackLevel.background)
-    const repeatX = this.layerBoolean(layer, 'repeatX', true)
+    const mode = this.layerString(layer, 'mode', 'scenePlate')
+    const repeatX = this.layerBoolean(layer, 'repeatX', false)
     const depth = this.layerNumber(layer, 'depth', -100)
     const scrollX = this.layerNumber(layer, 'scrollFactorX', 1)
     const scrollY = this.layerNumber(layer, 'scrollFactorY', 1)
     const opacity = this.layerNumber(layer, 'opacity', layer.opacity ?? 1)
     const x = layer.offsetx ?? 0
     const y = layer.offsety ?? 0
+
+    if (mode === 'scenePlate') {
+      const image = this.scene.add.image(0, 0, texture).setOrigin(0)
+      image.setDisplaySize(GAME_WIDTH, GAME_HEIGHT)
+      image.setScrollFactor(0, 0).setDepth(depth).setAlpha(opacity)
+      this.scenePlateCount += 1
+      return
+    }
 
     const image = repeatX
       ? this.scene.add.tileSprite(x, y, this.worldWidth, GAME_HEIGHT, texture).setOrigin(0)
@@ -94,6 +119,7 @@ export class StageMapSystem {
     tileLayer.setAlpha(this.layerNumber(layer, 'opacity', layer.opacity ?? 1))
     tileLayer.setScrollFactor(1, 1)
     this.tileLayerCount += 1
+    if (this.layerBoolean(layer, 'prototype', false)) this.visiblePrototypeTileLayerCount += 1
   }
 
   private renderObjectLayer(layer: TiledObjectLayer) {

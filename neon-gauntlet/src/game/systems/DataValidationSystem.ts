@@ -120,6 +120,7 @@ export class DataValidationSystem {
     })
     const layerNames = new Set(map.layers.map((layer) => layer.name))
     requiredMapLayers.forEach((name) => this.require(layerNames.has(name), `Map layer is required: ${name}`))
+    this.require(this.hasScenePlate(map), 'Map needs at least one visible scenePlate image layer for production-quality art')
     requiredTileLayers.forEach((name) => {
       const layer = map.layers.find((item) => item.name === name)
       this.require(layer?.type === 'tilelayer', `Map layer must be a tilelayer: ${name}`)
@@ -143,6 +144,14 @@ export class DataValidationSystem {
   private static hasNamedObject(map: TiledMapData, layerName: string, name: string) {
     const layer = map.layers.find((item) => item.name === layerName && item.type === 'objectgroup')
     return layer?.type === 'objectgroup' && layer.objects.some((object) => object.name === name)
+  }
+
+  private static hasScenePlate(map: TiledMapData) {
+    return map.layers.some((layer) => (
+      layer.type === 'imagelayer'
+      && layer.visible !== false
+      && layer.properties?.some((property) => property.name === 'mode' && property.value === 'scenePlate')
+    ))
   }
 
   private static validateAudioCue(label: string, file: string, volume: number) {

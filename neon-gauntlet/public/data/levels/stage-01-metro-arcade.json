@@ -4,14 +4,38 @@
   "worldWidth": 1400,
   "background": "stage-01-bg",
   "music": "stage-01",
-  "playerSpawn": { "x": 76, "lane": 0.72 },
+  "playerSpawn": {
+    "x": 76,
+    "lane": 0.72
+  },
   "enemyWaves": [
-    { "x": 330, "lane": 0.7, "role": "striker" },
-    { "x": 450, "lane": 0.76, "role": "runner" },
-    { "x": 570, "lane": 0.68, "role": "bruiser" },
-    { "x": 700, "lane": 0.78, "role": "thrower" }
+    {
+      "x": 330,
+      "lane": 0.7,
+      "role": "striker"
+    },
+    {
+      "x": 450,
+      "lane": 0.76,
+      "role": "runner"
+    },
+    {
+      "x": 570,
+      "lane": 0.68,
+      "role": "bruiser"
+    },
+    {
+      "x": 700,
+      "lane": 0.78,
+      "role": "thrower"
+    }
   ],
-  "boss": { "id": "switchblade-sora", "x": 1120, "lane": 0.72, "spawnAfterX": 850 },
+  "boss": {
+    "id": "switchblade-sora",
+    "x": 1120,
+    "lane": 0.72,
+    "spawnAfterX": 850
+  },
   "stageClearX": 1320,
   "map": "stage-01-map"
 }

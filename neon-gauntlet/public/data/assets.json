@@ -15,7 +15,7 @@
       "author": "unknown",
       "license": "unknown",
       "commercialUse": "blocked until replaced or documented",
-      "notes": "Currently one large bitmap background. Migration target is real Tiled/LDtk layers plus licensed tilesets."
+      "notes": "Active Stage 1 scene plate because it meets the current visual quality target better than prototype tiles. Gameplay still comes from Tiled-style object layers. Source/license must be documented or replaced before release."
     },
     "metro-tiles": {
       "file": "/assets/tilesets/metro-tiles.svg",
@@ -25,7 +25,7 @@
       "author": "project prototype",
       "license": "project-internal placeholder",
       "commercialUse": "blocked until approved or replaced",
-      "notes": "First real Tiled-style tileset for Stage 1. It proves the map pipeline; final production art still needs review or replacement."
+      "notes": "Prototype/editor helper tileset only. It must not be used as the primary visible stage art until replaced with production-quality tiles/prefabs."
     },
     "player-sheet": {
       "file": "/assets/sprites/player-sheet.png",

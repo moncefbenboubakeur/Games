@@ -21,8 +21,8 @@ Unknown assets are allowed only for internal prototype work.
 
 | Key | File | Current status | Commercial status | Action |
 | --- | --- | --- | --- | --- |
-| `stage-01-bg` | `public/assets/backgrounds/stage-01-metro-arcade.png` | Prototype | Blocked | Replace with licensed Tiled/LDtk tilesets/layers or document source/license. |
-| `metro-tiles` | `public/assets/tilesets/metro-tiles.svg` | Prototype | Blocked | Project-created pipeline tileset. Approve formally or replace with final licensed tileset art before release. |
+| `stage-01-bg` | `public/assets/backgrounds/stage-01-metro-arcade.png` | Prototype scene plate | Blocked | Active visual-quality target for Stage 1. Document source/license or replace with final approved scene plate before release. |
+| `metro-tiles` | `public/assets/tilesets/metro-tiles.svg` | Prototype helper | Blocked | Keep as editor/debug helper only. Do not use as primary visible map art unless replaced with production-quality tiles/prefabs. |
 | `player-sheet` | `public/assets/sprites/player-sheet.png` | Prototype | Blocked | Replace or formally document. Generate contact sheets for every cycle. |
 | `enemy-sheet` | `public/assets/sprites/enemy-rival-sheet.png` | Prototype | Blocked | Replace or formally document. Contact sheet review required after every crop/frame edit. |
 
