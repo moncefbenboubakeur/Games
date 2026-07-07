@@ -15,6 +15,7 @@
     "test:map-art": "node tools/validate-map-art.mjs",
     "inspect:map": "node tools/inspect-map-art.mjs",
     "create:level": "node tools/create-level-from-template.mjs",
+    "capture:map": "node tools/capture-map-preview.mjs",
     "test:screenshots": "playwright test tests/e2e/visual.spec.ts",
     "update:screenshots": "playwright test tests/e2e/visual.spec.ts --update-snapshots",
     "contact-sheets": "node tools/generate-contact-sheets.mjs",
