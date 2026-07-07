@@ -46,7 +46,7 @@ export class WorldScene extends Phaser.Scene {
     const audio = this.cache.json.get('audio') as AudioData
     const fallbackLevel = this.cache.json.get('stage-01') as LevelData
     const map = this.cache.json.get('stage-01-map') as TiledMapData
-    DataValidationSystem.validateAll({ animations, combat, enemies, bosses, level: fallbackLevel, map })
+    DataValidationSystem.validateAll({ animations, combat, enemies, bosses, audio, level: fallbackLevel, map })
     this.mapSystem = new StageMapSystem(this, map, fallbackLevel)
     this.level = this.mapSystem.resolveLevel()
 

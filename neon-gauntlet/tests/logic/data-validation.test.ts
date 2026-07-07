@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { DataValidationSystem } from '../../src/game/systems/DataValidationSystem'
-import type { AnimationData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData } from '../../src/game/data/types'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData } from '../../src/game/data/types'
 
 const combat = (): CombatData => ({
   player: {
@@ -42,6 +42,19 @@ const enemies = (): EnemiesData => ({
 
 const bosses = (): BossesData => ({
   bosses: [{ id: 'switchblade-sora', name: 'Switchblade Sora', hp: 170, speed: 42, damage: 18, range: 62, cooldownMinMs: 720, cooldownMaxMs: 1180, stageIntro: 'BOSS' }],
+})
+
+const audio = (): AudioData => ({
+  music: { 'stage-01': { file: '/assets/audio/music/stage-01-loop.wav', volume: 0.26, loop: true } },
+  sfx: {
+    punch: { file: '/assets/audio/sfx/punch.wav', volume: 0.55 },
+    kick: { file: '/assets/audio/sfx/kick.wav', volume: 0.58 },
+    hit: { file: '/assets/audio/sfx/hit.wav', volume: 0.5 },
+    jump: { file: '/assets/audio/sfx/jump.wav', volume: 0.42 },
+    hurt: { file: '/assets/audio/sfx/hurt.wav', volume: 0.48 },
+    guard: { file: '/assets/audio/sfx/guard.wav', volume: 0.4 },
+    stageClear: { file: '/assets/audio/sfx/stage-clear.wav', volume: 0.62 },
+  },
 })
 
 const level = (): LevelData => ({
@@ -93,7 +106,17 @@ const map = (): TiledMapData => ({
 
 describe('DataValidationSystem', () => {
   it('accepts a complete game data bundle', () => {
-    expect(() => DataValidationSystem.validateAll({ animations: animations(), combat: combat(), enemies: enemies(), bosses: bosses(), level: level(), map: map() })).not.toThrow()
+    expect(() =>
+      DataValidationSystem.validateAll({
+        animations: animations(),
+        combat: combat(),
+        enemies: enemies(),
+        bosses: bosses(),
+        audio: audio(),
+        level: level(),
+        map: map(),
+      }),
+    ).not.toThrow()
   })
 
   it('rejects attacks without hitbox metadata', () => {
@@ -112,5 +135,15 @@ describe('DataValidationSystem', () => {
     const badLevel = level()
     badLevel.enemyWaves = [{ x: 300, lane: 0.72, role: 'runner' }]
     expect(() => DataValidationSystem.validateLevel(badLevel, enemies(), bosses())).toThrow(/unknown role/)
+  })
+
+  it('rejects missing level music cues and invalid audio paths', () => {
+    const badAudio = audio()
+    badAudio.music = {}
+    expect(() => DataValidationSystem.validateAudio(badAudio, level())).toThrow(/music cue/)
+
+    const badPath = audio()
+    badPath.sfx.punch.file = '/tmp/punch.wav'
+    expect(() => DataValidationSystem.validateAudio(badPath)).toThrow(/assets\/audio/)
   })
 })

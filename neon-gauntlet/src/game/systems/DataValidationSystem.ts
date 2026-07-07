@@ -1,16 +1,18 @@
-import type { AnimationData, BossesData, CombatData, EnemiesData, EnemyRole, LevelData, TiledMapData } from '../data/types'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, EnemyRole, LevelData, TiledMapData } from '../data/types'
 
 interface GameDataBundle {
   animations: AnimationData
   combat: CombatData
   enemies: EnemiesData
   bosses: BossesData
+  audio: AudioData
   level: LevelData
   map: TiledMapData
 }
 
 const requiredMapLayers = ['BackgroundFar', 'Ground', 'Collision', 'PlayerSpawn', 'EnemySpawns', 'BossSpawn', 'Triggers', 'CameraZones']
 const requiredActorAnimations = ['idle', 'walk', 'punch', 'kick', 'guard', 'hurt', 'jump']
+const requiredSfx = ['punch', 'kick', 'hit', 'jump', 'hurt', 'guard', 'stageClear']
 
 export class DataValidationSystem {
   static validateAll(data: GameDataBundle) {
@@ -19,6 +21,7 @@ export class DataValidationSystem {
     this.validateEnemyDefinitions(data.enemies)
     this.validateBossDefinitions(data.bosses)
     this.validateLevel(data.level, data.enemies, data.bosses)
+    this.validateAudio(data.audio, data.level)
     this.validateMap(data.map)
   }
 
@@ -93,6 +96,17 @@ export class DataValidationSystem {
     this.require(level.boss.spawnAfterX < level.stageClearX, `${level.id} boss trigger must come before stage clear`)
   }
 
+  static validateAudio(data: AudioData, level?: LevelData) {
+    requiredSfx.forEach((key) => this.require(Boolean(data.sfx[key]), `Required sfx cue is missing: ${key}`))
+    if (level) this.require(Boolean(data.music[level.music]), `${level.id} music cue is missing: ${level.music}`)
+
+    Object.entries(data.music).forEach(([key, cue]) => {
+      this.validateAudioCue(`music.${key}`, cue.file, cue.volume)
+      this.require(typeof cue.loop === 'boolean', `music.${key} loop must be boolean`)
+    })
+    Object.entries(data.sfx).forEach(([key, cue]) => this.validateAudioCue(`sfx.${key}`, cue.file, cue.volume))
+  }
+
   static validateMap(map: TiledMapData) {
     this.require(map.width > 0 && map.height > 0, 'Map width/height must be positive')
     this.require(map.tilewidth > 0 && map.tileheight > 0, 'Map tile dimensions must be positive')
@@ -113,6 +127,12 @@ export class DataValidationSystem {
   private static hasNamedObject(map: TiledMapData, layerName: string, name: string) {
     const layer = map.layers.find((item) => item.name === layerName && item.type === 'objectgroup')
     return layer?.type === 'objectgroup' && layer.objects.some((object) => object.name === name)
+  }
+
+  private static validateAudioCue(label: string, file: string, volume: number) {
+    this.require(Boolean(file), `${label} file is required`)
+    this.require(file.startsWith('/assets/audio/'), `${label} file must live under /assets/audio/`)
+    this.require(volume >= 0 && volume <= 1, `${label} volume must be between 0 and 1`)
   }
 
   private static require(condition: boolean, message: string) {

@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { SceneKeys } from '../constants'
 import type { AudioData } from '../data/types'
+import { DataValidationSystem } from '../systems/DataValidationSystem'
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -22,6 +23,7 @@ export class PreloadScene extends Phaser.Scene {
 
   create() {
     const audio = this.cache.json.get('audio') as AudioData
+    DataValidationSystem.validateAudio(audio)
     Object.entries(audio.music).forEach(([key, cue]) => this.load.audio(`music:${key}`, cue.file))
     Object.entries(audio.sfx).forEach(([key, cue]) => this.load.audio(`sfx:${key}`, cue.file))
     this.load.once(Phaser.Loader.Events.COMPLETE, () => this.scene.start(SceneKeys.Menu))
