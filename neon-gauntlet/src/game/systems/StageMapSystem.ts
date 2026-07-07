@@ -92,8 +92,8 @@ export class StageMapSystem {
 
     if (mode === 'scenePlate') {
       const image = this.scene.add.image(0, 0, texture).setOrigin(0)
-      image.setDisplaySize(GAME_WIDTH, GAME_HEIGHT)
-      image.setScrollFactor(0, 0).setDepth(depth).setAlpha(opacity)
+      image.setDisplaySize(this.worldWidth, GAME_HEIGHT)
+      image.setScrollFactor(1, 1).setDepth(depth).setAlpha(opacity)
       this.scenePlateCount += 1
       return
     }

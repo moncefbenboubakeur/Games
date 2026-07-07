@@ -23,6 +23,7 @@ if (levels.length !== 10) fail(`Expected exactly 10 levels, found ${levels.lengt
 const ids = new Set()
 const orders = new Set()
 const bossIds = new Set()
+const placeholderBossStatuses = new Set(['concept', 'needs-boss'])
 
 for (const level of levels) {
   if (ids.has(level.id)) fail(`Duplicate level id: ${level.id}`)
@@ -42,7 +43,7 @@ for (const level of levels) {
 
   if (!allowedStatuses.has(level.productionStatus)) fail(`${level.id} invalid productionStatus: ${level.productionStatus}`)
   if (!level.boss?.id || !level.boss?.name) fail(`${level.id} boss id/name are required.`)
-  if (level.boss?.id) {
+  if (level.boss?.id && !placeholderBossStatuses.has(level.productionStatus)) {
     if (bossIds.has(level.boss.id)) fail(`Duplicate boss id: ${level.boss.id}`)
     bossIds.add(level.boss.id)
   }

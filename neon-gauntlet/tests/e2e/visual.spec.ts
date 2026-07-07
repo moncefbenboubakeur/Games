@@ -19,7 +19,7 @@ test('gameplay state is available for agents', async ({ page }) => {
   await startGame(page)
   const state = await page.evaluate(() => window.__NEON_DEBUG__)
   expect(state?.player?.hp).toBe(150)
-  expect(state?.level?.name).toBe('Metro Arcade')
+  expect(state?.level?.name).toBe('China Metro Arcade')
   expect(state?.enemies.length).toBeGreaterThanOrEqual(4)
   expect(state?.assets.stage1).toBe(true)
   expect(state?.assets.tileset).toBe(true)

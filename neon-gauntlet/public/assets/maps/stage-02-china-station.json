@@ -15,7 +15,7 @@
     {
       "name": "backgroundTexture",
       "type": "string",
-      "value": "stage-01-metro-arcade-bg"
+      "value": "stage-02-china-station-bg"
     },
     {
       "name": "music",
@@ -43,7 +43,7 @@
       "id": 1,
       "name": "BackgroundFar",
       "type": "imagelayer",
-      "image": "../backgrounds/china/stage-01-metro-arcade.png",
+      "image": "../backgrounds/china/stage-02-china-station.png",
       "visible": true,
       "opacity": 1,
       "offsetx": 0,
@@ -52,7 +52,7 @@
         {
           "name": "texture",
           "type": "string",
-          "value": "stage-01-metro-arcade-bg"
+          "value": "stage-02-china-station-bg"
         },
         {
           "name": "mode",

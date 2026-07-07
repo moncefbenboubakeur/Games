@@ -23,7 +23,7 @@ The target quality is the rich scene-plate standard documented in `docs/HYBRID_M
 
 ## Art Intake Summary
 
-- `stage-01-bg` (scenePlate) - prototype; commercial use: blocked until documented or replaced
+- `stage-01-metro-arcade-bg` (scenePlate) - needs-review; commercial use: blocked until documented or replaced
 - `metro-tiles` (tileset) - prototype; commercial use: blocked until approved or replaced
 
 ## Human Review Checklist

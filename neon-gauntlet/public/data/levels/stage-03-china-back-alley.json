@@ -1,8 +1,8 @@
 {
-  "id": "stage-01-metro-arcade",
-  "name": "China Metro Arcade",
-  "worldWidth": 576,
-  "background": "stage-01-metro-arcade-bg",
+  "id": "stage-03-china-back-alley",
+  "name": "China Back Alley",
+  "worldWidth": 720,
+  "background": "stage-03-china-back-alley-bg",
   "music": "stage-01",
   "playerSpawn": {
     "x": 76,
@@ -10,32 +10,32 @@
   },
   "enemyWaves": [
     {
-      "x": 242,
+      "x": 302,
       "lane": 0.7,
       "role": "striker"
     },
     {
-      "x": 317,
+      "x": 396,
       "lane": 0.76,
       "role": "runner"
     },
     {
-      "x": 392,
+      "x": 490,
       "lane": 0.68,
       "role": "bruiser"
     },
     {
-      "x": 449,
+      "x": 562,
       "lane": 0.78,
       "role": "thrower"
     }
   ],
   "boss": {
     "id": "switchblade-sora",
-    "x": 466,
+    "x": 610,
     "lane": 0.72,
-    "spawnAfterX": 356
+    "spawnAfterX": 500
   },
-  "stageClearX": 544,
-  "map": "stage-01-metro-arcade-map"
+  "stageClearX": 688,
+  "map": "stage-03-china-back-alley-map"
 }

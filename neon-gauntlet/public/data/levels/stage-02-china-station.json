@@ -1,8 +1,8 @@
 {
-  "id": "stage-01-metro-arcade",
-  "name": "China Metro Arcade",
+  "id": "stage-02-china-station",
+  "name": "China Station",
   "worldWidth": 576,
-  "background": "stage-01-metro-arcade-bg",
+  "background": "stage-02-china-station-bg",
   "music": "stage-01",
   "playerSpawn": {
     "x": 76,
@@ -37,5 +37,5 @@
     "spawnAfterX": 356
   },
   "stageClearX": 544,
-  "map": "stage-01-metro-arcade-map"
+  "map": "stage-02-china-station-map"
 }

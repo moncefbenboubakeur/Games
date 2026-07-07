@@ -5,54 +5,66 @@
     {
       "order": 1,
       "id": "stage-01-metro-arcade",
-      "name": "Metro Arcade",
-      "scenario": "Neon arcade district after closing, rain-slick pavement, glowing storefronts, and rival crews spilling out of game halls.",
-      "artTarget": "Dense cyberpunk street scene with arcade facade, readable wet combat lane, neon reflections, and foreground rail depth.",
-      "scenePlatePrompt": "High-detail 16-bit/SNES-inspired neon arcade street, rainy night, storefront signs, arcade machines visible inside, reflective pavement, readable beat-em-up lane, no text logos from real brands.",
-      "gameplayHook": "Intro stage that teaches movement lanes, short combos, guarding, and boss trigger spacing.",
-      "boss": { "id": "switchblade-sora", "name": "Switchblade Sora" },
+      "name": "China Metro Arcade",
+      "scenario": "Rainy China arcade frontage with neon shop signs, vending machines, reflective pavement, and a clear first fight lane.",
+      "artTarget": "Dense cyberpunk China arcade street with strong neon reflections, readable floor line, and no visible prototype tile repetition.",
+      "scenePlatePrompt": "Long high-detail 16-bit China cyberpunk arcade street, rainy night, neon signs, arcade facade, reflective pavement, readable beat-em-up lane.",
+      "gameplayHook": "Intro spacing stage that teaches movement, short combos, guarding, and boss trigger distance.",
+      "boss": {
+        "id": "switchblade-sora",
+        "name": "Switchblade Sora"
+      },
       "bossMechanic": "Fast pressure boss with readable blade windups, lane dashes, and punish windows.",
       "productionStatus": "vertical-slice",
-      "nextHarnessStep": "Resolve asset license/source, improve boss behavior, and keep scene-plate review packet current."
+      "nextHarnessStep": "Use this as the active Stage 1 plate, capture responsive review shots, then tune spawns against the shorter non-stretched world width."
     },
     {
       "order": 2,
-      "id": "stage-02-rooftop-run",
-      "name": "Rooftop Run",
-      "scenario": "Rainy rooftops above the arcade district with billboard glow, vents, water towers, and narrow skybridge transitions.",
-      "artTarget": "Layered skyline parallax, rooftop foreground silhouettes, wet surfaces, and strong moon/neon rim light.",
-      "scenePlatePrompt": "SNES beat-em-up rooftop level, rainy cyberpunk skyline, billboards, vents, water towers, distant towers, wet roof reflections, dramatic parallax, readable combat path.",
-      "gameplayHook": "Wind gust timing and edge-safe lane pressure without platforming frustration.",
-      "boss": { "id": "kairo-the-kite", "name": "Kairo the Kite" },
-      "bossMechanic": "Leaping boss who uses wind-up dive kicks and retreats to billboard shadows.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Generate scaffold, produce scene plate, then add rooftop-specific camera and hazard objects."
+      "id": "stage-02-china-station",
+      "name": "China Station",
+      "scenario": "Neon subway entrance and station wall with twin stairways, vending machines, wet concrete, and a compact ambush space.",
+      "artTarget": "Finished China metro station plate with readable stairs as background only, clear combat floor, and strong magenta/cyan light pools.",
+      "scenePlatePrompt": "Long high-detail 16-bit China cyberpunk subway station exterior, twin stair entrances, vending machines, rainy reflections, readable beat-em-up lane.",
+      "gameplayHook": "Stairwell ambush waves enter from both sides while the player controls the central lane.",
+      "boss": {
+        "id": "switchblade-sora",
+        "name": "Switchblade Sora"
+      },
+      "bossMechanic": "Temporary placeholder boss until a China station boss is designed and reviewed.",
+      "productionStatus": "needs-boss",
+      "nextHarnessStep": "Add runtime level selection and design a station-specific boss before approval."
     },
     {
       "order": 3,
-      "id": "stage-03-midnight-market",
-      "name": "Midnight Market",
-      "scenario": "Crowded night market with shuttered food stalls, lanterns, rolling carts, tarps, and spectators clearing out of the fight lane.",
-      "artTarget": "Warm/cool contrast with dense stalls, hanging lights, signs, and believable civilian background behavior.",
-      "scenePlatePrompt": "Pixel-art midnight street market, food stalls, lanterns, tarps, crates, rolling carts, wet stone street, spectators in background, vibrant but readable beat-em-up lane.",
-      "gameplayHook": "Rolling cart hazards and crowd spacing that forces enemies to approach from staggered lanes.",
-      "boss": { "id": "mika-cartwheel", "name": "Mika Cartwheel" },
-      "bossMechanic": "Acrobatic boss using cart rebounds, low sweeps, and clear recovery windows.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Design prop/prefab library for stalls and carts before map generation."
+      "id": "stage-03-china-back-alley",
+      "name": "China Back Alley",
+      "scenario": "Narrow China service alley with repair bays, shuttered shops, stacked crates, and wet neon reflections.",
+      "artTarget": "Moody alley depth with a central vanishing point, readable foreground lane, and dense production detail without blocking actors.",
+      "scenePlatePrompt": "Long high-detail 16-bit China cyberpunk back alley, repair garages, crates, neon signs, rainy pavement, readable beat-em-up lane.",
+      "gameplayHook": "Tighter lane pressure with enemies using shop-door entrances and crate cover.",
+      "boss": {
+        "id": "switchblade-sora",
+        "name": "Switchblade Sora"
+      },
+      "bossMechanic": "Temporary placeholder boss until alley-specific boss behavior is authored.",
+      "productionStatus": "needs-boss",
+      "nextHarnessStep": "Add prop/hazard object layers for crates and side-door enemy entrances."
     },
     {
       "order": 4,
-      "id": "stage-04-transit-tunnels",
-      "name": "Transit Tunnels",
-      "scenario": "Underground transit platform and tunnel maintenance zone with warning lamps, passing trains, and echoing concrete.",
-      "artTarget": "Industrial depth, animated train background, safety lights, platform edge readability.",
-      "scenePlatePrompt": "16-bit underground transit tunnel, platform lights, warning signs, maintenance pipes, passing train blur, concrete floor, readable combat lane, dramatic shadows.",
-      "gameplayHook": "Passing train light sweeps telegraph enemy waves and brief visibility changes.",
-      "boss": { "id": "brakepoint-bruno", "name": "Brakepoint Bruno" },
-      "bossMechanic": "Heavy grappler boss with charge tells synced to warning lights.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Define train-light background actor rules and boss charge hitboxes."
+      "id": "stage-04-china-night-market",
+      "name": "China Night Market",
+      "scenario": "Late-night China food and shop street with restaurant counters, lantern warmth, pharmacy lights, and wet open fight space.",
+      "artTarget": "Warm/cool neon market plate with plenty of floor readability and no fake repeated wall pattern.",
+      "scenePlatePrompt": "Long high-detail 16-bit China night market street, food counters, neon shop signs, rain reflections, open beat-em-up combat lane.",
+      "gameplayHook": "Market waves use staggered side entrances and rolling cart hazards after prop tooling exists.",
+      "boss": {
+        "id": "switchblade-sora",
+        "name": "Switchblade Sora"
+      },
+      "bossMechanic": "Temporary placeholder boss until market cart-boss behavior is authored.",
+      "productionStatus": "needs-boss",
+      "nextHarnessStep": "Add market prop semantics and replace placeholder boss data."
     },
     {
       "order": 5,
@@ -62,7 +74,10 @@
       "artTarget": "Hot orange/cyan factory contrast, layered machinery, moving conveyor props, safe readable foreground.",
       "scenePlatePrompt": "SNES pixel-art solar foundry, glowing furnaces, conveyor belts, catwalks, molten reflections, industrial machines, readable beat-em-up floor.",
       "gameplayHook": "Conveyor lane drift and timed heat vents that enemies also respect.",
-      "boss": { "id": "forge-aya", "name": "Forge Aya" },
+      "boss": {
+        "id": "forge-aya",
+        "name": "Forge Aya"
+      },
       "bossMechanic": "Armored boss using heat vent zones and hammer slam tells.",
       "productionStatus": "concept",
       "nextHarnessStep": "Prototype conveyor/hazard object layers and heat vent telegraph visuals."
@@ -75,7 +90,10 @@
       "artTarget": "High-altitude depth, transparent bridge surfaces, distant traffic, and bright ad glow without losing silhouettes.",
       "scenePlatePrompt": "Pixel-art futuristic skybridge, glass floor, tower city depth, holographic signs, drones, high wind, night lights, readable combat lane.",
       "gameplayHook": "Drone projectiles and wind-lane nudges with clear warning effects.",
-      "boss": { "id": "drone-queen-nova", "name": "Drone Queen Nova" },
+      "boss": {
+        "id": "drone-queen-nova",
+        "name": "Drone Queen Nova"
+      },
       "bossMechanic": "Controller boss that commands drones and exposes weak windows after overcommit.",
       "productionStatus": "concept",
       "nextHarnessStep": "Add projectile/hurtbox review tooling before boss implementation."
@@ -88,7 +106,10 @@
       "artTarget": "Organic neon shapes, transparent hologram layers, calm-but-strange color palette.",
       "scenePlatePrompt": "SNES-style holographic data garden, glowing digital trees, floating particles, glass floor, security avatars, cyber botanical scene, readable beat-em-up lane.",
       "gameplayHook": "Illusion decoys and predictable teleport pads that never break visual believability.",
-      "boss": { "id": "cipher-iris", "name": "Cipher Iris" },
+      "boss": {
+        "id": "cipher-iris",
+        "name": "Cipher Iris"
+      },
       "bossMechanic": "Decoy boss with clear tells distinguishing real body from projection.",
       "productionStatus": "concept",
       "nextHarnessStep": "Create actor-state rules for decoys before map playtest."
@@ -101,7 +122,10 @@
       "artTarget": "Storm lighting, container depth, water motion, crane silhouettes, readable dock floor.",
       "scenePlatePrompt": "16-bit stormy cyberpunk harbor, shipping containers, cranes, wet dock, warning beacons, ocean waves, rain, readable beat-em-up lane.",
       "gameplayHook": "Lightning flashes reveal incoming attackers and crane hooks create temporary lane blockers.",
-      "boss": { "id": "harbor-hale", "name": "Harbor Hale" },
+      "boss": {
+        "id": "harbor-hale",
+        "name": "Harbor Hale"
+      },
       "bossMechanic": "Long-range chain boss who pulls props and punishes bad spacing.",
       "productionStatus": "concept",
       "nextHarnessStep": "Design crane/hook object layer semantics and lightning visual review."
@@ -114,7 +138,10 @@
       "artTarget": "Vertical tower drama, broadcast equipment, animated signal pulses, final-ascent mood.",
       "scenePlatePrompt": "SNES pixel-art broadcast tower, antenna room, signal panels, elevator doors, city lights below, electronic glow, readable combat lane.",
       "gameplayHook": "Signal pulse waves interrupt careless attacks but are clearly telegraphed.",
-      "boss": { "id": "signal-vex", "name": "Signal Vex" },
+      "boss": {
+        "id": "signal-vex",
+        "name": "Signal Vex"
+      },
       "bossMechanic": "Technical boss using signal pulses, delayed mines, and punishable channeling.",
       "productionStatus": "concept",
       "nextHarnessStep": "Add signal-pulse timing data and visual baseline cases."
@@ -127,7 +154,10 @@
       "artTarget": "Final-stage spectacle with layered machinery, reactor glow, dramatic foreground silhouettes, and boss-arena clarity.",
       "scenePlatePrompt": "16-bit final cyberpunk reactor core arena, glowing neon energy, cables, machinery, holographic displays, dramatic shadows, readable boss fight floor.",
       "gameplayHook": "Multi-phase arena locks with reactor surge patterns and changing safe lanes.",
-      "boss": { "id": "zero-volt-ren", "name": "Zero Volt Ren" },
+      "boss": {
+        "id": "zero-volt-ren",
+        "name": "Zero Volt Ren"
+      },
       "bossMechanic": "Three-phase final boss with readable surges, summons, and clear vulnerable windows.",
       "productionStatus": "concept",
       "nextHarnessStep": "Do not build until phases 2-9 prove boss/state/combat systems are production-ready."

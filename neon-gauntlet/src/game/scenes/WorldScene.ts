@@ -195,7 +195,7 @@ export class WorldScene extends Phaser.Scene {
       },
       input: this.inputSystem.debugSnapshot(),
       assets: {
-        stage1: this.textures.exists('stage-01-bg'),
+        stage1: this.textures.exists('stage-01-metro-arcade-bg'),
         tileset: this.textures.exists('metro-tiles'),
         player: this.textures.exists('player-sheet'),
         enemy: this.textures.exists('enemy-sheet'),

@@ -46,6 +46,46 @@
       "license": "unknown",
       "commercialUse": "blocked until replaced or documented",
       "notes": "Walk cycle was manually replaced during prototype work. Requires ongoing contact-sheet review."
+    },
+    "stage-01-metro-arcade-bg": {
+      "file": "/assets/backgrounds/china/stage-01-metro-arcade.png",
+      "kind": "background",
+      "status": "needs-review",
+      "source": "Local generated China long background promoted from public/assets/backgrounds/Temp/long/Asia/China/ChatGPT Image Jul 8, 2026, 01_20_21 AM.png",
+      "author": "project-generated asset provided by Moncef Benboubakeur",
+      "license": "pending project approval",
+      "commercialUse": "blocked until documented or replaced",
+      "notes": "Active China long level plate. Needs responsive screenshot review and release licensing decision before production approval."
+    },
+    "stage-02-china-station-bg": {
+      "file": "/assets/backgrounds/china/stage-02-china-station.png",
+      "kind": "background",
+      "status": "needs-review",
+      "source": "Local generated China long background promoted from public/assets/backgrounds/Temp/long/Asia/China/ChatGPT Image Jul 8, 2026, 01_07_54 AM.png",
+      "author": "project-generated asset provided by Moncef Benboubakeur",
+      "license": "pending project approval",
+      "commercialUse": "blocked until documented or replaced",
+      "notes": "Active China long level plate. Needs responsive screenshot review and release licensing decision before production approval."
+    },
+    "stage-03-china-back-alley-bg": {
+      "file": "/assets/backgrounds/china/stage-03-china-back-alley.png",
+      "kind": "background",
+      "status": "needs-review",
+      "source": "Local generated China long background promoted from public/assets/backgrounds/Temp/long/Asia/China/ChatGPT Image Jul 8, 2026, 01_11_26 AM.png",
+      "author": "project-generated asset provided by Moncef Benboubakeur",
+      "license": "pending project approval",
+      "commercialUse": "blocked until documented or replaced",
+      "notes": "Active China long level plate. Needs responsive screenshot review and release licensing decision before production approval."
+    },
+    "stage-04-china-night-market-bg": {
+      "file": "/assets/backgrounds/china/stage-04-china-night-market.png",
+      "kind": "background",
+      "status": "needs-review",
+      "source": "Local generated China long background promoted from public/assets/backgrounds/Temp/long/Asia/China/ChatGPT Image Jul 8, 2026, 01_03_50 AM.png",
+      "author": "project-generated asset provided by Moncef Benboubakeur",
+      "license": "pending project approval",
+      "commercialUse": "blocked until documented or replaced",
+      "notes": "Active China long level plate. Needs responsive screenshot review and release licensing decision before production approval."
     }
   },
   "audio": {

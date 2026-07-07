@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:assets": "node tools/validate-contact-sheets.mjs",
-    "test:maps": "node tools/inspect-map-art.mjs --check",
+    "test:maps": "node tools/inspect-map-art.mjs --check --all",
     "test:map-art": "node tools/validate-map-art.mjs",
     "test:levels": "node tools/validate-level-production-plan.mjs",
     "inspect:map": "node tools/inspect-map-art.mjs",
