@@ -101,6 +101,26 @@ test('final China background clears to the replay screen', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('StageClearScene'))).toBe(true)
 })
 
+test('late China bosses spawn with their stage identity', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => {
+    window.__NEON_GAME__?.scene.stop('WorldScene')
+    window.__NEON_GAME__?.scene.stop('UIScene')
+    window.__NEON_GAME__?.scene.start('WorldScene', { levelId: 'stage-04-china-night-market' })
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-04-china-night-market')
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      level: { boss: { spawnAfterX: number } }
+      player: { x: number }
+    }
+    world.player.x = world.level.boss.spawnAfterX + 4
+  })
+
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.id)).toBe('lantern-mai')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.name)).toBe('Lantern Mai')
+})
+
 test('click replays from stage clear', async ({ page }) => {
   await startGame(page)
   await page.evaluate(() => {

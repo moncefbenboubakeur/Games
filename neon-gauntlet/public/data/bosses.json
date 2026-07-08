@@ -9,7 +9,13 @@
       "range": 62,
       "cooldownMinMs": 720,
       "cooldownMaxMs": 1180,
-      "stageIntro": "BOSS  Switchblade Sora"
+      "stageIntro": "BOSS  Switchblade Sora",
+      "preferredAttack": "punch",
+      "laneSpeed": 0.2,
+      "telegraphMs": 250,
+      "attackDurationMs": 280,
+      "scale": 1.2,
+      "tint": "#ffd166"
     },
     {
       "id": "turnstile-ren",
@@ -20,7 +26,13 @@
       "range": 54,
       "cooldownMinMs": 560,
       "cooldownMaxMs": 980,
-      "stageIntro": "BOSS  Turnstile Ren"
+      "stageIntro": "BOSS  Turnstile Ren",
+      "preferredAttack": "punch",
+      "laneSpeed": 0.3,
+      "telegraphMs": 210,
+      "attackDurationMs": 240,
+      "scale": 1.1,
+      "tint": "#6ee7ff"
     },
     {
       "id": "iron-wei",
@@ -31,7 +43,13 @@
       "range": 70,
       "cooldownMinMs": 850,
       "cooldownMaxMs": 1320,
-      "stageIntro": "BOSS  Iron Wei"
+      "stageIntro": "BOSS  Iron Wei",
+      "preferredAttack": "kick",
+      "laneSpeed": 0.13,
+      "telegraphMs": 360,
+      "attackDurationMs": 360,
+      "scale": 1.38,
+      "tint": "#ff9f43"
     },
     {
       "id": "lantern-mai",
@@ -42,7 +60,13 @@
       "range": 58,
       "cooldownMinMs": 500,
       "cooldownMaxMs": 860,
-      "stageIntro": "BOSS  Lantern Mai"
+      "stageIntro": "BOSS  Lantern Mai",
+      "preferredAttack": "punch",
+      "laneSpeed": 0.28,
+      "telegraphMs": 190,
+      "attackDurationMs": 250,
+      "scale": 1.25,
+      "tint": "#ff5cab"
     }
   ]
 }

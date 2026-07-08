@@ -10,17 +10,25 @@ export class Boss extends Enemy {
 
   constructor(scene: Phaser.Scene, x: number, lane: number, boss: BossDefinition, animations: AnimationSystem, combat: CombatSystem) {
     const asEnemy: EnemyDefinition = {
-      id: 'bruiser',
+      id: boss.preferredAttack === 'kick' ? 'bruiser' : 'striker',
       hp: boss.hp,
       speed: boss.speed,
       damage: boss.damage,
       range: boss.range,
       cooldownMinMs: boss.cooldownMinMs,
       cooldownMaxMs: boss.cooldownMaxMs,
-      scale: 1.28,
+      scale: boss.scale ?? 1.28,
+      preferredAttack: boss.preferredAttack,
+      laneSpeed: boss.laneSpeed,
+      telegraphMs: boss.telegraphMs,
+      attackDurationMs: boss.attackDurationMs,
     }
     super(scene, x, lane, asEnemy, animations, combat)
     this.bossName = boss.name
-    this.setTint(0xffd166)
+    this.setTint(Boss.tintNumber(boss.tint))
+  }
+
+  private static tintNumber(tint = '#ffd166') {
+    return Number.parseInt(tint.replace('#', ''), 16)
   }
 }

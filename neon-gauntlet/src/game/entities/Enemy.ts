@@ -68,12 +68,12 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
         this.moving = true
       }
       if (Math.abs(dy) > 0.025) {
-        this.lane += Math.sign(dy) * 0.18 * dt / 1000
+        this.lane += Math.sign(dy) * (this.def.laneSpeed ?? 0.18) * dt / 1000
         this.moving = true
       }
     }
     if (this.cooldownMs <= 0 && this.telegraphMs <= 0 && this.attackMs <= 0 && this.canStartAttack(player)) {
-      this.telegraphMs = this.def.id === 'thrower' ? 430 : 260
+      this.telegraphMs = this.def.telegraphMs ?? (this.def.id === 'thrower' ? 430 : 260)
       this.cooldownMs = Phaser.Math.Between(this.def.cooldownMinMs, this.def.cooldownMaxMs)
     }
 
@@ -82,7 +82,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
       if (!this.canStartAttack(player)) {
         this.cooldownMs = Math.min(this.cooldownMs, 180)
       } else {
-        this.attackMs = 280
+        this.attackMs = this.def.attackDurationMs ?? 280
         player.hurt(this.def.damage, this.face * 22)
       }
     }
@@ -133,7 +133,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
       telegraphMs: this.telegraphMs,
       attackMs: this.attackMs,
       moving: this.moving,
-      preferredAttack: this.def.id === 'bruiser' ? 'kick' : 'punch',
+      preferredAttack: this.def.preferredAttack ?? (this.def.id === 'bruiser' ? 'kick' : 'punch'),
     })
     let index = 0
 

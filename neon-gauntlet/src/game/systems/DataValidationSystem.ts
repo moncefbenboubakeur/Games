@@ -15,6 +15,7 @@ const requiredTileLayers = ['BackgroundMid', 'Decor', 'Ground', 'Foreground']
 const allowedImageLayerModes = ['scenePlate', 'parallaxPlate', 'tile']
 const requiredActorAnimations = ['idle', 'walk', 'punch', 'kick', 'guard', 'hurt', 'jump']
 const requiredSfx = ['punch', 'kick', 'hit', 'jump', 'hurt', 'guard', 'stageClear']
+const allowedPreferredAttacks = ['punch', 'kick']
 
 export class DataValidationSystem {
   static validateAll(data: GameDataBundle) {
@@ -70,6 +71,7 @@ export class DataValidationSystem {
       this.require(enemy.speed > 0, `${enemy.id} speed must be positive`)
       this.require(enemy.range > 0, `${enemy.id} range must be positive`)
       this.require(enemy.scale > 0, `${enemy.id} scale must be positive`)
+      this.validateBehaviorTuning(enemy.id, enemy)
     })
   }
 
@@ -82,6 +84,9 @@ export class DataValidationSystem {
       this.require(boss.hp > 0, `${boss.id} hp must be positive`)
       this.require(boss.speed > 0, `${boss.id} speed must be positive`)
       this.require(boss.range > 0, `${boss.id} range must be positive`)
+      this.validateBehaviorTuning(boss.id, boss)
+      if (boss.scale !== undefined) this.require(boss.scale > 0, `${boss.id} scale must be positive`)
+      if (boss.tint !== undefined) this.require(/^#?[0-9a-fA-F]{6}$/.test(boss.tint), `${boss.id} tint must be a 6 digit hex color`)
     })
   }
 
@@ -170,6 +175,23 @@ export class DataValidationSystem {
     this.require(Boolean(file), `${label} file is required`)
     this.require(file.startsWith('/assets/audio/'), `${label} file must live under /assets/audio/`)
     this.require(volume >= 0 && volume <= 1, `${label} volume must be between 0 and 1`)
+  }
+
+  private static validateBehaviorTuning(
+    label: string,
+    data: {
+      preferredAttack?: string
+      laneSpeed?: number
+      telegraphMs?: number
+      attackDurationMs?: number
+    },
+  ) {
+    if (data.preferredAttack !== undefined) {
+      this.require(allowedPreferredAttacks.includes(data.preferredAttack), `${label} preferredAttack must be punch or kick`)
+    }
+    if (data.laneSpeed !== undefined) this.require(data.laneSpeed > 0, `${label} laneSpeed must be positive`)
+    if (data.telegraphMs !== undefined) this.require(data.telegraphMs > 0, `${label} telegraphMs must be positive`)
+    if (data.attackDurationMs !== undefined) this.require(data.attackDurationMs > 0, `${label} attackDurationMs must be positive`)
   }
 
   private static require(condition: boolean, message: string) {

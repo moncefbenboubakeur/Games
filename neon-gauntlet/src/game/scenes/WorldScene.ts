@@ -278,6 +278,7 @@ export class WorldScene extends Phaser.Scene {
       title: 'Neon Gauntlet',
       player: { x: this.player.x, hp: this.player.hp },
       level: { ...this.level, index: this.levelIndex, exitReady: this.exitReady },
+      boss: this.boss ? { id: this.level.boss.id, name: this.boss.bossName, hp: this.boss.hp, x: this.boss.x } : null,
       enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({ x: enemy.x, hp: enemy.hp, active: enemy.active })),
       combat: {
         playerAttack: activeAttack

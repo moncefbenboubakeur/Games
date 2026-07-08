@@ -70,6 +70,10 @@ export interface EnemyDefinition {
   cooldownMinMs: number
   cooldownMaxMs: number
   scale: number
+  preferredAttack?: 'punch' | 'kick'
+  laneSpeed?: number
+  telegraphMs?: number
+  attackDurationMs?: number
 }
 
 export interface EnemiesData {
@@ -86,6 +90,12 @@ export interface BossDefinition {
   cooldownMinMs: number
   cooldownMaxMs: number
   stageIntro: string
+  preferredAttack?: 'punch' | 'kick'
+  laneSpeed?: number
+  telegraphMs?: number
+  attackDurationMs?: number
+  scale?: number
+  tint?: string
 }
 
 export interface BossesData {

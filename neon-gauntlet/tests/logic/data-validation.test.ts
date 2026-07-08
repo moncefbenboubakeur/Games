@@ -41,7 +41,25 @@ const enemies = (): EnemiesData => ({
 })
 
 const bosses = (): BossesData => ({
-  bosses: [{ id: 'switchblade-sora', name: 'Switchblade Sora', hp: 170, speed: 42, damage: 18, range: 62, cooldownMinMs: 720, cooldownMaxMs: 1180, stageIntro: 'BOSS' }],
+  bosses: [
+    {
+      id: 'switchblade-sora',
+      name: 'Switchblade Sora',
+      hp: 170,
+      speed: 42,
+      damage: 18,
+      range: 62,
+      cooldownMinMs: 720,
+      cooldownMaxMs: 1180,
+      stageIntro: 'BOSS',
+      preferredAttack: 'punch',
+      laneSpeed: 0.2,
+      telegraphMs: 250,
+      attackDurationMs: 280,
+      scale: 1.2,
+      tint: '#ffd166',
+    },
+  ],
 })
 
 const audio = (): AudioData => ({
@@ -183,6 +201,20 @@ describe('DataValidationSystem', () => {
     const badLevel = level()
     badLevel.enemyWaves = [{ x: 300, lane: 0.72, role: 'runner' }]
     expect(() => DataValidationSystem.validateLevel(badLevel, enemies(), bosses())).toThrow(/unknown role/)
+  })
+
+  it('rejects invalid boss behavior tuning', () => {
+    const badAttack = bosses()
+    badAttack.bosses[0].preferredAttack = 'guard' as 'punch'
+    expect(() => DataValidationSystem.validateBossDefinitions(badAttack)).toThrow(/preferredAttack/)
+
+    const badTint = bosses()
+    badTint.bosses[0].tint = 'gold'
+    expect(() => DataValidationSystem.validateBossDefinitions(badTint)).toThrow(/tint/)
+
+    const badLaneSpeed = bosses()
+    badLaneSpeed.bosses[0].laneSpeed = 0
+    expect(() => DataValidationSystem.validateBossDefinitions(badLaneSpeed)).toThrow(/laneSpeed/)
   })
 
   it('rejects missing level music cues and invalid audio paths', () => {
