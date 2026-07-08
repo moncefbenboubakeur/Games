@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { SceneKeys } from '../constants'
+import { CHINA_CHAPTER_LEVELS } from '../data/chinaChapter'
 import type { AudioData } from '../data/types'
 import { DataValidationSystem } from '../systems/DataValidationSystem'
 
@@ -9,7 +10,12 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('stage-01-metro-arcade-bg', '/assets/backgrounds/china/stage-01-metro-arcade.png')
+    CHINA_CHAPTER_LEVELS.forEach((level) => {
+      this.load.image(level.backgroundKey, level.backgroundFile)
+      this.load.json(level.levelKey, level.levelFile)
+      this.load.json(level.mapKey, level.mapFile)
+      this.load.tilemapTiledJSON(level.tilemapKey, level.mapFile)
+    })
     this.load.svg('metro-tiles', '/assets/tilesets/metro-tiles.svg', { width: 128, height: 64 })
     this.load.image('player-sheet', '/assets/sprites/player-sheet.png')
     this.load.image('enemy-sheet', '/assets/sprites/enemy-rival-sheet.png')
@@ -18,9 +24,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json('enemies', '/data/enemies.json')
     this.load.json('bosses', '/data/bosses.json')
     this.load.json('audio', '/data/audio.json')
-    this.load.json('stage-01', '/data/levels/stage-01-metro-arcade.json')
-    this.load.json('stage-01-map', '/assets/maps/stage-01-metro-arcade.json')
-    this.load.tilemapTiledJSON('stage-01-tilemap', '/assets/maps/stage-01-metro-arcade.json')
   }
 
   create() {

@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
+import { firstChinaLevel } from '../data/chinaChapter'
 
 export class MenuScene extends Phaser.Scene {
   constructor() {
@@ -40,7 +41,10 @@ export class MenuScene extends Phaser.Scene {
     const begin = () => {
       window.removeEventListener('keydown', keyBegin)
       window.removeEventListener('pointerdown', begin)
-      this.scene.start(SceneKeys.World)
+      const firstLevel = firstChinaLevel()
+      this.registry.set('currentLevelId', firstLevel.id)
+      this.registry.set('chapterScore', 0)
+      this.scene.start(SceneKeys.World, { levelId: firstLevel.id, score: 0 })
     }
     const keyBegin = (event: KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') begin()

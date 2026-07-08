@@ -22,6 +22,7 @@ export class AudioSystem {
     if (!this.unlocked || this.muted) return
     const cue = this.data.music[key]
     if (!cue || this.music?.isPlaying) return
+    this.scene.sound.stopByKey(`music:${key}`)
     this.music = this.scene.sound.add(`music:${key}`, { loop: cue.loop, volume: cue.volume })
     this.music.play()
   }

@@ -9,7 +9,7 @@ declare global {
     __NEON_DEBUG__?: {
       title: string
       player: { x: number; hp: number }
-      level: { name: string }
+      level: { id: string; name: string; index?: number; stageClearX?: number; exitReady?: boolean }
       enemies: Array<{ x: number; hp: number; active?: boolean }>
       combat?: {
         playerAttack: null | {

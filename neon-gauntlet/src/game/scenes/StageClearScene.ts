@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
+import { firstChinaLevel } from '../data/chinaChapter'
 
 export class StageClearScene extends Phaser.Scene {
   private replayStarted = false
@@ -19,7 +20,7 @@ export class StageClearScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#050711')
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 22, 'STAGE CLEAR', { fontFamily: 'monospace', fontSize: '24px', color: '#61ff6a' }).setOrigin(0.5)
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 10, `Score ${data.score || 0}`, { fontFamily: 'monospace', fontSize: '13px', color: '#ffd166' }).setOrigin(0.5)
-    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 34, 'Press Enter to replay', { fontFamily: 'monospace', fontSize: '10px', color: '#dff6ff' }).setOrigin(0.5)
+    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 34, 'Press Enter to replay chapter', { fontFamily: 'monospace', fontSize: '10px', color: '#dff6ff' }).setOrigin(0.5)
     this.input.keyboard?.once('keydown-ENTER', () => this.replay())
     this.input.keyboard?.once('keydown-SPACE', () => this.replay())
     this.input.once('pointerdown', () => this.replay())
@@ -36,6 +37,9 @@ export class StageClearScene extends Phaser.Scene {
     this.replayStarted = true
     window.removeEventListener('keydown', this.replayFromKeyboard)
     window.removeEventListener('pointerdown', this.replayFromPointer)
-    this.scene.start(SceneKeys.World)
+    const firstLevel = firstChinaLevel()
+    this.registry.set('currentLevelId', firstLevel.id)
+    this.registry.set('chapterScore', 0)
+    this.scene.start(SceneKeys.World, { levelId: firstLevel.id, score: 0 })
   }
 }

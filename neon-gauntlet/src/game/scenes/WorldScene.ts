@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
-import { SceneKeys } from '../constants'
+import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
+import { chinaLevelById, chinaLevelIndex, nextChinaLevel } from '../data/chinaChapter'
 import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData } from '../data/types'
 import { Boss } from '../entities/Boss'
 import { Enemy } from '../entities/Enemy'
@@ -25,11 +26,14 @@ export class WorldScene extends Phaser.Scene {
   private enemies: Enemy[] = []
   private boss?: Boss
   private level!: LevelData
+  private levelIndex = 0
   private mapSystem!: StageMapSystem
   private score = 0
   private bossSpawned = false
   private stageCleared = false
   private frozen = false
+  private exitReady = false
+  private exitArrow?: Phaser.GameObjects.Text
   private save = new SaveAdapter()
   private readonly playSfx = (key: string) => this.audioSystem.playSfx(key)
 
@@ -37,17 +41,20 @@ export class WorldScene extends Phaser.Scene {
     super(SceneKeys.World)
   }
 
-  create() {
-    this.resetRunState()
+  create(data: { levelId?: string; score?: number } = {}) {
+    this.resetRunState(data.score ?? Number(this.registry.get('chapterScore') || 0))
+    const levelRef = chinaLevelById(data.levelId || String(this.registry.get('currentLevelId') || ''))
+    this.levelIndex = chinaLevelIndex(levelRef.id)
+    this.registry.set('currentLevelId', levelRef.id)
     const animations = this.cache.json.get('animations') as AnimationData
     const combat = this.cache.json.get('combat') as CombatData
     const enemies = this.cache.json.get('enemies') as EnemiesData
     const bosses = this.cache.json.get('bosses') as BossesData
     const audio = this.cache.json.get('audio') as AudioData
-    const fallbackLevel = this.cache.json.get('stage-01') as LevelData
-    const map = this.cache.json.get('stage-01-map') as TiledMapData
+    const fallbackLevel = this.cache.json.get(levelRef.levelKey) as LevelData
+    const map = this.cache.json.get(levelRef.mapKey) as TiledMapData
     DataValidationSystem.validateAll({ animations, combat, enemies, bosses, audio, level: fallbackLevel, map })
-    this.mapSystem = new StageMapSystem(this, map, fallbackLevel)
+    this.mapSystem = new StageMapSystem(this, map, fallbackLevel, levelRef.tilemapKey)
     this.level = this.mapSystem.resolveLevel()
 
     this.animationSystem = new AnimationSystem(this, animations)
@@ -60,6 +67,7 @@ export class WorldScene extends Phaser.Scene {
     this.registry.set('worldScene', this)
 
     this.mapSystem.render()
+    this.createExitArrow()
 
     this.player = new Player(this, this.level.playerSpawn.x, this.level.playerSpawn.lane, this.animationSystem, this.combat, combat)
     const spawner = new SpawnSystem(this, this.animationSystem, this.combat, enemies.roles, bosses.bosses)
@@ -109,13 +117,16 @@ export class WorldScene extends Phaser.Scene {
     return this.audioSystem.toggleMute()
   }
 
-  private resetRunState() {
+  private resetRunState(score = 0) {
     this.enemies = []
     this.boss = undefined
-    this.score = 0
+    this.score = score
     this.bossSpawned = false
     this.stageCleared = false
     this.frozen = false
+    this.exitReady = false
+    this.exitArrow?.destroy()
+    this.exitArrow = undefined
     this.events.off('sfx', this.playSfx)
     this.combatDebug?.destroy()
   }
@@ -152,13 +163,68 @@ export class WorldScene extends Phaser.Scene {
 
   private handleStageClear() {
     if (this.stageCleared) return
-    const livingEnemies = this.enemies.some((enemy) => enemy.hp > 0)
-    const livingBoss = this.boss && this.boss.hp > 0
-    if (this.player.x < this.level.stageClearX || livingEnemies || livingBoss) return
+    this.exitReady = !this.hasLivingThreats()
+    this.updateExitArrow()
+    if (!this.exitReady || this.player.x < this.level.stageClearX) return
     this.stageCleared = true
     this.save.publishResult({ score: this.score, stage: this.level.id, completed: true })
+    this.registry.set('chapterScore', this.score)
+    const nextLevel = nextChinaLevel(this.level.id)
+    if (!nextLevel) {
+      this.scene.stop(SceneKeys.UI)
+      this.scene.start(SceneKeys.StageClear, { score: this.score })
+      return
+    }
+    this.startLevelTransfer(nextLevel.id)
+  }
+
+  private hasLivingThreats() {
+    return this.enemies.some((enemy) => enemy.hp > 0) || Boolean(this.boss && this.boss.hp > 0)
+  }
+
+  private createExitArrow() {
+    this.exitArrow = this.add.text(GAME_WIDTH - 118, 112, 'GO >>>', {
+      fontFamily: 'monospace',
+      fontSize: '16px',
+      color: '#ffd400',
+      stroke: '#4a2500',
+      strokeThickness: 6,
+      backgroundColor: '#120900',
+      padding: { left: 5, right: 5, top: 2, bottom: 2 },
+    }).setDepth(930).setScrollFactor(0).setVisible(false).setAlpha(1)
+    this.exitArrow.setShadow(2, 2, '#000000', 0, true, true)
+    this.tweens.add({ targets: this.exitArrow, alpha: 0.42, duration: 330, yoyo: true, repeat: -1 })
+  }
+
+  private updateExitArrow() {
+    if (!this.exitArrow || this.exitArrow.visible === this.exitReady) return
+    this.exitArrow.setVisible(this.exitReady)
+  }
+
+  private startLevelTransfer(nextLevelId: string) {
+    this.frozen = true
     this.scene.stop(SceneKeys.UI)
-    this.scene.start(SceneKeys.StageClear, { score: this.score })
+    this.events.emit('sfx', 'stageClear')
+    const wipe = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x050711, 0)
+      .setOrigin(0)
+      .setScrollFactor(0)
+      .setDepth(2000)
+    const label = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2, 'NEXT AREA', {
+      fontFamily: 'monospace',
+      fontSize: '18px',
+      color: '#ffd166',
+      stroke: '#0b1028',
+      strokeThickness: 5,
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(2001).setAlpha(0)
+    this.tweens.add({
+      targets: [wipe, label],
+      alpha: 1,
+      duration: 420,
+      ease: 'Sine.easeInOut',
+      onComplete: () => {
+        this.scene.start(SceneKeys.World, { levelId: nextLevelId, score: this.score })
+      },
+    })
   }
 
   private addHitSpark(x: number, y: number) {
@@ -182,7 +248,7 @@ export class WorldScene extends Phaser.Scene {
     ;(window as typeof window & { __NEON_DEBUG__?: unknown; player?: unknown; enemies?: unknown; level?: unknown; assets?: unknown }).__NEON_DEBUG__ = {
       title: 'Neon Gauntlet',
       player: { x: this.player.x, hp: this.player.hp },
-      level: this.level,
+      level: { ...this.level, index: this.levelIndex, exitReady: this.exitReady },
       enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({ x: enemy.x, hp: enemy.hp, active: enemy.active })),
       combat: {
         playerAttack: activeAttack
@@ -196,6 +262,9 @@ export class WorldScene extends Phaser.Scene {
       input: this.inputSystem.debugSnapshot(),
       assets: {
         stage1: this.textures.exists('stage-01-metro-arcade-bg'),
+        stage2: this.textures.exists('stage-02-china-station-bg'),
+        stage3: this.textures.exists('stage-03-china-back-alley-bg'),
+        stage4: this.textures.exists('stage-04-china-night-market-bg'),
         tileset: this.textures.exists('metro-tiles'),
         player: this.textures.exists('player-sheet'),
         enemy: this.textures.exists('enemy-sheet'),

@@ -36,6 +36,9 @@ export class GameOverScene extends Phaser.Scene {
     this.retryStarted = true
     window.removeEventListener('keydown', this.retryFromKeyboard)
     window.removeEventListener('pointerdown', this.retryFromPointer)
-    this.scene.start(SceneKeys.World)
+    this.scene.start(SceneKeys.World, {
+      levelId: String(this.registry.get('currentLevelId') || ''),
+      score: Number(this.registry.get('chapterScore') || 0),
+    })
   }
 }
