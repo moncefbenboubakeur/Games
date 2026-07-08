@@ -1,4 +1,4 @@
-import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, EnemyRole, LevelData, TiledMapData, WorldBehaviorData } from '../data/types'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, EnemyRole, LevelData, TiledMapData, WorldBehaviorData, WorldSystemsData } from '../data/types'
 
 interface GameDataBundle {
   animations: AnimationData
@@ -86,6 +86,10 @@ export class DataValidationSystem {
       this.require(enemy.speed > 0, `${enemy.id} speed must be positive`)
       this.require(enemy.range > 0, `${enemy.id} range must be positive`)
       this.require(enemy.scale > 0, `${enemy.id} scale must be positive`)
+      if (enemy.textureFile !== undefined) {
+        this.require(Boolean(enemy.texture), `${enemy.id} texture is required when textureFile is set`)
+        this.require(enemy.textureFile.startsWith('/assets/sprites/enemies/'), `${enemy.id} textureFile must live under /assets/sprites/enemies/`)
+      }
       this.validateBehaviorTuning(enemy.id, enemy)
     })
   }
@@ -104,6 +108,14 @@ export class DataValidationSystem {
       this.require(boss.range > 0, `${boss.id} range must be positive`)
       this.validateBehaviorTuning(boss.id, boss)
       if (boss.scale !== undefined) this.require(boss.scale > 0, `${boss.id} scale must be positive`)
+      boss.phases?.forEach((phase, index) => {
+        this.require(Boolean(phase.id), `${boss.id} phase ${index} id is required`)
+        this.require(phase.hpBelow > 0 && phase.hpBelow < 1, `${boss.id} phase ${phase.id} hpBelow must be between 0 and 1`)
+        this.require(Boolean(phase.message), `${boss.id} phase ${phase.id} message is required`)
+        this.require(phase.speedMultiplier > 0, `${boss.id} phase ${phase.id} speedMultiplier must be positive`)
+        this.require(phase.cooldownMultiplier > 0, `${boss.id} phase ${phase.id} cooldownMultiplier must be positive`)
+        if (phase.preferredAttack !== undefined) this.require(allowedPreferredAttacks.includes(phase.preferredAttack), `${boss.id} phase ${phase.id} preferredAttack must be punch or kick`)
+      })
     })
   }
 
@@ -140,6 +152,59 @@ export class DataValidationSystem {
     this.require(data.npc.allowRandomGuarding === false, 'NPCs/background actors must not randomly guard')
     this.require(data.npc.requirePathForMovingActors === true, 'Moving NPCs/background actors need paths')
     this.require(data.npc.requireAnimationContactSheet === true, 'NPC/background actor animations need contact-sheet review')
+  }
+
+  static validateWorldSystems(data: WorldSystemsData, levels: LevelData[], bosses: BossesData, enemies: EnemiesData) {
+    this.require(data.version > 0, 'World systems version must be positive')
+    Object.entries(data.projectiles).forEach(([key, projectile]) => {
+      this.require(key === projectile.id, `Projectile key must match id: ${key}`)
+      this.require(projectile.speed > 0, `${key} projectile speed must be positive`)
+      this.require(projectile.damage > 0, `${key} projectile damage must be positive`)
+      this.require(projectile.ttlMs > 0, `${key} projectile ttlMs must be positive`)
+      this.require(projectile.width > 0 && projectile.height > 0, `${key} projectile dimensions must be positive`)
+      this.require(projectile.laneRange > 0, `${key} projectile laneRange must be positive`)
+      this.require(/^#[0-9a-fA-F]{6}$/.test(projectile.color), `${key} projectile color must be #RRGGBB`)
+    })
+
+    const projectileIds = new Set(Object.keys(data.projectiles))
+    bosses.bosses.flatMap((boss) => boss.phases || []).forEach((phase) => {
+      if (phase.projectile) this.require(projectileIds.has(phase.projectile), `Boss phase projectile is unknown: ${phase.projectile}`)
+    })
+    enemies.roles.forEach((enemy) => {
+      if (enemy.projectile) this.require(projectileIds.has(enemy.projectile), `${enemy.id} projectile is unknown: ${enemy.projectile}`)
+    })
+
+    levels.forEach((level) => {
+      const stage = data.stages[level.id]
+      this.require(Boolean(stage), `${level.id} world-system stage definition is required`)
+      stage.hazards.forEach((hazard) => {
+        this.require(Boolean(hazard.id), `${level.id} hazard id is required`)
+        this.require(hazard.x >= 0 && hazard.x <= level.worldWidth, `${hazard.id} hazard x must fit level`)
+        this.require(hazard.lane >= 0.45 && hazard.lane <= 0.95, `${hazard.id} hazard lane must be playable/reasonable`)
+        this.require(hazard.width > 0 && hazard.height > 0, `${hazard.id} hazard dimensions must be positive`)
+        this.require(hazard.cycleMs > hazard.telegraphMs + hazard.activeMs, `${hazard.id} hazard cycle must leave idle time`)
+        this.require(hazard.telegraphMs > 0 && hazard.activeMs > 0, `${hazard.id} hazard timing must be positive`)
+        this.require(hazard.damage > 0, `${hazard.id} hazard damage must be positive`)
+        this.require(/^#[0-9a-fA-F]{6}$/.test(hazard.color), `${hazard.id} hazard color must be #RRGGBB`)
+      })
+      stage.props.forEach((prop) => {
+        this.require(Boolean(prop.id), `${level.id} prop id is required`)
+        this.require(prop.x >= 0 && prop.x <= level.worldWidth, `${prop.id} prop x must fit level`)
+        this.require(prop.width > 0 && prop.height > 0, `${prop.id} prop dimensions must be positive`)
+        this.require(prop.hp > 0, `${prop.id} prop hp must be positive`)
+        this.require(prop.score >= 0, `${prop.id} prop score must be non-negative`)
+      })
+      stage.npcs.forEach((npc) => {
+        this.require(Boolean(npc.id), `${level.id} npc id is required`)
+        this.require(Boolean(npc.purpose), `${npc.id} npc purpose is required`)
+        this.require(npc.path.length >= 2, `${npc.id} moving npc needs at least two path points`)
+        this.require(npc.speed > 0, `${npc.id} npc speed must be positive`)
+        npc.path.forEach((point, index) => {
+          this.require(point.x >= 0 && point.x <= level.worldWidth, `${npc.id} npc path ${index} x must fit level`)
+          this.require(point.lane >= 0.35 && point.lane <= 0.95, `${npc.id} npc path ${index} lane must be reasonable`)
+        })
+      })
+    })
   }
 
   static validateMap(map: TiledMapData) {

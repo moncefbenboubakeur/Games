@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { SceneKeys } from '../constants'
 import { CHINA_CHAPTER_LEVELS } from '../data/chinaChapter'
-import type { AudioData, BossesData } from '../data/types'
+import type { AudioData, BossesData, EnemiesData } from '../data/types'
 import { DataValidationSystem } from '../systems/DataValidationSystem'
 
 export class PreloadScene extends Phaser.Scene {
@@ -25,12 +25,17 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json('bosses', '/data/bosses.json')
     this.load.json('audio', '/data/audio.json')
     this.load.json('world-behavior', '/data/world-behavior.json')
+    this.load.json('world-systems', '/data/world-systems.json')
   }
 
   create() {
     const audio = this.cache.json.get('audio') as AudioData
     const bosses = this.cache.json.get('bosses') as BossesData
+    const enemies = this.cache.json.get('enemies') as EnemiesData
     DataValidationSystem.validateAudio(audio)
+    enemies.roles.forEach((enemy) => {
+      if (enemy.texture && enemy.textureFile) this.load.image(enemy.texture, enemy.textureFile)
+    })
     bosses.bosses.forEach((boss) => this.load.image(boss.texture, boss.textureFile))
     Object.entries(audio.music).forEach(([key, cue]) => this.load.audio(`music:${key}`, cue.file))
     Object.entries(audio.sfx).forEach(([key, cue]) => this.load.audio(`sfx:${key}`, cue.file))

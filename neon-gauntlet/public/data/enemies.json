@@ -1,8 +1,54 @@
 {
   "roles": [
-    { "id": "striker", "hp": 48, "speed": 54, "damage": 9, "range": 34, "cooldownMinMs": 820, "cooldownMaxMs": 1380, "scale": 1 },
-    { "id": "runner", "hp": 40, "speed": 73, "damage": 8, "range": 32, "cooldownMinMs": 780, "cooldownMaxMs": 1260, "scale": 0.92 },
-    { "id": "bruiser", "hp": 76, "speed": 38, "damage": 13, "range": 42, "cooldownMinMs": 940, "cooldownMaxMs": 1500, "scale": 1.12 },
-    { "id": "thrower", "hp": 44, "speed": 45, "damage": 7, "range": 98, "cooldownMinMs": 1050, "cooldownMaxMs": 1600, "scale": 0.98 }
+    {
+      "id": "striker",
+      "texture": "striker-sheet",
+      "textureFile": "/assets/sprites/enemies/striker-sheet.png",
+      "hp": 48,
+      "speed": 54,
+      "damage": 9,
+      "range": 34,
+      "cooldownMinMs": 820,
+      "cooldownMaxMs": 1380,
+      "scale": 1
+    },
+    {
+      "id": "runner",
+      "texture": "runner-sheet",
+      "textureFile": "/assets/sprites/enemies/runner-sheet.png",
+      "hp": 40,
+      "speed": 73,
+      "damage": 8,
+      "range": 32,
+      "cooldownMinMs": 780,
+      "cooldownMaxMs": 1260,
+      "scale": 0.92
+    },
+    {
+      "id": "bruiser",
+      "texture": "bruiser-sheet",
+      "textureFile": "/assets/sprites/enemies/bruiser-sheet.png",
+      "hp": 76,
+      "speed": 38,
+      "damage": 13,
+      "range": 42,
+      "cooldownMinMs": 940,
+      "cooldownMaxMs": 1500,
+      "scale": 1.12,
+      "preferredAttack": "kick"
+    },
+    {
+      "id": "thrower",
+      "texture": "thrower-sheet",
+      "textureFile": "/assets/sprites/enemies/thrower-sheet.png",
+      "hp": 44,
+      "speed": 45,
+      "damage": 7,
+      "range": 98,
+      "cooldownMinMs": 1050,
+      "cooldownMaxMs": 1600,
+      "scale": 0.98,
+      "projectile": "spark-bolt"
+    }
   ]
 }

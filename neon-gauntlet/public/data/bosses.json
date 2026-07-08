@@ -16,7 +16,17 @@
       "laneSpeed": 0.2,
       "telegraphMs": 250,
       "attackDurationMs": 280,
-      "scale": 1.2
+      "scale": 1.2,
+      "phases": [
+        {
+          "id": "blade-rush",
+          "hpBelow": 0.55,
+          "message": "Sora speeds up",
+          "speedMultiplier": 1.22,
+          "cooldownMultiplier": 0.82,
+          "preferredAttack": "punch"
+        }
+      ]
     },
     {
       "id": "turnstile-ren",
@@ -34,7 +44,18 @@
       "laneSpeed": 0.3,
       "telegraphMs": 210,
       "attackDurationMs": 240,
-      "scale": 1.1
+      "scale": 1.1,
+      "phases": [
+        {
+          "id": "turnstile-flurry",
+          "hpBelow": 0.5,
+          "message": "Ren changes lanes",
+          "speedMultiplier": 1.28,
+          "cooldownMultiplier": 0.78,
+          "preferredAttack": "punch",
+          "projectile": "spark-bolt"
+        }
+      ]
     },
     {
       "id": "iron-wei",
@@ -52,7 +73,17 @@
       "laneSpeed": 0.13,
       "telegraphMs": 360,
       "attackDurationMs": 360,
-      "scale": 1.38
+      "scale": 1.38,
+      "phases": [
+        {
+          "id": "iron-stomp",
+          "hpBelow": 0.58,
+          "message": "Wei plants his feet",
+          "speedMultiplier": 0.92,
+          "cooldownMultiplier": 0.72,
+          "preferredAttack": "kick"
+        }
+      ]
     },
     {
       "id": "lantern-mai",
@@ -70,7 +101,27 @@
       "laneSpeed": 0.28,
       "telegraphMs": 190,
       "attackDurationMs": 250,
-      "scale": 1.25
+      "scale": 1.25,
+      "phases": [
+        {
+          "id": "lantern-burst",
+          "hpBelow": 0.66,
+          "message": "Mai lights the market",
+          "speedMultiplier": 1.18,
+          "cooldownMultiplier": 0.76,
+          "preferredAttack": "punch",
+          "projectile": "lantern-shot"
+        },
+        {
+          "id": "final-lantern",
+          "hpBelow": 0.32,
+          "message": "Mai goes all in",
+          "speedMultiplier": 1.35,
+          "cooldownMultiplier": 0.62,
+          "preferredAttack": "kick",
+          "projectile": "lantern-shot"
+        }
+      ]
     }
   ]
 }

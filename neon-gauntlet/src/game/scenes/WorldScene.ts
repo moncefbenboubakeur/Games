@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
-import { chinaLevelById, chinaLevelIndex, nextChinaLevel } from '../data/chinaChapter'
-import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData, WorldBehaviorData } from '../data/types'
+import { CHINA_CHAPTER_LEVELS, chinaLevelById, chinaLevelIndex, nextChinaLevel } from '../data/chinaChapter'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData, WorldBehaviorData, WorldSystemsData } from '../data/types'
 import { Boss } from '../entities/Boss'
 import { Enemy } from '../entities/Enemy'
 import { Player } from '../entities/Player'
@@ -11,7 +11,11 @@ import { CameraSystem } from '../systems/CameraSystem'
 import { CombatDebugSystem } from '../systems/CombatDebugSystem'
 import { attackBounds, CombatSystem } from '../systems/CombatSystem'
 import { DataValidationSystem } from '../systems/DataValidationSystem'
+import { HazardSystem } from '../systems/HazardSystem'
 import { InputSystem } from '../systems/InputSystem'
+import { NpcSystem } from '../systems/NpcSystem'
+import { ProjectileSystem } from '../systems/ProjectileSystem'
+import { PropSystem } from '../systems/PropSystem'
 import { SaveAdapter } from '../systems/SaveAdapter'
 import { SpawnSystem } from '../systems/SpawnSystem'
 import { StageMapSystem } from '../systems/StageMapSystem'
@@ -34,8 +38,15 @@ export class WorldScene extends Phaser.Scene {
   private frozen = false
   private exitReady = false
   private exitArrow?: Phaser.GameObjects.Text
+  private hazards?: HazardSystem
+  private props?: PropSystem
+  private npcs?: NpcSystem
+  private projectiles?: ProjectileSystem
   private save = new SaveAdapter()
   private readonly playSfx = (key: string) => this.audioSystem.playSfx(key)
+  private readonly spawnProjectile = (payload: { projectileId: string; x: number; lane: number; face: -1 | 1 }) => {
+    this.projectiles?.spawn(payload.projectileId, payload.x, payload.lane, payload.face)
+  }
 
   constructor() {
     super(SceneKeys.World)
@@ -52,15 +63,25 @@ export class WorldScene extends Phaser.Scene {
     const bosses = this.cache.json.get('bosses') as BossesData
     const audio = this.cache.json.get('audio') as AudioData
     const worldBehavior = this.cache.json.get('world-behavior') as WorldBehaviorData
+    const worldSystems = this.cache.json.get('world-systems') as WorldSystemsData
     const fallbackLevel = this.cache.json.get(levelRef.levelKey) as LevelData
     const map = this.cache.json.get(levelRef.mapKey) as TiledMapData
     DataValidationSystem.validateAll({ animations, combat, enemies, bosses, audio, level: fallbackLevel, map })
     DataValidationSystem.validateWorldBehavior(worldBehavior)
+    DataValidationSystem.validateWorldSystems(
+      worldSystems,
+      CHINA_CHAPTER_LEVELS.map((level) => this.cache.json.get(level.levelKey) as LevelData),
+      bosses,
+      enemies,
+    )
     this.mapSystem = new StageMapSystem(this, map, fallbackLevel, levelRef.tilemapKey)
     this.level = this.mapSystem.resolveLevel()
 
     this.animationSystem = new AnimationSystem(this, animations)
     this.animationSystem.registerFrames()
+    enemies.roles.forEach((enemy) => {
+      if (enemy.texture) this.animationSystem.registerFramesForTexture('enemy', enemy.texture)
+    })
     bosses.bosses.forEach((boss) => this.animationSystem.registerFramesForTexture('enemy', boss.texture))
     this.combat = new CombatSystem(combat)
     this.combatDebug = new CombatDebugSystem(this, this.combat)
@@ -72,6 +93,7 @@ export class WorldScene extends Phaser.Scene {
     this.mapSystem.render()
     this.createExitArrow()
     this.showAreaTitle()
+    this.createWorldSystems(worldSystems)
 
     this.player = new Player(this, this.level.playerSpawn.x, this.level.playerSpawn.lane, this.animationSystem, this.combat, combat)
     const spawner = new SpawnSystem(this, this.animationSystem, this.combat, enemies.roles, bosses.bosses)
@@ -82,7 +104,12 @@ export class WorldScene extends Phaser.Scene {
     this.audioSystem.unlock()
     this.audioSystem.playMusic(this.level.music)
     this.events.on('sfx', this.playSfx)
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off('sfx', this.playSfx))
+    this.events.on('enemy:projectile', this.spawnProjectile)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.events.off('sfx', this.playSfx)
+      this.events.off('enemy:projectile', this.spawnProjectile)
+      this.destroyWorldSystems()
+    })
 
     this.events.emit('hud:update', this.snapshot())
     this.exposeDebug()
@@ -103,6 +130,9 @@ export class WorldScene extends Phaser.Scene {
     this.enemies = this.enemies.filter((enemy) => enemy.active)
     if (this.boss?.active) this.boss.updateEnemy(delta, this.player, this.level.worldWidth)
     if (this.boss && !this.boss.active) this.boss = undefined
+    this.hazards?.update(_time, this.player)
+    this.npcs?.update(delta)
+    this.projectiles?.update(delta, this.player, this.level.worldWidth)
     this.handlePlayerAttack()
     this.handleBossSpawn()
     this.handleStageClear()
@@ -131,7 +161,9 @@ export class WorldScene extends Phaser.Scene {
     this.exitReady = false
     this.exitArrow?.destroy()
     this.exitArrow = undefined
+    this.destroyWorldSystems()
     this.events.off('sfx', this.playSfx)
+    this.events.off('enemy:projectile', this.spawnProjectile)
     this.combatDebug?.destroy()
   }
 
@@ -140,6 +172,7 @@ export class WorldScene extends Phaser.Scene {
     const attack = this.player.activeAttack
     if (!attack) return
     const targets = [...this.enemies, ...(this.boss ? [this.boss] : [])].filter((enemy) => enemy.hp > 0)
+    let hitActor = false
     for (const target of targets) {
       const result = this.combat.hit(this.player, target, attack, this.player.combo)
       if (!result.hit) continue
@@ -147,8 +180,34 @@ export class WorldScene extends Phaser.Scene {
       this.score += target.isBoss ? this.combat.data.score.bossHit : this.combat.data.score.enemyHit
       this.player.markHitApplied()
       this.addHitSpark(target.x, target.y - 30)
+      hitActor = true
       break
     }
+    if (hitActor) return
+    const propScore = this.props?.tryHitByPlayer(this.player, attack) ?? 0
+    if (propScore > 0) {
+      this.score += propScore
+      this.player.markHitApplied()
+    }
+  }
+
+  private createWorldSystems(worldSystems: WorldSystemsData) {
+    const stage = worldSystems.stages[this.level.id]
+    this.hazards = new HazardSystem(this, stage?.hazards || [])
+    this.props = new PropSystem(this, stage?.props || [], this.combat)
+    this.npcs = new NpcSystem(this, stage?.npcs || [])
+    this.projectiles = new ProjectileSystem(this, worldSystems.projectiles)
+  }
+
+  private destroyWorldSystems() {
+    this.hazards?.destroy()
+    this.props?.destroy()
+    this.npcs?.destroy()
+    this.projectiles?.destroy()
+    this.hazards = undefined
+    this.props = undefined
+    this.npcs = undefined
+    this.projectiles = undefined
   }
 
   private handleBossSpawn() {
@@ -280,7 +339,7 @@ export class WorldScene extends Phaser.Scene {
       title: 'Neon Gauntlet',
       player: { x: this.player.x, hp: this.player.hp },
       level: { ...this.level, index: this.levelIndex, exitReady: this.exitReady },
-      boss: this.boss ? { id: this.level.boss.id, name: this.boss.bossName, hp: this.boss.hp, x: this.boss.x } : null,
+      boss: this.boss ? { id: this.level.boss.id, name: this.boss.bossName, hp: this.boss.hp, x: this.boss.x, phase: this.boss.activePhase } : null,
       enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({
         x: enemy.x,
         hp: enemy.hp,
@@ -312,6 +371,12 @@ export class WorldScene extends Phaser.Scene {
         renderedTileLayers: this.mapSystem.renderedTileLayers(),
         scenePlates: this.mapSystem.renderedScenePlates(),
         prototypeTileLayersVisible: this.mapSystem.visiblePrototypeTileLayers(),
+      },
+      world: {
+        hazards: this.hazards?.debugSnapshot() || [],
+        props: this.props?.debugSnapshot() || [],
+        npcs: this.npcs?.debugSnapshot() || [],
+        projectiles: this.projectiles?.debugSnapshot() || { count: 0 },
       },
     }
     ;(window as typeof window & { __NEON_FREEZE__?: () => void }).__NEON_FREEZE__ = () => {

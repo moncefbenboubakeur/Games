@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { DataValidationSystem } from '../../src/game/systems/DataValidationSystem'
-import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData, WorldBehaviorData } from '../../src/game/data/types'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData, WorldBehaviorData, WorldSystemsData } from '../../src/game/data/types'
 
 const combat = (): CombatData => ({
   player: {
@@ -176,6 +176,60 @@ const worldBehavior = (): WorldBehaviorData => ({
   },
 })
 
+const worldSystems = (): WorldSystemsData => ({
+  version: 1,
+  projectiles: {
+    'spark-bolt': {
+      id: 'spark-bolt',
+      speed: 120,
+      damage: 8,
+      ttlMs: 1200,
+      width: 10,
+      height: 6,
+      laneRange: 0.07,
+      color: '#50e7ff',
+    },
+  },
+  stages: {
+    'stage-01': {
+      hazards: [
+        {
+          id: 'test-spark',
+          type: 'spark',
+          x: 300,
+          lane: 0.72,
+          width: 34,
+          height: 8,
+          cycleMs: 2600,
+          telegraphMs: 700,
+          activeMs: 400,
+          damage: 7,
+          color: '#50e7ff',
+        },
+      ],
+      props: [
+        { id: 'test-crate', type: 'crate', x: 220, lane: 0.8, width: 20, height: 20, hp: 20, score: 20, color: '#ffd166' },
+      ],
+      npcs: [
+        {
+          id: 'test-npc',
+          purpose: 'background test actor',
+          x: 100,
+          lane: 0.45,
+          width: 8,
+          height: 20,
+          color: '#dff6ff',
+          speed: 8,
+          path: [
+            { x: 100, lane: 0.45 },
+            { x: 160, lane: 0.45 },
+          ],
+        },
+      ],
+    },
+  },
+})
+
 describe('DataValidationSystem', () => {
   it('accepts a complete game data bundle', () => {
     expect(() =>
@@ -271,6 +325,24 @@ describe('DataValidationSystem', () => {
     const badBehavior = worldBehavior()
     badBehavior.npc.allowRandomGuarding = true
     expect(() => DataValidationSystem.validateWorldBehavior(badBehavior)).toThrow(/randomly guard/)
+  })
+
+  it('validates world systems and rejects untelegraphed hazards', () => {
+    expect(() => DataValidationSystem.validateWorldSystems(worldSystems(), [level()], bosses(), enemies())).not.toThrow()
+
+    const badSystems = worldSystems()
+    badSystems.stages['stage-01'].hazards[0].cycleMs = 900
+    expect(() => DataValidationSystem.validateWorldSystems(badSystems, [level()], bosses(), enemies())).toThrow(/cycle/)
+  })
+
+  it('rejects unknown projectile references from enemies and boss phases', () => {
+    const enemyProjectile = enemies()
+    enemyProjectile.roles[0].projectile = 'missing'
+    expect(() => DataValidationSystem.validateWorldSystems(worldSystems(), [level()], bosses(), enemyProjectile)).toThrow(/projectile/)
+
+    const bossProjectile = bosses()
+    bossProjectile.bosses[0].phases = [{ id: 'phase', hpBelow: 0.5, message: 'phase', speedMultiplier: 1, cooldownMultiplier: 1, projectile: 'missing' }]
+    expect(() => DataValidationSystem.validateWorldSystems(worldSystems(), [level()], bossProjectile, enemies())).toThrow(/projectile/)
   })
 
   it('rejects missing level music cues and invalid audio paths', () => {

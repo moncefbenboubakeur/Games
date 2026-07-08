@@ -47,6 +47,46 @@
       "commercialUse": "blocked until replaced or documented",
       "notes": "Walk cycle was manually replaced during prototype work. Requires ongoing contact-sheet review."
     },
+    "striker-sheet": {
+      "file": "/assets/sprites/enemies/striker-sheet.png",
+      "kind": "enemy-role-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-enemy-role-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Runtime role-specific texture. This improves role identity but is not final hand-authored enemy art."
+    },
+    "runner-sheet": {
+      "file": "/assets/sprites/enemies/runner-sheet.png",
+      "kind": "enemy-role-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-enemy-role-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Runtime role-specific texture. This improves role identity but is not final hand-authored enemy art."
+    },
+    "bruiser-sheet": {
+      "file": "/assets/sprites/enemies/bruiser-sheet.png",
+      "kind": "enemy-role-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-enemy-role-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Runtime role-specific texture. This improves role identity but is not final hand-authored enemy art."
+    },
+    "thrower-sheet": {
+      "file": "/assets/sprites/enemies/thrower-sheet.png",
+      "kind": "enemy-role-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-enemy-role-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Runtime role-specific texture. This improves role identity but is not final hand-authored enemy art."
+    },
     "stage-01-metro-arcade-bg": {
       "file": "/assets/backgrounds/china/stage-01-metro-arcade.png",
       "kind": "background",

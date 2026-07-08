@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "test:assets": "node tools/validate-contact-sheets.mjs",
     "boss-sheets": "node tools/generate-boss-sheets.mjs",
+    "enemy-role-sheets": "node tools/generate-enemy-role-sheets.mjs",
     "test:maps": "node tools/inspect-map-art.mjs --check --all",
     "test:map-art": "node tools/validate-map-art.mjs",
     "test:audio": "node tools/validate-audio-sources.mjs",

@@ -102,7 +102,16 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
         this.aiReason = 'cancelled-empty-air'
       } else {
         this.attackMs = this.def.attackDurationMs ?? 280
-        player.hurt(this.def.damage, this.face * 22)
+        if (this.def.projectile) {
+          this.scene.events.emit('enemy:projectile', {
+            projectileId: this.def.projectile,
+            x: this.x,
+            lane: this.lane,
+            face: this.face,
+          })
+        } else {
+          player.hurt(this.def.damage, this.face * 22)
+        }
         this.aiState = 'attack'
         this.aiReason = 'confirmed-contact-range'
       }

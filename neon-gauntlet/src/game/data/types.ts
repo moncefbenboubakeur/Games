@@ -79,6 +79,7 @@ export interface CombatData {
 export interface EnemyDefinition {
   id: EnemyRole
   texture?: string
+  textureFile?: string
   hp: number
   speed: number
   damage: number
@@ -90,6 +91,7 @@ export interface EnemyDefinition {
   laneSpeed?: number
   telegraphMs?: number
   attackDurationMs?: number
+  projectile?: string
 }
 
 export interface EnemiesData {
@@ -113,6 +115,17 @@ export interface BossDefinition {
   telegraphMs?: number
   attackDurationMs?: number
   scale?: number
+  phases?: BossPhaseDefinition[]
+}
+
+export interface BossPhaseDefinition {
+  id: string
+  hpBelow: number
+  message: string
+  speedMultiplier: number
+  cooldownMultiplier: number
+  preferredAttack?: 'punch' | 'kick'
+  projectile?: string
 }
 
 export interface BossesData {
@@ -156,6 +169,67 @@ export interface WorldBehaviorData {
     requirePathForMovingActors: boolean
     requireAnimationContactSheet: boolean
   }
+}
+
+export interface ProjectileDefinition {
+  id: string
+  speed: number
+  damage: number
+  ttlMs: number
+  width: number
+  height: number
+  laneRange: number
+  color: string
+}
+
+export interface HazardDefinition {
+  id: string
+  type: 'spark' | 'steam' | 'cart'
+  x: number
+  lane: number
+  width: number
+  height: number
+  cycleMs: number
+  telegraphMs: number
+  activeMs: number
+  damage: number
+  color: string
+}
+
+export interface PropDefinition {
+  id: string
+  type: 'cabinet' | 'crate' | 'barrel' | 'stall'
+  x: number
+  lane: number
+  width: number
+  height: number
+  hp: number
+  score: number
+  color: string
+}
+
+export interface NpcActorDefinition {
+  id: string
+  purpose: string
+  x: number
+  lane: number
+  width: number
+  height: number
+  color: string
+  speed: number
+  path: Array<{ x: number; lane: number }>
+}
+
+export interface StageWorldSystemsDefinition {
+  hazards: HazardDefinition[]
+  props: PropDefinition[]
+  npcs: NpcActorDefinition[]
+}
+
+export interface WorldSystemsData {
+  version: number
+  projectiles: Record<string, ProjectileDefinition>
+  stages: Record<string, StageWorldSystemsDefinition>
 }
 
 export interface TiledProperty {

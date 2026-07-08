@@ -11,7 +11,7 @@ declare global {
       title: string
       player: { x: number; hp: number }
       level: { id: string; name: string; index?: number; stageClearX?: number; exitReady?: boolean; boss?: { id: string } }
-      boss?: null | { id: string; name: string; hp: number; x: number }
+      boss?: null | { id: string; name: string; hp: number; x: number; phase?: string }
       enemies: Array<{ x: number; hp: number; active?: boolean; aiState?: string; aiReason?: string; texture?: string }>
       combat?: {
         playerAttack: null | {
@@ -38,6 +38,12 @@ declare global {
         }
       }
       assets: Record<string, boolean | number>
+      world?: {
+        hazards: Array<{ id: string; type: string; x: number; lane: number }>
+        props: Array<{ id: string; type: string; hp: number }>
+        npcs: Array<{ id: string; purpose: string; x: number }>
+        projectiles: { count: number }
+      }
     }
   }
 }

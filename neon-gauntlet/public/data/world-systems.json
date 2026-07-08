@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "projectiles": {
+    "spark-bolt": {
+      "id": "spark-bolt",
+      "speed": 118,
+      "damage": 8,
+      "ttlMs": 1450,
+      "width": 12,
+      "height": 7,
+      "laneRange": 0.07,
+      "color": "#50e7ff"
+    },
+    "lantern-shot": {
+      "id": "lantern-shot",
+      "speed": 132,
+      "damage": 12,
+      "ttlMs": 1550,
+      "width": 14,
+      "height": 9,
+      "laneRange": 0.075,
+      "color": "#ffd166"
+    }
+  },
+  "stages": {
+    "stage-01-metro-arcade": {
+      "hazards": [
+        {
+          "id": "arcade-sign-spark",
+          "type": "spark",
+          "x": 300,
+          "lane": 0.8,
+          "width": 34,
+          "height": 9,
+          "cycleMs": 2800,
+          "telegraphMs": 760,
+          "activeMs": 420,
+          "damage": 7,
+          "color": "#50e7ff"
+        }
+      ],
+      "props": [
+        { "id": "cabinet-left", "type": "cabinet", "x": 184, "lane": 0.8, "width": 18, "height": 34, "hp": 18, "score": 25, "color": "#ff5cab" },
+        { "id": "cabinet-right", "type": "cabinet", "x": 438, "lane": 0.79, "width": 18, "height": 34, "hp": 18, "score": 25, "color": "#50e7ff" }
+      ],
+      "npcs": [
+        {
+          "id": "arcade-window-player",
+          "purpose": "background arcade patron silhouette that makes the arcade feel alive",
+          "x": 284,
+          "lane": 0.48,
+          "width": 10,
+          "height": 22,
+          "color": "#6ee7ff",
+          "speed": 9,
+          "path": [
+            { "x": 284, "lane": 0.48 },
+            { "x": 318, "lane": 0.48 }
+          ]
+        }
+      ]
+    },
+    "stage-02-china-station": {
+      "hazards": [
+        {
+          "id": "platform-gate-spark",
+          "type": "spark",
+          "x": 392,
+          "lane": 0.75,
+          "width": 42,
+          "height": 8,
+          "cycleMs": 2500,
+          "telegraphMs": 680,
+          "activeMs": 460,
+          "damage": 8,
+          "color": "#ff5cab"
+        }
+      ],
+      "props": [
+        { "id": "ticket-kiosk", "type": "cabinet", "x": 232, "lane": 0.78, "width": 22, "height": 36, "hp": 22, "score": 30, "color": "#ffd166" }
+      ],
+      "npcs": [
+        {
+          "id": "late-commuter",
+          "purpose": "background commuter moving behind the fight lane",
+          "x": 110,
+          "lane": 0.5,
+          "width": 9,
+          "height": 24,
+          "color": "#dff6ff",
+          "speed": 13,
+          "path": [
+            { "x": 110, "lane": 0.5 },
+            { "x": 260, "lane": 0.5 }
+          ]
+        }
+      ]
+    },
+    "stage-03-china-back-alley": {
+      "hazards": [
+        {
+          "id": "steam-pipe",
+          "type": "steam",
+          "x": 502,
+          "lane": 0.73,
+          "width": 38,
+          "height": 34,
+          "cycleMs": 3100,
+          "telegraphMs": 900,
+          "activeMs": 620,
+          "damage": 9,
+          "color": "#dff6ff"
+        }
+      ],
+      "props": [
+        { "id": "crate-stack-a", "type": "crate", "x": 262, "lane": 0.8, "width": 24, "height": 24, "hp": 26, "score": 35, "color": "#b45309" },
+        { "id": "crate-stack-b", "type": "crate", "x": 604, "lane": 0.81, "width": 24, "height": 24, "hp": 26, "score": 35, "color": "#92400e" }
+      ],
+      "npcs": [
+        {
+          "id": "repair-shop-shadow",
+          "purpose": "repair-shop worker silhouette behind a shutter",
+          "x": 406,
+          "lane": 0.46,
+          "width": 10,
+          "height": 23,
+          "color": "#ffd166",
+          "speed": 7,
+          "path": [
+            { "x": 406, "lane": 0.46 },
+            { "x": 432, "lane": 0.46 }
+          ]
+        }
+      ]
+    },
+    "stage-04-china-night-market": {
+      "hazards": [
+        {
+          "id": "rolling-market-cart",
+          "type": "cart",
+          "x": 556,
+          "lane": 0.8,
+          "width": 46,
+          "height": 16,
+          "cycleMs": 3600,
+          "telegraphMs": 960,
+          "activeMs": 760,
+          "damage": 10,
+          "color": "#ffd166"
+        }
+      ],
+      "props": [
+        { "id": "food-stall-crate", "type": "stall", "x": 338, "lane": 0.8, "width": 30, "height": 28, "hp": 30, "score": 45, "color": "#ef4444" }
+      ],
+      "npcs": [
+        {
+          "id": "lantern-crowd",
+          "purpose": "small market crowd silhouette that stays out of the fight lane",
+          "x": 238,
+          "lane": 0.45,
+          "width": 12,
+          "height": 24,
+          "color": "#ff5cab",
+          "speed": 8,
+          "path": [
+            { "x": 238, "lane": 0.45 },
+            { "x": 300, "lane": 0.45 }
+          ]
+        }
+      ]
+    }
+  }
+}
