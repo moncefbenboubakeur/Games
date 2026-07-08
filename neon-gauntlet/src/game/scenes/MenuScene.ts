@@ -38,23 +38,25 @@ export class MenuScene extends Phaser.Scene {
       align: 'center',
     }).setOrigin(0.5)
 
-    const begin = () => {
+    const begin = (levelId = firstChinaLevel().id, score = 0) => {
       window.removeEventListener('keydown', keyBegin)
-      window.removeEventListener('pointerdown', begin)
-      const firstLevel = firstChinaLevel()
-      this.registry.set('currentLevelId', firstLevel.id)
-      this.registry.set('chapterScore', 0)
-      this.scene.start(SceneKeys.World, { levelId: firstLevel.id, score: 0 })
+      window.removeEventListener('pointerdown', pointerBegin)
+      this.registry.set('currentLevelId', levelId)
+      this.registry.set('chapterScore', score)
+      this.scene.start(SceneKeys.World, { levelId, score })
     }
+    const beginDefault = () => begin()
     const keyBegin = (event: KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') begin()
     }
-    start.on('pointerdown', begin)
-    this.input.once('pointerdown', begin)
-    this.input.keyboard?.once('keydown-ENTER', begin)
-    this.input.keyboard?.once('keydown-SPACE', begin)
+    const pointerBegin = () => begin()
+    start.on('pointerdown', beginDefault)
+    this.input.once('pointerdown', beginDefault)
+    this.input.keyboard?.once('keydown-ENTER', beginDefault)
+    this.input.keyboard?.once('keydown-SPACE', beginDefault)
     window.addEventListener('keydown', keyBegin)
-    window.addEventListener('pointerdown', begin, { once: true })
-    ;(window as typeof window & { __NEON_START__?: () => void }).__NEON_START__ = begin
+    window.addEventListener('pointerdown', pointerBegin, { once: true })
+    ;(window as typeof window & { __NEON_START__?: () => void; __NEON_START_LEVEL__?: (levelId: string, score?: number) => void }).__NEON_START__ = () => begin()
+    ;(window as typeof window & { __NEON_START_LEVEL__?: (levelId: string, score?: number) => void }).__NEON_START_LEVEL__ = begin
   }
 }

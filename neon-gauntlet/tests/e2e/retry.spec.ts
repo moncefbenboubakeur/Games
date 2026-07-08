@@ -121,6 +121,17 @@ test('late China bosses spawn with their stage identity', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.name)).toBe('Lantern Mai')
 })
 
+test('automation can start a requested China level directly', async ({ page }) => {
+  await page.goto('/')
+  await page.waitForSelector('canvas')
+  await page.waitForFunction(() => typeof window.__NEON_START_LEVEL__ === 'function')
+  await page.evaluate(() => window.__NEON_START_LEVEL__?.('stage-04-china-night-market'))
+
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-04-china-night-market')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.boss?.id)).toBe('lantern-mai')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player?.hp)).toBe(150)
+})
+
 test('click replays from stage clear', async ({ page }) => {
   await startGame(page)
   await page.evaluate(() => {

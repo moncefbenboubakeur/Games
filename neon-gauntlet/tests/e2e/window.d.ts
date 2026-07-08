@@ -3,6 +3,7 @@ export {}
 declare global {
   interface Window {
     __NEON_START__?: () => void
+    __NEON_START_LEVEL__?: (levelId: string, score?: number) => void
     __NEON_FREEZE__?: () => void
     __NEON_TOGGLE_HITBOXES__?: () => boolean
     __NEON_GAME__?: import('phaser').Game
