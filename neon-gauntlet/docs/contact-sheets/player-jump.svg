@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-475" y="-744" clip-path="url(#player-jump-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="117" height="168" fill="none" stroke="#46d9ff" stroke-width="1.1559633027522935"/>
+          <rect x="33" y="17" width="51" height="144" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="0.9247706422018348"/>
           <line x1="0" y1="168" x2="117" y2="168" stroke="#ffd166" stroke-width="0.7706422018348623" stroke-dasharray="3.853211009174312 3.0825688073394493"/>
           <circle cx="59" cy="168" r="3.0825688073394493" fill="#ff5c8a"/>
         </g>
@@ -29,6 +30,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-660" y="-732" clip-path="url(#player-jump-1)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="144" height="192" fill="none" stroke="#46d9ff" stroke-width="1.3211009174311925"/>
+          <rect x="40" y="19" width="63" height="165" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.056880733944954"/>
           <line x1="0" y1="192" x2="144" y2="192" stroke="#ffd166" stroke-width="0.8807339449541284" stroke-dasharray="4.403669724770642 3.5229357798165135"/>
           <circle cx="72" cy="192" r="3.5229357798165135" fill="#ff5c8a"/>
         </g>

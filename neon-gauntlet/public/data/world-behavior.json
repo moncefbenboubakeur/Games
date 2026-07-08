@@ -1,0 +1,14 @@
+{
+  "ai": {
+    "cancelTelegraphWhenTargetLeavesRange": true,
+    "guardOnlyWhenThreatened": true,
+    "maxOffLaneAttackDelta": 0.095,
+    "pursuitStopRangeMultiplier": 0.82
+  },
+  "npc": {
+    "requirePurpose": true,
+    "allowRandomGuarding": false,
+    "requirePathForMovingActors": true,
+    "requireAnimationContactSheet": true
+  }
+}

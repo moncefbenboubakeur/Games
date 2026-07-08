@@ -3,6 +3,8 @@
     {
       "id": "switchblade-sora",
       "name": "Switchblade Sora",
+      "texture": "switchblade-sora-sheet",
+      "textureFile": "/assets/sprites/bosses/switchblade-sora-sheet.png",
       "hp": 170,
       "speed": 42,
       "damage": 18,
@@ -14,12 +16,13 @@
       "laneSpeed": 0.2,
       "telegraphMs": 250,
       "attackDurationMs": 280,
-      "scale": 1.2,
-      "tint": "#ffd166"
+      "scale": 1.2
     },
     {
       "id": "turnstile-ren",
       "name": "Turnstile Ren",
+      "texture": "turnstile-ren-sheet",
+      "textureFile": "/assets/sprites/bosses/turnstile-ren-sheet.png",
       "hp": 150,
       "speed": 58,
       "damage": 14,
@@ -31,12 +34,13 @@
       "laneSpeed": 0.3,
       "telegraphMs": 210,
       "attackDurationMs": 240,
-      "scale": 1.1,
-      "tint": "#6ee7ff"
+      "scale": 1.1
     },
     {
       "id": "iron-wei",
       "name": "Iron Wei",
+      "texture": "iron-wei-sheet",
+      "textureFile": "/assets/sprites/bosses/iron-wei-sheet.png",
       "hp": 210,
       "speed": 34,
       "damage": 24,
@@ -48,12 +52,13 @@
       "laneSpeed": 0.13,
       "telegraphMs": 360,
       "attackDurationMs": 360,
-      "scale": 1.38,
-      "tint": "#ff9f43"
+      "scale": 1.38
     },
     {
       "id": "lantern-mai",
       "name": "Lantern Mai",
+      "texture": "lantern-mai-sheet",
+      "textureFile": "/assets/sprites/bosses/lantern-mai-sheet.png",
       "hp": 235,
       "speed": 64,
       "damage": 19,
@@ -65,8 +70,7 @@
       "laneSpeed": 0.28,
       "telegraphMs": 190,
       "attackDurationMs": 250,
-      "scale": 1.25,
-      "tint": "#ff5cab"
+      "scale": 1.25
     }
   ]
 }

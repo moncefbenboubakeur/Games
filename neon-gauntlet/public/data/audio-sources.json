@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "rules": [
+    "Every music and sfx cue must have source, author, license, commercial-use, and approval status.",
+    "Prototype audio may run in development but must not be production-approved.",
+    "Production-approved audio cannot have blocked, unknown, or placeholder commercial status."
+  ],
+  "cues": {
+    "music:stage-01": {
+      "file": "/assets/audio/music/stage-01-loop.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace with final licensed stage loop or approve project-owned source files."
+    },
+    "sfx:punch": {
+      "file": "/assets/audio/sfx/punch.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace or approve as project-owned impact sfx."
+    },
+    "sfx:kick": {
+      "file": "/assets/audio/sfx/kick.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace or approve as project-owned impact sfx."
+    },
+    "sfx:hit": {
+      "file": "/assets/audio/sfx/hit.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace or approve as project-owned hit-confirm sfx."
+    },
+    "sfx:jump": {
+      "file": "/assets/audio/sfx/jump.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace or approve as project-owned movement sfx."
+    },
+    "sfx:hurt": {
+      "file": "/assets/audio/sfx/hurt.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace or approve as project-owned reaction sfx."
+    },
+    "sfx:guard": {
+      "file": "/assets/audio/sfx/guard.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace or approve as project-owned block sfx."
+    },
+    "sfx:stageClear": {
+      "file": "/assets/audio/sfx/stage-clear.wav",
+      "source": "local generated prototype audio",
+      "author": "project prototype",
+      "license": "project-internal placeholder",
+      "commercialUse": "blocked until approved or replaced",
+      "approvalStatus": "placeholder",
+      "replacementPlan": "Replace or approve as project-owned stage-clear cue."
+    }
+  }
+}

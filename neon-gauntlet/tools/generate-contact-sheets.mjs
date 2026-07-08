@@ -82,6 +82,7 @@ function makeContactSheet({ actor, action, texture, imageHref, frames }) {
           </clipPath>
           <image href="${svgEscape(imageHref)}" x="${-frame.x}" y="${-frame.y}" clip-path="url(#${clipId})" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="${frame.w}" height="${frame.h}" fill="none" stroke="#46d9ff" stroke-width="${1.5 / scale}"/>
+          ${frame.hurtbox ? `<rect x="${frame.hurtbox.x}" y="${frame.hurtbox.y}" width="${frame.hurtbox.w}" height="${frame.hurtbox.h}" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="${1.2 / scale}"/>` : ''}
           <line x1="0" y1="${frame.ay}" x2="${frame.w}" y2="${frame.ay}" stroke="#ffd166" stroke-width="${1 / scale}" stroke-dasharray="${5 / scale} ${4 / scale}"/>
           <circle cx="${frame.ax}" cy="${frame.ay}" r="${4 / scale}" fill="#ff5c8a"/>
         </g>

@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-862" y="-287" clip-path="url(#player-punch-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="188" height="189" fill="none" stroke="#46d9ff" stroke-width="1.396039603960396"/>
+          <rect x="53" y="19" width="83" height="163" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1168316831683167"/>
           <line x1="0" y1="189" x2="188" y2="189" stroke="#ffd166" stroke-width="0.9306930693069306" stroke-dasharray="4.653465346534653 3.7227722772277225"/>
           <circle cx="74" cy="189" r="3.7227722772277225" fill="#ff5c8a"/>
         </g>
@@ -29,6 +30,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-1067" y="-284" clip-path="url(#player-punch-1)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="194" height="191" fill="none" stroke="#46d9ff" stroke-width="1.4405940594059405"/>
+          <rect x="54" y="19" width="85" height="164" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1524752475247524"/>
           <line x1="0" y1="191" x2="194" y2="191" stroke="#ffd166" stroke-width="0.9603960396039604" stroke-dasharray="4.801980198019802 3.8415841584158414"/>
           <circle cx="76" cy="191" r="3.8415841584158414" fill="#ff5c8a"/>
         </g>
@@ -45,6 +47,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-1266" y="-303" clip-path="url(#player-punch-2)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="219" height="173" fill="none" stroke="#46d9ff" stroke-width="1.6262376237623763"/>
+          <rect x="61" y="17" width="96" height="149" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.300990099009901"/>
           <line x1="0" y1="173" x2="219" y2="173" stroke="#ffd166" stroke-width="1.0841584158415842" stroke-dasharray="5.420792079207921 4.336633663366337"/>
           <circle cx="73" cy="173" r="4.336633663366337" fill="#ff5c8a"/>
         </g>

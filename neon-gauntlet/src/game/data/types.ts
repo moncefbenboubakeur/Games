@@ -10,6 +10,20 @@ export interface SpriteFrameData {
   h: number
   ax: number
   ay: number
+  hurtbox?: {
+    x: number
+    y: number
+    w: number
+    h: number
+  }
+}
+
+export interface AttackHitFrameData {
+  frame: number
+  forwardOffset: number
+  width: number
+  targetHalfWidth: number
+  laneRange: number
 }
 
 export interface ActorAnimationData {
@@ -34,6 +48,7 @@ export interface AttackDefinition {
     targetHalfWidth: number
     laneRange: number
     activeFrame: number
+    frames?: AttackHitFrameData[]
   }
   durationMs: number
   activeAfterMs: number
@@ -63,6 +78,7 @@ export interface CombatData {
 
 export interface EnemyDefinition {
   id: EnemyRole
+  texture?: string
   hp: number
   speed: number
   damage: number
@@ -83,6 +99,8 @@ export interface EnemiesData {
 export interface BossDefinition {
   id: string
   name: string
+  texture: string
+  textureFile: string
   hp: number
   speed: number
   damage: number
@@ -95,7 +113,6 @@ export interface BossDefinition {
   telegraphMs?: number
   attackDurationMs?: number
   scale?: number
-  tint?: string
 }
 
 export interface BossesData {
@@ -124,6 +141,21 @@ export interface LevelData {
 export interface AudioData {
   music: Record<string, { file: string; volume: number; loop: boolean }>
   sfx: Record<string, { file: string; volume: number }>
+}
+
+export interface WorldBehaviorData {
+  ai: {
+    cancelTelegraphWhenTargetLeavesRange: boolean
+    guardOnlyWhenThreatened: boolean
+    maxOffLaneAttackDelta: number
+    pursuitStopRangeMultiplier: number
+  }
+  npc: {
+    requirePurpose: boolean
+    allowRandomGuarding: boolean
+    requirePathForMovingActors: boolean
+    requireAnimationContactSheet: boolean
+  }
 }
 
 export interface TiledProperty {

@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-61" y="-524" clip-path="url(#enemy-kick-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="164" height="195" fill="none" stroke="#46d9ff" stroke-width="1.341743119266055"/>
+          <rect x="46" y="20" width="72" height="168" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.073394495412844"/>
           <line x1="0" y1="195" x2="164" y2="195" stroke="#ffd166" stroke-width="0.8944954128440367" stroke-dasharray="4.472477064220183 3.5779816513761467"/>
           <circle cx="70" cy="195" r="3.5779816513761467" fill="#ff5c8a"/>
         </g>
@@ -29,6 +30,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-278" y="-533" clip-path="url(#enemy-kick-1)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="175" height="186" fill="none" stroke="#46d9ff" stroke-width="1.2995049504950493"/>
+          <rect x="49" y="19" width="77" height="160" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.0396039603960394"/>
           <line x1="0" y1="186" x2="175" y2="186" stroke="#ffd166" stroke-width="0.8663366336633663" stroke-dasharray="4.3316831683168315 3.4653465346534653"/>
           <circle cx="73" cy="186" r="3.4653465346534653" fill="#ff5c8a"/>
         </g>
@@ -45,6 +47,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-501" y="-527" clip-path="url(#enemy-kick-2)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="226" height="192" fill="none" stroke="#46d9ff" stroke-width="1.6782178217821784"/>
+          <rect x="63" y="19" width="99" height="165" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.3425742574257427"/>
           <line x1="0" y1="192" x2="226" y2="192" stroke="#ffd166" stroke-width="1.118811881188119" stroke-dasharray="5.594059405940595 4.475247524752476"/>
           <circle cx="79" cy="192" r="4.475247524752476" fill="#ff5c8a"/>
         </g>

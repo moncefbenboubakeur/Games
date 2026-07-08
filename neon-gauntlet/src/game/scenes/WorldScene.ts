@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
 import { chinaLevelById, chinaLevelIndex, nextChinaLevel } from '../data/chinaChapter'
-import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData } from '../data/types'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData, WorldBehaviorData } from '../data/types'
 import { Boss } from '../entities/Boss'
 import { Enemy } from '../entities/Enemy'
 import { Player } from '../entities/Player'
@@ -51,14 +51,17 @@ export class WorldScene extends Phaser.Scene {
     const enemies = this.cache.json.get('enemies') as EnemiesData
     const bosses = this.cache.json.get('bosses') as BossesData
     const audio = this.cache.json.get('audio') as AudioData
+    const worldBehavior = this.cache.json.get('world-behavior') as WorldBehaviorData
     const fallbackLevel = this.cache.json.get(levelRef.levelKey) as LevelData
     const map = this.cache.json.get(levelRef.mapKey) as TiledMapData
     DataValidationSystem.validateAll({ animations, combat, enemies, bosses, audio, level: fallbackLevel, map })
+    DataValidationSystem.validateWorldBehavior(worldBehavior)
     this.mapSystem = new StageMapSystem(this, map, fallbackLevel, levelRef.tilemapKey)
     this.level = this.mapSystem.resolveLevel()
 
     this.animationSystem = new AnimationSystem(this, animations)
     this.animationSystem.registerFrames()
+    bosses.bosses.forEach((boss) => this.animationSystem.registerFramesForTexture('enemy', boss.texture))
     this.combat = new CombatSystem(combat)
     this.combatDebug = new CombatDebugSystem(this, this.combat)
     this.audioSystem = new AudioSystem(this, audio)
@@ -190,7 +193,6 @@ export class WorldScene extends Phaser.Scene {
       color: '#ffd400',
       stroke: '#4a2500',
       strokeThickness: 6,
-      backgroundColor: '#120900',
       padding: { left: 5, right: 5, top: 2, bottom: 2 },
     }).setDepth(930).setScrollFactor(0).setVisible(false).setAlpha(1)
     this.exitArrow.setShadow(2, 2, '#000000', 0, true, true)
@@ -279,7 +281,14 @@ export class WorldScene extends Phaser.Scene {
       player: { x: this.player.x, hp: this.player.hp },
       level: { ...this.level, index: this.levelIndex, exitReady: this.exitReady },
       boss: this.boss ? { id: this.level.boss.id, name: this.boss.bossName, hp: this.boss.hp, x: this.boss.x } : null,
-      enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({ x: enemy.x, hp: enemy.hp, active: enemy.active })),
+      enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({
+        x: enemy.x,
+        hp: enemy.hp,
+        active: enemy.active,
+        aiState: enemy.aiState,
+        aiReason: enemy.aiReason,
+        texture: enemy.texture.key,
+      })),
       combat: {
         playerAttack: activeAttack
           ? {

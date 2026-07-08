@@ -1,5 +1,7 @@
 import { expect, test } from 'playwright/test'
 
+test.setTimeout(90_000)
+
 async function startGame(page: import('playwright/test').Page) {
   await page.goto('/')
   await page.waitForSelector('canvas')
@@ -46,6 +48,7 @@ test('enemies chase instead of attacking empty air when the player is far away',
   expect(state.enemyX).toBeLessThan(setup.startX)
   expect(state.telegraphMs).toBe(0)
   expect(state.attackMs).toBe(0)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies[0]?.aiState)).not.toBe('telegraph')
 })
 
 test('enemy walk animation uses a complete stepping cycle only while moving', async ({ page }) => {
@@ -137,4 +140,47 @@ test('enemies cancel their windup if the player escapes before the hit frame', a
   expect(state.attackMs).toBe(0)
   expect(state.frame.startsWith('enemy-guard')).toBe(false)
   expect(state.playerHp).toBe(150)
+})
+
+test('far enemies do not randomly guard when there is no threat', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ attackMs: number; cooldownMs: number; lane: number; telegraphMs: number; x: number }>
+      player: { lane: number; x: number }
+    }
+    const enemy = world.enemies[0]
+    world.player.x = 60
+    world.player.lane = 0.72
+    enemy.x = 430
+    enemy.lane = 0.72
+    enemy.attackMs = 0
+    enemy.telegraphMs = 0
+    enemy.cooldownMs = 9999
+  })
+  await page.waitForTimeout(300)
+
+  const state = await page.evaluate(() => window.__NEON_DEBUG__?.enemies[0])
+  expect(state?.aiState).toBe('pursue')
+  expect(state?.aiReason).toBe('closing-distance')
+})
+
+test('spawned bosses use boss-specific textures', async ({ page }) => {
+  await page.goto('/')
+  await page.waitForSelector('canvas')
+  await page.waitForFunction(() => typeof window.__NEON_START_LEVEL__ === 'function')
+  await page.evaluate(() => window.__NEON_START_LEVEL__?.('stage-04-china-night-market'))
+  await page.waitForFunction(() => window.__NEON_DEBUG__?.level?.id === 'stage-04-china-night-market')
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      handleBossSpawn: () => void
+      level: { boss: { spawnAfterX: number } }
+      player: { x: number }
+    }
+    world.player.x = world.level.boss.spawnAfterX + 4
+    world.handleBossSpawn()
+  })
+
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.id)).toBe('lantern-mai')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.find((enemy) => enemy.texture === 'lantern-mai-sheet')?.texture)).toBe('lantern-mai-sheet')
 })

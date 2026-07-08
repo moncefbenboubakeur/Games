@@ -7,6 +7,7 @@ export interface FighterState {
   hp: number
   guard?: boolean
   invincibleMs?: number
+  attackFrame?: number
 }
 
 export function sameLane(a: FighterState, b: FighterState, range: number) {
@@ -23,7 +24,7 @@ export function canHit(attacker: FighterState, defender: FighterState, attack: A
 }
 
 export function attackBounds(attacker: FighterState, attack: AttackDefinition) {
-  const hitbox = attack.hitbox
+  const hitbox = activeHitbox(attacker, attack)
   if (!hitbox) {
     return attacker.face === 1
       ? { left: attacker.x, right: attacker.x + attack.range }
@@ -44,7 +45,7 @@ export function attackBounds(attacker: FighterState, attack: AttackDefinition) {
 }
 
 export function hurtBounds(defender: FighterState, attack: AttackDefinition) {
-  const halfWidth = attack.hitbox?.targetHalfWidth ?? 0
+  const halfWidth = activeHitbox(defender, attack)?.targetHalfWidth ?? attack.hitbox?.targetHalfWidth ?? 0
   return {
     left: defender.x - halfWidth,
     right: defender.x + halfWidth,
@@ -54,8 +55,14 @@ export function hurtBounds(defender: FighterState, attack: AttackDefinition) {
 export function hitboxesOverlap(attacker: FighterState, defender: FighterState, attack: AttackDefinition) {
   const attackBox = attackBounds(attacker, attack)
   const hurtBox = hurtBounds(defender, attack)
-  const laneRange = attack.hitbox?.laneRange ?? attack.laneRange
+  const laneRange = activeHitbox(attacker, attack)?.laneRange ?? attack.hitbox?.laneRange ?? attack.laneRange
   return attackBox.left <= hurtBox.right && attackBox.right >= hurtBox.left && sameLane(attacker, defender, laneRange) && isInFront(attacker, defender)
+}
+
+export function activeHitbox(attacker: FighterState, attack: AttackDefinition) {
+  if (!attack.hitbox) return undefined
+  const frame = attacker.attackFrame
+  return attack.hitbox.frames?.find((item) => item.frame === frame) ?? attack.hitbox
 }
 
 export function applyDamage(target: FighterState, damage: number) {

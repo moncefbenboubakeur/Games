@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-962" y="-914" clip-path="url(#enemy-down-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="191" height="73" fill="none" stroke="#46d9ff" stroke-width="1.4183168316831685"/>
+          <rect x="53" y="7" width="84" height="63" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1346534653465348"/>
           <line x1="0" y1="73" x2="191" y2="73" stroke="#ffd166" stroke-width="0.9455445544554456" stroke-dasharray="4.727722772277228 3.7821782178217824"/>
           <circle cx="95" cy="73" r="3.7821782178217824" fill="#ff5c8a"/>
         </g>

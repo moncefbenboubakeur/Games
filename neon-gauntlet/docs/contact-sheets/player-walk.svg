@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-66" y="-271" clip-path="url(#player-walk-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="137" height="204" fill="none" stroke="#46d9ff" stroke-width="1.4036697247706422"/>
+          <rect x="38" y="20" width="60" height="175" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1229357798165138"/>
           <line x1="0" y1="204" x2="137" y2="204" stroke="#ffd166" stroke-width="0.9357798165137615" stroke-dasharray="4.678899082568807 3.743119266055046"/>
           <circle cx="68" cy="204" r="3.743119266055046" fill="#ff5c8a"/>
         </g>
@@ -29,6 +30,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-263" y="-268" clip-path="url(#player-walk-1)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="142" height="207" fill="none" stroke="#46d9ff" stroke-width="1.4243119266055047"/>
+          <rect x="40" y="21" width="62" height="178" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1394495412844037"/>
           <line x1="0" y1="207" x2="142" y2="207" stroke="#ffd166" stroke-width="0.9495412844036697" stroke-dasharray="4.747706422018348 3.7981651376146788"/>
           <circle cx="71" cy="207" r="3.7981651376146788" fill="#ff5c8a"/>
         </g>
@@ -45,6 +47,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-471" y="-267" clip-path="url(#player-walk-2)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="146" height="208" fill="none" stroke="#46d9ff" stroke-width="1.4311926605504586"/>
+          <rect x="41" y="21" width="64" height="179" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1449541284403668"/>
           <line x1="0" y1="208" x2="146" y2="208" stroke="#ffd166" stroke-width="0.9541284403669724" stroke-dasharray="4.770642201834862 3.8165137614678897"/>
           <circle cx="73" cy="208" r="3.8165137614678897" fill="#ff5c8a"/>
         </g>
@@ -61,6 +64,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-696" y="-275" clip-path="url(#player-walk-3)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="133" height="200" fill="none" stroke="#46d9ff" stroke-width="1.3761467889908257"/>
+          <rect x="37" y="20" width="59" height="172" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1009174311926604"/>
           <line x1="0" y1="200" x2="133" y2="200" stroke="#ffd166" stroke-width="0.9174311926605504" stroke-dasharray="4.587155963302752 3.6697247706422016"/>
           <circle cx="66" cy="200" r="3.6697247706422016" fill="#ff5c8a"/>
         </g>

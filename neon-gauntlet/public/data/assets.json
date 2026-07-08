@@ -86,6 +86,46 @@
       "license": "pending project approval",
       "commercialUse": "blocked until documented or replaced",
       "notes": "Active China long level plate. Needs responsive screenshot review and release licensing decision before production approval."
+    },
+    "switchblade-sora-sheet": {
+      "file": "/assets/sprites/bosses/switchblade-sora-sheet.png",
+      "kind": "boss-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-boss-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Separate runtime boss texture. This removes Phaser runtime tinting but is not final unique boss art."
+    },
+    "turnstile-ren-sheet": {
+      "file": "/assets/sprites/bosses/turnstile-ren-sheet.png",
+      "kind": "boss-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-boss-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Separate runtime boss texture. This removes Phaser runtime tinting but is not final unique boss art."
+    },
+    "iron-wei-sheet": {
+      "file": "/assets/sprites/bosses/iron-wei-sheet.png",
+      "kind": "boss-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-boss-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Separate runtime boss texture. This removes Phaser runtime tinting but is not final unique boss art."
+    },
+    "lantern-mai-sheet": {
+      "file": "/assets/sprites/bosses/lantern-mai-sheet.png",
+      "kind": "boss-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "generated from local prototype enemy-rival-sheet via tools/generate-boss-sheets.mjs",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Separate runtime boss texture. This removes Phaser runtime tinting but is not final unique boss art."
     }
   },
   "audio": {

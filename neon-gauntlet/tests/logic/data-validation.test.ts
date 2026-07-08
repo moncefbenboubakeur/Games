@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { DataValidationSystem } from '../../src/game/systems/DataValidationSystem'
-import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData } from '../../src/game/data/types'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData, WorldBehaviorData } from '../../src/game/data/types'
 
 const combat = (): CombatData => ({
   player: {
@@ -17,7 +17,17 @@ const combat = (): CombatData => ({
       damage: 16,
       range: 42,
       laneRange: 0.095,
-      hitbox: { forwardOffset: 10, width: 38, targetHalfWidth: 14, laneRange: 0.095, activeFrame: 1 },
+      hitbox: {
+        forwardOffset: 10,
+        width: 38,
+        targetHalfWidth: 14,
+        laneRange: 0.095,
+        activeFrame: 1,
+        frames: [
+          { frame: 0, forwardOffset: 8, width: 22, targetHalfWidth: 14, laneRange: 0.08 },
+          { frame: 1, forwardOffset: 10, width: 38, targetHalfWidth: 14, laneRange: 0.095 },
+        ],
+      },
       durationMs: 230,
       activeAfterMs: 40,
       knockback: 18,
@@ -26,7 +36,17 @@ const combat = (): CombatData => ({
       damage: 25,
       range: 58,
       laneRange: 0.095,
-      hitbox: { forwardOffset: 16, width: 54, targetHalfWidth: 14, laneRange: 0.095, activeFrame: 2 },
+      hitbox: {
+        forwardOffset: 16,
+        width: 54,
+        targetHalfWidth: 14,
+        laneRange: 0.095,
+        activeFrame: 2,
+        frames: [
+          { frame: 0, forwardOffset: 12, width: 30, targetHalfWidth: 14, laneRange: 0.08 },
+          { frame: 2, forwardOffset: 22, width: 66, targetHalfWidth: 14, laneRange: 0.1 },
+        ],
+      },
       durationMs: 330,
       activeAfterMs: 55,
       knockback: 30,
@@ -45,6 +65,8 @@ const bosses = (): BossesData => ({
     {
       id: 'switchblade-sora',
       name: 'Switchblade Sora',
+      texture: 'switchblade-sora-sheet',
+      textureFile: '/assets/sprites/bosses/switchblade-sora-sheet.png',
       hp: 170,
       speed: 42,
       damage: 18,
@@ -57,7 +79,6 @@ const bosses = (): BossesData => ({
       telegraphMs: 250,
       attackDurationMs: 280,
       scale: 1.2,
-      tint: '#ffd166',
     },
   ],
 })
@@ -89,7 +110,7 @@ const level = (): LevelData => ({
 })
 
 const animations = (): AnimationData => {
-  const frame = { name: 'frame-0', x: 0, y: 0, w: 10, h: 10, ax: 5, ay: 10 }
+  const frame = { name: 'frame-0', x: 0, y: 0, w: 10, h: 10, ax: 5, ay: 10, hurtbox: { x: 2, y: 1, w: 6, h: 8 } }
   const actions = { idle: [frame], walk: [frame], punch: [frame], kick: [frame], guard: [frame], hurt: [frame], jump: [frame], down: [frame] }
   return {
     player: { texture: 'player-sheet', scale: 0.38, animations: actions },
@@ -140,6 +161,21 @@ const map = (): TiledMapData => ({
   ],
 })
 
+const worldBehavior = (): WorldBehaviorData => ({
+  ai: {
+    cancelTelegraphWhenTargetLeavesRange: true,
+    guardOnlyWhenThreatened: true,
+    maxOffLaneAttackDelta: 0.095,
+    pursuitStopRangeMultiplier: 0.82,
+  },
+  npc: {
+    requirePurpose: true,
+    allowRandomGuarding: false,
+    requirePathForMovingActors: true,
+    requireAnimationContactSheet: true,
+  },
+})
+
 describe('DataValidationSystem', () => {
   it('accepts a complete game data bundle', () => {
     expect(() =>
@@ -159,6 +195,18 @@ describe('DataValidationSystem', () => {
     const badCombat = combat()
     badCombat.attacks.punch.hitbox = undefined
     expect(() => DataValidationSystem.validateCombat(badCombat)).toThrow(/punch hitbox metadata/)
+  })
+
+  it('rejects attacks without per-frame hitbox metadata', () => {
+    const badCombat = combat()
+    badCombat.attacks.punch.hitbox!.frames = []
+    expect(() => DataValidationSystem.validateCombat(badCombat)).toThrow(/per-frame/)
+  })
+
+  it('rejects animation frames without valid hurtboxes', () => {
+    const badAnimations = animations()
+    badAnimations.player.animations.idle[0].hurtbox = undefined
+    expect(() => DataValidationSystem.validateAnimations(badAnimations)).toThrow(/hurtbox/)
   })
 
   it('rejects maps without required gameplay layers', () => {
@@ -208,13 +256,21 @@ describe('DataValidationSystem', () => {
     badAttack.bosses[0].preferredAttack = 'guard' as 'punch'
     expect(() => DataValidationSystem.validateBossDefinitions(badAttack)).toThrow(/preferredAttack/)
 
-    const badTint = bosses()
-    badTint.bosses[0].tint = 'gold'
-    expect(() => DataValidationSystem.validateBossDefinitions(badTint)).toThrow(/tint/)
+    const badTextureFile = bosses()
+    badTextureFile.bosses[0].textureFile = '/assets/sprites/enemy-rival-sheet.png'
+    expect(() => DataValidationSystem.validateBossDefinitions(badTextureFile)).toThrow(/textureFile/)
 
     const badLaneSpeed = bosses()
     badLaneSpeed.bosses[0].laneSpeed = 0
     expect(() => DataValidationSystem.validateBossDefinitions(badLaneSpeed)).toThrow(/laneSpeed/)
+  })
+
+  it('rejects invalid world behavior rules', () => {
+    expect(() => DataValidationSystem.validateWorldBehavior(worldBehavior())).not.toThrow()
+
+    const badBehavior = worldBehavior()
+    badBehavior.npc.allowRandomGuarding = true
+    expect(() => DataValidationSystem.validateWorldBehavior(badBehavior)).toThrow(/randomly guard/)
   })
 
   it('rejects missing level music cues and invalid audio paths', () => {

@@ -12,7 +12,7 @@ declare global {
       player: { x: number; hp: number }
       level: { id: string; name: string; index?: number; stageClearX?: number; exitReady?: boolean; boss?: { id: string } }
       boss?: null | { id: string; name: string; hp: number; x: number }
-      enemies: Array<{ x: number; hp: number; active?: boolean }>
+      enemies: Array<{ x: number; hp: number; active?: boolean; aiState?: string; aiReason?: string; texture?: string }>
       combat?: {
         playerAttack: null | {
           kind: 'punch' | 'kick'

@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-462" y="-737" clip-path="url(#enemy-jump-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="112" height="178" fill="none" stroke="#46d9ff" stroke-width="1.2247706422018347"/>
+          <rect x="31" y="18" width="49" height="153" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="0.9798165137614677"/>
           <line x1="0" y1="178" x2="112" y2="178" stroke="#ffd166" stroke-width="0.8165137614678898" stroke-dasharray="4.082568807339449 3.266055045871559"/>
           <circle cx="56" cy="178" r="3.266055045871559" fill="#ff5c8a"/>
         </g>
@@ -29,6 +30,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-645" y="-729" clip-path="url(#enemy-jump-1)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="136" height="196" fill="none" stroke="#46d9ff" stroke-width="1.348623853211009"/>
+          <rect x="38" y="20" width="60" height="169" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.0788990825688072"/>
           <line x1="0" y1="196" x2="136" y2="196" stroke="#ffd166" stroke-width="0.8990825688073394" stroke-dasharray="4.495412844036697 3.5963302752293576"/>
           <circle cx="68" cy="196" r="3.5963302752293576" fill="#ff5c8a"/>
         </g>

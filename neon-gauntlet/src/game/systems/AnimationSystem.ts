@@ -10,6 +10,11 @@ export class AnimationSystem {
     this.registerActorFrames(this.data.enemy)
   }
 
+  registerFramesForTexture(actor: 'player' | 'enemy', textureKey: string) {
+    const actorData = this.data[actor]
+    this.registerActorFrames({ ...actorData, texture: textureKey })
+  }
+
   frame(actor: 'player' | 'enemy', action: ActionName, index = 0) {
     const actorData = this.data[actor]
     const frames = actorData.animations[action] || actorData.animations.idle

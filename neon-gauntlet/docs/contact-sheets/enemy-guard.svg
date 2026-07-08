@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-867" y="-533" clip-path="url(#enemy-guard-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="135" height="186" fill="none" stroke="#46d9ff" stroke-width="1.2798165137614679"/>
+          <rect x="38" y="19" width="59" height="160" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.0238532110091743"/>
           <line x1="0" y1="186" x2="135" y2="186" stroke="#ffd166" stroke-width="0.8532110091743119" stroke-dasharray="4.26605504587156 3.4128440366972477"/>
           <circle cx="67" cy="186" r="3.4128440366972477" fill="#ff5c8a"/>
         </g>
@@ -29,6 +30,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-1085" y="-533" clip-path="url(#enemy-guard-1)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="129" height="186" fill="none" stroke="#46d9ff" stroke-width="1.2798165137614679"/>
+          <rect x="36" y="19" width="57" height="160" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.0238532110091743"/>
           <line x1="0" y1="186" x2="129" y2="186" stroke="#ffd166" stroke-width="0.8532110091743119" stroke-dasharray="4.26605504587156 3.4128440366972477"/>
           <circle cx="64" cy="186" r="3.4128440366972477" fill="#ff5c8a"/>
         </g>
@@ -45,6 +47,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/enemy-rival-sheet.png" x="-1305" y="-538" clip-path="url(#enemy-guard-2)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="127" height="181" fill="none" stroke="#46d9ff" stroke-width="1.2454128440366972"/>
+          <rect x="36" y="18" width="56" height="156" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="0.9963302752293577"/>
           <line x1="0" y1="181" x2="127" y2="181" stroke="#ffd166" stroke-width="0.8302752293577982" stroke-dasharray="4.151376146788991 3.3211009174311927"/>
           <circle cx="63" cy="181" r="3.3211009174311927" fill="#ff5c8a"/>
         </g>

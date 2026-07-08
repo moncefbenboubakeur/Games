@@ -19,6 +19,7 @@ function findRepeatedFrames(actor, action, frames) {
   const failures = []
   const signatures = new Map()
   frames.forEach((frame, index) => {
+    if (!frame.hurtbox) failures.push(`${actor}.${action}[${index}] is missing hurtbox metadata`)
     const signature = frameSignature(frame)
     if (signatures.has(signature)) failures.push(`${actor}.${action}[${index}] duplicates frame ${signatures.get(signature)}`)
     signatures.set(signature, index)

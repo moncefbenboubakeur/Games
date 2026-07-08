@@ -12,6 +12,7 @@ export class Player extends Phaser.GameObjects.Sprite implements FighterState {
   hp: number
   guard = false
   invincibleMs = 0
+  attackFrame = 0
   combo = 0
   comboMs = 0
   z = 0
@@ -94,6 +95,7 @@ export class Player extends Phaser.GameObjects.Sprite implements FighterState {
     if (this.attackMs <= 0) {
       this.attackKind = null
       this.hitApplied = false
+      this.attackFrame = 0
     }
     this.invincibleMs = Math.max(0, this.invincibleMs - dt)
     this.comboMs = Math.max(0, this.comboMs - dt)
@@ -156,6 +158,7 @@ export class Player extends Phaser.GameObjects.Sprite implements FighterState {
       } else if (action === 'punch' || action === 'kick') {
         const frames = action === 'kick' ? [0, 1, 2] : [0, 1, 2]
         index = choose(frames, Math.floor((1 - this.attackMs / this.combat.getAttack(action).durationMs) * frames.length))
+        this.attackFrame = index
       } else if (action === 'walk') {
         index = tick % 4
       }

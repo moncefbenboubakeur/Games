@@ -1,4 +1,4 @@
-import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, EnemyRole, LevelData, TiledMapData } from '../data/types'
+import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, EnemyRole, LevelData, TiledMapData, WorldBehaviorData } from '../data/types'
 
 interface GameDataBundle {
   animations: AnimationData
@@ -40,6 +40,13 @@ export class DataValidationSystem {
           this.require(Boolean(frame.name), `${actor}.${action}[${index}] frame name is required`)
           this.require(frame.w > 0 && frame.h > 0, `${actor}.${action}[${index}] frame dimensions must be positive`)
           this.require(frame.ax >= 0 && frame.ay >= 0, `${actor}.${action}[${index}] anchor must be non-negative`)
+          this.require(Boolean(frame.hurtbox), `${actor}.${action}[${index}] hurtbox metadata is required`)
+          if (frame.hurtbox) {
+            this.require(frame.hurtbox.w > 0 && frame.hurtbox.h > 0, `${actor}.${action}[${index}] hurtbox dimensions must be positive`)
+            this.require(frame.hurtbox.x >= 0 && frame.hurtbox.y >= 0, `${actor}.${action}[${index}] hurtbox origin must be non-negative`)
+            this.require(frame.hurtbox.x + frame.hurtbox.w <= frame.w, `${actor}.${action}[${index}] hurtbox must fit inside frame width`)
+            this.require(frame.hurtbox.y + frame.hurtbox.h <= frame.h, `${actor}.${action}[${index}] hurtbox must fit inside frame height`)
+          }
         })
       })
     })
@@ -59,6 +66,14 @@ export class DataValidationSystem {
       this.require(attack.hitbox.targetHalfWidth > 0, `${kind} targetHalfWidth must be positive`)
       this.require(attack.hitbox.laneRange > 0, `${kind} hitbox laneRange must be positive`)
       this.require(attack.hitbox.activeFrame >= 0, `${kind} activeFrame must be non-negative`)
+      this.require(Array.isArray(attack.hitbox.frames) && attack.hitbox.frames.length > 0, `${kind} per-frame hitbox metadata is required`)
+      attack.hitbox.frames?.forEach((frame, index) => {
+        this.require(frame.frame >= 0, `${kind} hitbox frame ${index} frame must be non-negative`)
+        this.require(frame.forwardOffset >= 0, `${kind} hitbox frame ${index} forwardOffset must be non-negative`)
+        this.require(frame.width > 0, `${kind} hitbox frame ${index} width must be positive`)
+        this.require(frame.targetHalfWidth > 0, `${kind} hitbox frame ${index} targetHalfWidth must be positive`)
+        this.require(frame.laneRange > 0, `${kind} hitbox frame ${index} laneRange must be positive`)
+      })
     })
   }
 
@@ -81,12 +96,14 @@ export class DataValidationSystem {
       this.require(!ids.has(boss.id), `Duplicate boss id: ${boss.id}`)
       ids.add(boss.id)
       this.require(Boolean(boss.name), `${boss.id} name is required`)
+      this.require(Boolean(boss.texture), `${boss.id} texture is required`)
+      this.require(Boolean(boss.textureFile), `${boss.id} textureFile is required`)
+      this.require(boss.textureFile.startsWith('/assets/sprites/bosses/'), `${boss.id} textureFile must live under /assets/sprites/bosses/`)
       this.require(boss.hp > 0, `${boss.id} hp must be positive`)
       this.require(boss.speed > 0, `${boss.id} speed must be positive`)
       this.require(boss.range > 0, `${boss.id} range must be positive`)
       this.validateBehaviorTuning(boss.id, boss)
       if (boss.scale !== undefined) this.require(boss.scale > 0, `${boss.id} scale must be positive`)
-      if (boss.tint !== undefined) this.require(/^#?[0-9a-fA-F]{6}$/.test(boss.tint), `${boss.id} tint must be a 6 digit hex color`)
     })
   }
 
@@ -112,6 +129,17 @@ export class DataValidationSystem {
       this.require(typeof cue.loop === 'boolean', `music.${key} loop must be boolean`)
     })
     Object.entries(data.sfx).forEach(([key, cue]) => this.validateAudioCue(`sfx.${key}`, cue.file, cue.volume))
+  }
+
+  static validateWorldBehavior(data: WorldBehaviorData) {
+    this.require(data.ai.cancelTelegraphWhenTargetLeavesRange === true, 'AI must cancel telegraph when target leaves range')
+    this.require(data.ai.guardOnlyWhenThreatened === true, 'AI guard must be threat-driven')
+    this.require(data.ai.maxOffLaneAttackDelta > 0, 'AI maxOffLaneAttackDelta must be positive')
+    this.require(data.ai.pursuitStopRangeMultiplier > 0 && data.ai.pursuitStopRangeMultiplier <= 1, 'AI pursuitStopRangeMultiplier must be between 0 and 1')
+    this.require(data.npc.requirePurpose === true, 'NPCs/background actors need an explicit purpose')
+    this.require(data.npc.allowRandomGuarding === false, 'NPCs/background actors must not randomly guard')
+    this.require(data.npc.requirePathForMovingActors === true, 'Moving NPCs/background actors need paths')
+    this.require(data.npc.requireAnimationContactSheet === true, 'NPC/background actor animations need contact-sheet review')
   }
 
   static validateMap(map: TiledMapData) {

@@ -13,6 +13,7 @@
           </clipPath>
           <image href="../../public/assets/sprites/player-sheet.png" x="-78" y="-20" clip-path="url(#player-idle-0)" style="image-rendering: pixelated"/>
           <rect x="0" y="0" width="118" height="210" fill="none" stroke="#46d9ff" stroke-width="1.4449541284403669"/>
+          <rect x="33" y="21" width="52" height="181" fill="rgba(255,92,138,0.18)" stroke="#ff5c8a" stroke-width="1.1559633027522935"/>
           <line x1="0" y1="210" x2="118" y2="210" stroke="#ffd166" stroke-width="0.9633027522935779" stroke-dasharray="4.816513761467889 3.8532110091743115"/>
           <circle cx="59" cy="210" r="3.8532110091743115" fill="#ff5c8a"/>
         </g>

@@ -15,6 +15,8 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   face: -1 | 1 = -1
   hp: number
   guard = false
+  aiState: 'idle' | 'pursue' | 'align' | 'telegraph' | 'attack' | 'recover' | 'down' = 'idle'
+  aiReason = 'spawn'
   invincibleMs = 0
   attackMs = 0
   telegraphMs = 0
@@ -23,6 +25,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   private corpseStartedAt = 0
   private downFrameApplied = false
   private moving = false
+  protected readonly textureKey: string
 
   constructor(
     scene: Phaser.Scene,
@@ -33,16 +36,20 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     protected readonly combat: CombatSystem,
   ) {
     const frame = animations.frame('enemy', 'idle')
-    super(scene, x, laneToY(lane), 'enemy-sheet', frame.name)
+    const textureKey = def.texture ?? 'enemy-sheet'
+    super(scene, x, laneToY(lane), textureKey, frame.name)
+    this.textureKey = textureKey
     this.lane = lane
     this.hp = def.hp
     this.setScale(0.38 * def.scale)
-    animations.apply(this, 'enemy-sheet', frame)
+    animations.apply(this, this.textureKey, frame)
     scene.add.existing(this)
   }
 
   updateEnemy(dt: number, player: Player, worldWidth: number) {
     if (this.hp <= 0) {
+      this.aiState = 'down'
+      this.aiReason = 'defeated'
       this.updateCorpse(dt)
       return
     }
@@ -56,35 +63,56 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     const dy = player.lane - this.lane
     this.face = dx < 0 ? -1 : 1
     this.moving = false
+    this.aiState = 'idle'
+    this.aiReason = 'watching'
 
     if (this.telegraphMs > 0 && !this.canStartAttack(player)) {
       this.telegraphMs = 0
       this.cooldownMs = Math.min(this.cooldownMs, 180)
+      this.aiState = 'pursue'
+      this.aiReason = 'target-left-range'
     }
 
     if (this.telegraphMs <= 0 && this.attackMs <= 0) {
       if (Math.abs(dx) > this.def.range * 0.82) {
         this.x += Math.sign(dx) * this.def.speed * dt / 1000
         this.moving = true
+        this.aiState = 'pursue'
+        this.aiReason = 'closing-distance'
       }
       if (Math.abs(dy) > 0.025) {
         this.lane += Math.sign(dy) * (this.def.laneSpeed ?? 0.18) * dt / 1000
         this.moving = true
+        this.aiState = 'align'
+        this.aiReason = 'matching-lane'
       }
     }
     if (this.cooldownMs <= 0 && this.telegraphMs <= 0 && this.attackMs <= 0 && this.canStartAttack(player)) {
       this.telegraphMs = this.def.telegraphMs ?? (this.def.id === 'thrower' ? 430 : 260)
       this.cooldownMs = Phaser.Math.Between(this.def.cooldownMinMs, this.def.cooldownMaxMs)
+      this.aiState = 'telegraph'
+      this.aiReason = 'target-in-range'
     }
 
     if (this.telegraphMs > 0 && this.telegraphMs <= 40) {
       this.telegraphMs = 0
       if (!this.canStartAttack(player)) {
         this.cooldownMs = Math.min(this.cooldownMs, 180)
+        this.aiState = 'recover'
+        this.aiReason = 'cancelled-empty-air'
       } else {
         this.attackMs = this.def.attackDurationMs ?? 280
         player.hurt(this.def.damage, this.face * 22)
+        this.aiState = 'attack'
+        this.aiReason = 'confirmed-contact-range'
       }
+    }
+    if (this.attackMs > 0) {
+      this.aiState = 'attack'
+      this.aiReason = 'attack-recovery'
+    } else if (this.telegraphMs > 0) {
+      this.aiState = 'telegraph'
+      this.aiReason = 'target-in-range'
     }
 
     this.x = clamp(this.x, 32, worldWidth - 32)
@@ -148,7 +176,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     }
 
     const frame = this.animations.frame('enemy', action, index)
-    this.animations.apply(this, 'enemy-sheet', frame)
+    this.animations.apply(this, this.textureKey, frame)
     this.applyFacing(action)
     this.alpha = this.invincibleMs > 0 && Math.floor(this.invincibleMs / 55) % 2 ? 0.62 : 1
   }
