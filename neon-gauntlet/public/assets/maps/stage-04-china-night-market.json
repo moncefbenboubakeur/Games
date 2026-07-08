@@ -10,7 +10,7 @@
   "tileheight": 16,
   "infinite": false,
   "nextlayerid": 14,
-  "nextobjectid": 17,
+  "nextobjectid": 21,
   "properties": [
     {
       "name": "backgroundTexture",
@@ -2916,10 +2916,31 @@
       "objects": [
         {
           "id": 3,
+          "name": "runner",
+          "type": "enemy_spawn",
+          "x": 250,
+          "y": 168,
+          "width": 0,
+          "height": 0,
+          "properties": [
+            {
+              "name": "role",
+              "type": "string",
+              "value": "runner"
+            },
+            {
+              "name": "lane",
+              "type": "float",
+              "value": 0.64
+            }
+          ]
+        },
+        {
+          "id": 4,
           "name": "striker",
           "type": "enemy_spawn",
-          "x": 302,
-          "y": 168,
+          "x": 326,
+          "y": 178,
           "width": 0,
           "height": 0,
           "properties": [
@@ -2931,15 +2952,36 @@
             {
               "name": "lane",
               "type": "float",
+              "value": 0.82
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "thrower",
+          "type": "enemy_spawn",
+          "x": 408,
+          "y": 168,
+          "width": 0,
+          "height": 0,
+          "properties": [
+            {
+              "name": "role",
+              "type": "string",
+              "value": "thrower"
+            },
+            {
+              "name": "lane",
+              "type": "float",
               "value": 0.7
             }
           ]
         },
         {
-          "id": 4,
+          "id": 6,
           "name": "runner",
           "type": "enemy_spawn",
-          "x": 396,
+          "x": 488,
           "y": 178,
           "width": 0,
           "height": 0,
@@ -2957,10 +2999,10 @@
           ]
         },
         {
-          "id": 5,
+          "id": 7,
           "name": "bruiser",
           "type": "enemy_spawn",
-          "x": 490,
+          "x": 560,
           "y": 168,
           "width": 0,
           "height": 0,
@@ -2976,27 +3018,6 @@
               "value": 0.68
             }
           ]
-        },
-        {
-          "id": 6,
-          "name": "thrower",
-          "type": "enemy_spawn",
-          "x": 562,
-          "y": 178,
-          "width": 0,
-          "height": 0,
-          "properties": [
-            {
-              "name": "role",
-              "type": "string",
-              "value": "thrower"
-            },
-            {
-              "name": "lane",
-              "type": "float",
-              "value": 0.78
-            }
-          ]
         }
       ]
     },
@@ -3007,8 +3028,8 @@
       "visible": false,
       "objects": [
         {
-          "id": 7,
-          "name": "switchblade-sora",
+          "id": 20,
+          "name": "lantern-mai",
           "type": "boss_spawn",
           "x": 610,
           "y": 173,
@@ -3018,12 +3039,12 @@
             {
               "name": "boss",
               "type": "string",
-              "value": "switchblade-sora"
+              "value": "lantern-mai"
             },
             {
               "name": "lane",
               "type": "float",
-              "value": 0.72
+              "value": 0.7
             }
           ]
         }
@@ -3039,7 +3060,7 @@
           "id": 8,
           "name": "boss-trigger",
           "type": "boss_trigger",
-          "x": 500,
+          "x": 486,
           "y": 0,
           "width": 20,
           "height": 240,

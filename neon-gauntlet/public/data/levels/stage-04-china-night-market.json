@@ -10,31 +10,36 @@
   },
   "enemyWaves": [
     {
-      "x": 302,
-      "lane": 0.7,
+      "x": 250,
+      "lane": 0.64,
+      "role": "runner"
+    },
+    {
+      "x": 326,
+      "lane": 0.82,
       "role": "striker"
     },
     {
-      "x": 396,
+      "x": 408,
+      "lane": 0.7,
+      "role": "thrower"
+    },
+    {
+      "x": 488,
       "lane": 0.76,
       "role": "runner"
     },
     {
-      "x": 490,
+      "x": 560,
       "lane": 0.68,
       "role": "bruiser"
-    },
-    {
-      "x": 562,
-      "lane": 0.78,
-      "role": "thrower"
     }
   ],
   "boss": {
-    "id": "switchblade-sora",
+    "id": "lantern-mai",
     "x": 610,
-    "lane": 0.72,
-    "spawnAfterX": 500
+    "lane": 0.7,
+    "spawnAfterX": 486
   },
   "stageClearX": 688,
   "map": "stage-04-china-night-market-map"

@@ -10,31 +10,31 @@
   },
   "enemyWaves": [
     {
-      "x": 242,
-      "lane": 0.7,
-      "role": "striker"
-    },
-    {
-      "x": 317,
-      "lane": 0.76,
+      "x": 218,
+      "lane": 0.64,
       "role": "runner"
     },
     {
-      "x": 392,
-      "lane": 0.68,
-      "role": "bruiser"
+      "x": 280,
+      "lane": 0.82,
+      "role": "runner"
     },
     {
-      "x": 449,
-      "lane": 0.78,
+      "x": 350,
+      "lane": 0.72,
       "role": "thrower"
+    },
+    {
+      "x": 424,
+      "lane": 0.76,
+      "role": "striker"
     }
   ],
   "boss": {
-    "id": "switchblade-sora",
+    "id": "turnstile-ren",
     "x": 466,
-    "lane": 0.72,
-    "spawnAfterX": 356
+    "lane": 0.7,
+    "spawnAfterX": 348
   },
   "stageClearX": 544,
   "map": "stage-02-china-station-map"

@@ -10,7 +10,7 @@
   "tileheight": 16,
   "infinite": false,
   "nextlayerid": 14,
-  "nextobjectid": 17,
+  "nextobjectid": 21,
   "properties": [
     {
       "name": "backgroundTexture",
@@ -2467,7 +2467,7 @@
       "visible": false,
       "objects": [
         {
-          "id": 7,
+          "id": 20,
           "name": "switchblade-sora",
           "type": "boss_spawn",
           "x": 466,

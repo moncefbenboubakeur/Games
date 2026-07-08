@@ -68,6 +68,7 @@ export class WorldScene extends Phaser.Scene {
 
     this.mapSystem.render()
     this.createExitArrow()
+    this.showAreaTitle()
 
     this.player = new Player(this, this.level.playerSpawn.x, this.level.playerSpawn.lane, this.animationSystem, this.combat, combat)
     const spawner = new SpawnSystem(this, this.animationSystem, this.combat, enemies.roles, bosses.bosses)
@@ -223,6 +224,34 @@ export class WorldScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
       onComplete: () => {
         this.scene.start(SceneKeys.World, { levelId: nextLevelId, score: this.score })
+      },
+    })
+  }
+
+  private showAreaTitle() {
+    const title = this.add.text(GAME_WIDTH / 2, 42, `AREA ${this.levelIndex + 1}  ${this.level.name}`, {
+      fontFamily: 'monospace',
+      fontSize: '13px',
+      color: '#ffd166',
+      stroke: '#050711',
+      strokeThickness: 5,
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(1600).setAlpha(0)
+    const subtitle = this.add.text(GAME_WIDTH / 2, 61, 'CLEAR THE CREW  THEN MOVE RIGHT', {
+      fontFamily: 'monospace',
+      fontSize: '8px',
+      color: '#dff6ff',
+      stroke: '#050711',
+      strokeThickness: 4,
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(1600).setAlpha(0)
+    this.tweens.add({
+      targets: [title, subtitle],
+      alpha: 1,
+      duration: 240,
+      yoyo: true,
+      hold: 900,
+      onComplete: () => {
+        title.destroy()
+        subtitle.destroy()
       },
     })
   }

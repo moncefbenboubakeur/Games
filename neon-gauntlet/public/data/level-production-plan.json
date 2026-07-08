@@ -14,9 +14,9 @@
         "id": "switchblade-sora",
         "name": "Switchblade Sora"
       },
-      "bossMechanic": "Fast pressure boss with readable blade windups, lane dashes, and punish windows.",
+      "bossMechanic": "Balanced intro boss with readable blade pressure and simple punish windows.",
       "productionStatus": "vertical-slice",
-      "nextHarnessStep": "Use this as the active Stage 1 plate, capture responsive review shots, then tune spawns against the shorter non-stretched world width."
+      "nextHarnessStep": "Tune boss-specific behavior and capture responsive review shots after playtesting."
     },
     {
       "order": 2,
@@ -27,12 +27,12 @@
       "scenePlatePrompt": "Long high-detail 16-bit China cyberpunk subway station exterior, twin stair entrances, vending machines, rainy reflections, readable beat-em-up lane.",
       "gameplayHook": "Stairwell ambush waves enter from both sides while the player controls the central lane.",
       "boss": {
-        "id": "switchblade-sora",
-        "name": "Switchblade Sora"
+        "id": "turnstile-ren",
+        "name": "Turnstile Ren"
       },
-      "bossMechanic": "Temporary placeholder boss until a China station boss is designed and reviewed.",
-      "productionStatus": "needs-boss",
-      "nextHarnessStep": "Add runtime level selection and design a station-specific boss before approval."
+      "bossMechanic": "Fast station boss who pressures lanes like a turnstile ambush.",
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Tune boss-specific behavior and capture responsive review shots after playtesting."
     },
     {
       "order": 3,
@@ -43,12 +43,12 @@
       "scenePlatePrompt": "Long high-detail 16-bit China cyberpunk back alley, repair garages, crates, neon signs, rainy pavement, readable beat-em-up lane.",
       "gameplayHook": "Tighter lane pressure with enemies using shop-door entrances and crate cover.",
       "boss": {
-        "id": "switchblade-sora",
-        "name": "Switchblade Sora"
+        "id": "iron-wei",
+        "name": "Iron Wei"
       },
-      "bossMechanic": "Temporary placeholder boss until alley-specific boss behavior is authored.",
-      "productionStatus": "needs-boss",
-      "nextHarnessStep": "Add prop/hazard object layers for crates and side-door enemy entrances."
+      "bossMechanic": "Heavy alley boss who controls space with slow but punishing kicks.",
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Tune boss-specific behavior and capture responsive review shots after playtesting."
     },
     {
       "order": 4,
@@ -59,12 +59,12 @@
       "scenePlatePrompt": "Long high-detail 16-bit China night market street, food counters, neon shop signs, rain reflections, open beat-em-up combat lane.",
       "gameplayHook": "Market waves use staggered side entrances and rolling cart hazards after prop tooling exists.",
       "boss": {
-        "id": "switchblade-sora",
-        "name": "Switchblade Sora"
+        "id": "lantern-mai",
+        "name": "Lantern Mai"
       },
-      "bossMechanic": "Temporary placeholder boss until market cart-boss behavior is authored.",
-      "productionStatus": "needs-boss",
-      "nextHarnessStep": "Add market prop semantics and replace placeholder boss data."
+      "bossMechanic": "Final China boss with fast pressure after a denser market swarm.",
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Tune boss-specific behavior and capture responsive review shots after playtesting."
     },
     {
       "order": 5,

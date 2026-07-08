@@ -68,6 +68,7 @@ test('walking into the blinking exit advances to the next China background', asy
 
   await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('WorldScene'))).toBe(true)
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id), { timeout: 5000 }).toBe('stage-02-china-station')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.boss?.id)).toBe('turnstile-ren')
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player?.hp)).toBe(150)
 })
 
@@ -79,6 +80,7 @@ test('final China background clears to the replay screen', async ({ page }) => {
     window.__NEON_GAME__?.scene.start('WorldScene', { levelId: 'stage-04-china-night-market' })
   })
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-04-china-night-market')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.boss?.id)).toBe('lantern-mai')
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
       boss?: { hp: number }

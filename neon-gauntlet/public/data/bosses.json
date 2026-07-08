@@ -10,6 +10,39 @@
       "cooldownMinMs": 720,
       "cooldownMaxMs": 1180,
       "stageIntro": "BOSS  Switchblade Sora"
+    },
+    {
+      "id": "turnstile-ren",
+      "name": "Turnstile Ren",
+      "hp": 150,
+      "speed": 58,
+      "damage": 14,
+      "range": 54,
+      "cooldownMinMs": 560,
+      "cooldownMaxMs": 980,
+      "stageIntro": "BOSS  Turnstile Ren"
+    },
+    {
+      "id": "iron-wei",
+      "name": "Iron Wei",
+      "hp": 210,
+      "speed": 34,
+      "damage": 24,
+      "range": 70,
+      "cooldownMinMs": 850,
+      "cooldownMaxMs": 1320,
+      "stageIntro": "BOSS  Iron Wei"
+    },
+    {
+      "id": "lantern-mai",
+      "name": "Lantern Mai",
+      "hp": 235,
+      "speed": 64,
+      "damage": 19,
+      "range": 58,
+      "cooldownMinMs": 500,
+      "cooldownMaxMs": 860,
+      "stageIntro": "BOSS  Lantern Mai"
     }
   ]
 }

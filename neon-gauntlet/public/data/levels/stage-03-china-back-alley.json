@@ -10,31 +10,31 @@
   },
   "enemyWaves": [
     {
-      "x": 302,
+      "x": 284,
       "lane": 0.7,
       "role": "striker"
     },
     {
-      "x": 396,
-      "lane": 0.76,
-      "role": "runner"
-    },
-    {
-      "x": 490,
-      "lane": 0.68,
+      "x": 360,
+      "lane": 0.78,
       "role": "bruiser"
     },
     {
-      "x": 562,
-      "lane": 0.78,
+      "x": 450,
+      "lane": 0.66,
       "role": "thrower"
+    },
+    {
+      "x": 548,
+      "lane": 0.8,
+      "role": "bruiser"
     }
   ],
   "boss": {
-    "id": "switchblade-sora",
+    "id": "iron-wei",
     "x": 610,
-    "lane": 0.72,
-    "spawnAfterX": 500
+    "lane": 0.76,
+    "spawnAfterX": 490
   },
   "stageClearX": 688,
   "map": "stage-03-china-back-alley-map"
