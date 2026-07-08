@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { GAME_HEIGHT, GAME_WIDTH, SceneKeys } from '../constants'
 import { CHINA_CHAPTER_LEVELS, chinaLevelById, chinaLevelIndex, nextChinaLevel } from '../data/chinaChapter'
-import type { AnimationData, AudioData, BossesData, CombatData, EnemiesData, LevelData, TiledMapData, WorldBehaviorData, WorldSystemsData } from '../data/types'
+import type { AnimationData, AudioData, BossesData, BossPhaseDefinition, CombatData, EnemiesData, EnemyRole, LevelData, TiledMapData, WorldBehaviorData, WorldSystemsData } from '../data/types'
 import { Boss } from '../entities/Boss'
 import { Enemy } from '../entities/Enemy'
 import { Player } from '../entities/Player'
@@ -42,11 +42,13 @@ export class WorldScene extends Phaser.Scene {
   private props?: PropSystem
   private npcs?: NpcSystem
   private projectiles?: ProjectileSystem
+  private bossAura?: Phaser.GameObjects.Ellipse
   private save = new SaveAdapter()
   private readonly playSfx = (key: string) => this.audioSystem.playSfx(key)
   private readonly spawnProjectile = (payload: { projectileId: string; x: number; lane: number; face: -1 | 1 }) => {
     this.projectiles?.spawn(payload.projectileId, payload.x, payload.lane, payload.face)
   }
+  private readonly onBossPhase = (payload: { boss: Boss; phase: BossPhaseDefinition }) => this.handleBossPhase(payload.boss, payload.phase)
 
   constructor() {
     super(SceneKeys.World)
@@ -105,9 +107,11 @@ export class WorldScene extends Phaser.Scene {
     this.audioSystem.playMusic(this.level.music)
     this.events.on('sfx', this.playSfx)
     this.events.on('enemy:projectile', this.spawnProjectile)
+    this.events.on('boss:phase', this.onBossPhase)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.events.off('sfx', this.playSfx)
       this.events.off('enemy:projectile', this.spawnProjectile)
+      this.events.off('boss:phase', this.onBossPhase)
       this.destroyWorldSystems()
     })
 
@@ -133,6 +137,7 @@ export class WorldScene extends Phaser.Scene {
     this.hazards?.update(_time, this.player)
     this.npcs?.update(delta)
     this.projectiles?.update(delta, this.player, this.level.worldWidth)
+    this.updateBossAura(_time)
     this.handlePlayerAttack()
     this.handleBossSpawn()
     this.handleStageClear()
@@ -164,6 +169,7 @@ export class WorldScene extends Phaser.Scene {
     this.destroyWorldSystems()
     this.events.off('sfx', this.playSfx)
     this.events.off('enemy:projectile', this.spawnProjectile)
+    this.events.off('boss:phase', this.onBossPhase)
     this.combatDebug?.destroy()
   }
 
@@ -208,6 +214,60 @@ export class WorldScene extends Phaser.Scene {
     this.props = undefined
     this.npcs = undefined
     this.projectiles = undefined
+    this.bossAura?.destroy()
+    this.bossAura = undefined
+  }
+
+  private handleBossPhase(boss: Boss, phase: BossPhaseDefinition) {
+    this.showBossAura(boss, phase.auraColor || '#ffd166')
+    if (phase.stageHazard) this.hazards?.trigger(phase.stageHazard, this.time.now, 10000)
+    if (phase.projectile && phase.projectileBurst) this.spawnBossProjectileBurst(boss, phase.projectile, phase.projectileBurst)
+    if (phase.summonRole) this.spawnBossSupport(boss, phase.summonRole, phase.summonCount || 1)
+  }
+
+  private showBossAura(boss: Boss, color: string) {
+    const tint = Number.parseInt(color.replace('#', ''), 16)
+    this.bossAura?.destroy()
+    this.bossAura = this.add.ellipse(boss.x, boss.y - 25, 62, 22, tint, 0.22)
+      .setStrokeStyle(2, tint, 0.72)
+      .setDepth(boss.depth - 1)
+      .setBlendMode(Phaser.BlendModes.ADD)
+  }
+
+  private updateBossAura(time: number) {
+    if (!this.bossAura || !this.boss?.active) {
+      this.bossAura?.destroy()
+      this.bossAura = undefined
+      return
+    }
+    this.bossAura.setPosition(this.boss.x, this.boss.y - 25)
+    this.bossAura.setDepth(this.boss.depth - 1)
+    this.bossAura.setAlpha(0.18 + Math.sin(time / 110) * 0.08)
+  }
+
+  private spawnBossProjectileBurst(boss: Boss, projectileId: string, count: number) {
+    const spread = [-0.055, 0, 0.055, -0.095, 0.095]
+    for (let index = 0; index < count; index += 1) {
+      const face = index % 2 === 0 ? boss.face : ((boss.face * -1) as -1 | 1)
+      const lane = Phaser.Math.Clamp(boss.lane + (spread[index] || 0), 0.58, 0.88)
+      this.projectiles?.spawn(projectileId, boss.x, lane, face)
+    }
+  }
+
+  private spawnBossSupport(boss: Boss, role: EnemyRole, count: number) {
+    for (let index = 0; index < count; index += 1) {
+      const side = index % 2 === 0 ? -1 : 1
+      const x = Phaser.Math.Clamp(boss.x + side * (58 + index * 18), 34, this.level.worldWidth - 34)
+      const lane = Phaser.Math.Clamp(boss.lane + (index % 2 === 0 ? 0.055 : -0.055), 0.58, 0.88)
+      this.spawnEnemySupport(x, role, lane)
+    }
+  }
+
+  private spawnEnemySupport(x: number, role: EnemyRole, lane: number) {
+    if (this.enemies.filter((enemy) => enemy.hp > 0).length >= 7) return
+    const def = (this.cache.json.get('enemies') as EnemiesData).roles.find((enemy) => enemy.id === role)
+    if (!def) return
+    this.enemies.push(new Enemy(this, x, lane, def, this.animationSystem, this.combat))
   }
 
   private handleBossSpawn() {
@@ -337,7 +397,7 @@ export class WorldScene extends Phaser.Scene {
     const activeAttack = this.player.activeAttack
     ;(window as typeof window & { __NEON_DEBUG__?: unknown; player?: unknown; enemies?: unknown; level?: unknown; assets?: unknown }).__NEON_DEBUG__ = {
       title: 'Neon Gauntlet',
-      player: { x: this.player.x, hp: this.player.hp },
+      player: { x: this.player.x, hp: this.player.hp, combo: this.player.combo },
       level: { ...this.level, index: this.levelIndex, exitReady: this.exitReady },
       boss: this.boss ? { id: this.level.boss.id, name: this.boss.bossName, hp: this.boss.hp, x: this.boss.x, phase: this.boss.activePhase } : null,
       enemies: [...this.enemies, ...(this.boss ? [this.boss] : [])].map((enemy) => ({

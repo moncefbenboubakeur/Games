@@ -35,6 +35,13 @@ export class UIScene extends Phaser.Scene {
     this.levelText = this.add.text(18, 52, '', { fontFamily: 'monospace', fontSize: '9px', color: '#ffd166', stroke: '#081020', strokeThickness: 3 })
     this.bossText = this.add.text(GAME_WIDTH - 16, 14, '', { fontFamily: 'monospace', fontSize: '9px', color: '#fff', stroke: '#081020', strokeThickness: 3 }).setOrigin(1, 0)
     this.messageText = this.add.text(GAME_WIDTH / 2, 72, '', { fontFamily: 'monospace', fontSize: '16px', color: '#fff', stroke: '#081020', strokeThickness: 4 }).setOrigin(0.5)
+    this.add.text(GAME_WIDTH - 16, 30, 'PAD  D-PAD/LS MOVE  X=P  B=K  A=J  RB=G', {
+      fontFamily: 'monospace',
+      fontSize: '6px',
+      color: '#9ee7ff',
+      stroke: '#081020',
+      strokeThickness: 2,
+    }).setOrigin(1, 0).setAlpha(0.78)
 
     this.createTouchControls()
     this.world = this.scene.get(SceneKeys.World) as WorldScene

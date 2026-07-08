@@ -115,6 +115,11 @@ export class DataValidationSystem {
         this.require(phase.speedMultiplier > 0, `${boss.id} phase ${phase.id} speedMultiplier must be positive`)
         this.require(phase.cooldownMultiplier > 0, `${boss.id} phase ${phase.id} cooldownMultiplier must be positive`)
         if (phase.preferredAttack !== undefined) this.require(allowedPreferredAttacks.includes(phase.preferredAttack), `${boss.id} phase ${phase.id} preferredAttack must be punch or kick`)
+        if (phase.alternateAttack !== undefined) this.require(allowedPreferredAttacks.includes(phase.alternateAttack), `${boss.id} phase ${phase.id} alternateAttack must be punch or kick`)
+        if (phase.patternCycleMs !== undefined) this.require(phase.patternCycleMs > 0, `${boss.id} phase ${phase.id} patternCycleMs must be positive`)
+        if (phase.projectileBurst !== undefined) this.require(phase.projectileBurst > 0 && phase.projectileBurst <= 5, `${boss.id} phase ${phase.id} projectileBurst must be 1-5`)
+        if (phase.summonCount !== undefined) this.require(phase.summonCount > 0 && phase.summonCount <= 3, `${boss.id} phase ${phase.id} summonCount must be 1-3`)
+        if (phase.auraColor !== undefined) this.require(/^#[0-9a-fA-F]{6}$/.test(phase.auraColor), `${boss.id} phase ${phase.id} auraColor must be #RRGGBB`)
       })
     })
   }
@@ -173,6 +178,10 @@ export class DataValidationSystem {
     enemies.roles.forEach((enemy) => {
       if (enemy.projectile) this.require(projectileIds.has(enemy.projectile), `${enemy.id} projectile is unknown: ${enemy.projectile}`)
     })
+    const roleIds = new Set(enemies.roles.map((enemy) => enemy.id))
+    bosses.bosses.flatMap((boss) => boss.phases || []).forEach((phase) => {
+      if (phase.summonRole) this.require(roleIds.has(phase.summonRole), `Boss phase summon role is unknown: ${phase.summonRole}`)
+    })
 
     levels.forEach((level) => {
       const stage = data.stages[level.id]
@@ -186,6 +195,11 @@ export class DataValidationSystem {
         this.require(hazard.telegraphMs > 0 && hazard.activeMs > 0, `${hazard.id} hazard timing must be positive`)
         this.require(hazard.damage > 0, `${hazard.id} hazard damage must be positive`)
         this.require(/^#[0-9a-fA-F]{6}$/.test(hazard.color), `${hazard.id} hazard color must be #RRGGBB`)
+      })
+      const hazardIds = new Set(stage.hazards.map((hazard) => hazard.id))
+      const levelBoss = bosses.bosses.find((boss) => boss.id === level.boss.id)
+      ;(levelBoss?.phases || []).forEach((phase) => {
+        if (phase.stageHazard) this.require(hazardIds.has(phase.stageHazard), `${level.id} boss phase hazard is unknown: ${phase.stageHazard}`)
       })
       stage.props.forEach((prop) => {
         this.require(Boolean(prop.id), `${level.id} prop id is required`)

@@ -125,7 +125,14 @@ export interface BossPhaseDefinition {
   speedMultiplier: number
   cooldownMultiplier: number
   preferredAttack?: 'punch' | 'kick'
+  alternateAttack?: 'punch' | 'kick'
+  patternCycleMs?: number
   projectile?: string
+  projectileBurst?: number
+  summonRole?: EnemyRole
+  summonCount?: number
+  stageHazard?: string
+  auraColor?: string
 }
 
 export interface BossesData {

@@ -27,8 +27,16 @@ export class ProjectileSystem {
       const inBody = Math.abs(projectile.x - player.x) <= 18
       if (!inLane || !inBody) return
       player.hurt(projectile.damage, projectile.x < player.x ? 18 : -18)
+      this.addImpact(projectile.x, projectile.y)
       projectile.destroy()
     })
+  }
+
+  private addImpact(x: number, y: number) {
+    const flash = this.scene.add.star(x, y, 6, 2, 10, 0xffd166)
+      .setDepth(1200)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    this.scene.tweens.add({ targets: flash, alpha: 0, scale: 1.7, duration: 220, onComplete: () => flash.destroy() })
   }
 
   destroy() {

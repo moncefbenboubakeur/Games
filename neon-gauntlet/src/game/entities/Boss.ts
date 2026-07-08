@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import type { BossDefinition, EnemyDefinition } from '../data/types'
+import type { BossDefinition, BossPhaseDefinition, EnemyDefinition } from '../data/types'
 import type { AnimationSystem } from '../systems/AnimationSystem'
 import type { CombatSystem } from '../systems/CombatSystem'
 import { Enemy } from './Enemy'
@@ -9,9 +9,11 @@ export class Boss extends Enemy {
   readonly bossName: string
   readonly bossId: string
   activePhase = 'base'
+  phaseAuraColor = '#ffffff'
   private readonly base: Pick<EnemyDefinition, 'speed' | 'cooldownMinMs' | 'cooldownMaxMs' | 'preferredAttack' | 'projectile'>
   private readonly maxHp: number
   private readonly bossDef: BossDefinition
+  private activePhaseDef?: BossPhaseDefinition
 
   constructor(scene: Phaser.Scene, x: number, lane: number, boss: BossDefinition, animations: AnimationSystem, combat: CombatSystem) {
     const asEnemy: EnemyDefinition = {
@@ -45,6 +47,7 @@ export class Boss extends Enemy {
 
   override updateEnemy(dt: number, player: Parameters<Enemy['updateEnemy']>[1], worldWidth: number) {
     this.updatePhase()
+    this.updatePhasePattern()
     super.updateEnemy(dt, player, worldWidth)
   }
 
@@ -55,11 +58,28 @@ export class Boss extends Enemy {
     const nextPhase = phase?.id ?? 'base'
     if (nextPhase === this.activePhase) return
     this.activePhase = nextPhase
+    this.activePhaseDef = phase
+    this.phaseAuraColor = phase?.auraColor ?? '#ffffff'
     this.def.speed = this.base.speed * (phase?.speedMultiplier ?? 1)
     this.def.cooldownMinMs = Math.round(this.base.cooldownMinMs * (phase?.cooldownMultiplier ?? 1))
     this.def.cooldownMaxMs = Math.round(this.base.cooldownMaxMs * (phase?.cooldownMultiplier ?? 1))
     this.def.preferredAttack = phase?.preferredAttack ?? this.base.preferredAttack
     this.def.projectile = phase?.projectile ?? this.base.projectile
-    if (phase) this.scene.events.emit('message', phase.message)
+    if (phase) {
+      this.scene.events.emit('message', phase.message)
+      this.scene.events.emit('boss:phase', {
+        boss: this,
+        phase,
+      })
+    }
+  }
+
+  private updatePhasePattern() {
+    const phase = this.activePhaseDef
+    if (!phase?.alternateAttack || !phase.patternCycleMs) return
+    const tick = Math.floor(this.scene.time.now / phase.patternCycleMs)
+    this.def.preferredAttack = tick % 2 === 0
+      ? (phase.preferredAttack ?? this.base.preferredAttack)
+      : phase.alternateAttack
   }
 }

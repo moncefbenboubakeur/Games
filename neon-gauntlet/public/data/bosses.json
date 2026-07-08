@@ -24,7 +24,13 @@
           "message": "Sora speeds up",
           "speedMultiplier": 1.22,
           "cooldownMultiplier": 0.82,
-          "preferredAttack": "punch"
+          "preferredAttack": "punch",
+          "alternateAttack": "kick",
+          "patternCycleMs": 1300,
+          "summonRole": "runner",
+          "summonCount": 1,
+          "stageHazard": "arcade-sign-spark",
+          "auraColor": "#ffd166"
         }
       ]
     },
@@ -53,7 +59,14 @@
           "speedMultiplier": 1.28,
           "cooldownMultiplier": 0.78,
           "preferredAttack": "punch",
-          "projectile": "spark-bolt"
+          "alternateAttack": "kick",
+          "patternCycleMs": 980,
+          "projectile": "spark-bolt",
+          "projectileBurst": 2,
+          "summonRole": "striker",
+          "summonCount": 1,
+          "stageHazard": "platform-gate-spark",
+          "auraColor": "#50e7ff"
         }
       ]
     },
@@ -81,7 +94,13 @@
           "message": "Wei plants his feet",
           "speedMultiplier": 0.92,
           "cooldownMultiplier": 0.72,
-          "preferredAttack": "kick"
+          "preferredAttack": "kick",
+          "alternateAttack": "punch",
+          "patternCycleMs": 1600,
+          "summonRole": "bruiser",
+          "summonCount": 1,
+          "stageHazard": "steam-pipe",
+          "auraColor": "#ff9f43"
         }
       ]
     },
@@ -110,7 +129,14 @@
           "speedMultiplier": 1.18,
           "cooldownMultiplier": 0.76,
           "preferredAttack": "punch",
-          "projectile": "lantern-shot"
+          "alternateAttack": "kick",
+          "patternCycleMs": 900,
+          "projectile": "lantern-shot",
+          "projectileBurst": 2,
+          "summonRole": "runner",
+          "summonCount": 1,
+          "stageHazard": "rolling-market-cart",
+          "auraColor": "#ff5cab"
         },
         {
           "id": "final-lantern",
@@ -119,7 +145,14 @@
           "speedMultiplier": 1.35,
           "cooldownMultiplier": 0.62,
           "preferredAttack": "kick",
-          "projectile": "lantern-shot"
+          "alternateAttack": "punch",
+          "patternCycleMs": 720,
+          "projectile": "lantern-shot",
+          "projectileBurst": 3,
+          "summonRole": "thrower",
+          "summonCount": 1,
+          "stageHazard": "rolling-market-cart",
+          "auraColor": "#ffd166"
         }
       ]
     }

@@ -95,3 +95,47 @@ test('touch buttons trigger only their intended actions', async ({ page }) => {
     await page.waitForTimeout(10)
   }
 })
+
+test('gamepad analog movement stops when centered', async ({ page }) => {
+  await startGame(page)
+  const start = await playerX(page)
+
+  await page.evaluate(() => {
+    window.__NEON_TEST_GAMEPAD__ = { axes: [1, 0], buttons: [] }
+  })
+  await page.waitForTimeout(900)
+  await page.evaluate(() => {
+    window.__NEON_TEST_GAMEPAD__ = { axes: [0, 0], buttons: [] }
+  })
+  await page.waitForTimeout(120)
+  const afterRelease = await playerX(page)
+  await page.waitForTimeout(500)
+  const later = await playerX(page)
+
+  expect(afterRelease).toBeGreaterThan(start + 8)
+  expect(later).toBeLessThanOrEqual(afterRelease + 2)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.input?.normalized.right)).toBe(false)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.input?.gamepad.connected)).toBe(true)
+})
+
+test('gamepad action buttons are edge triggered, not spammed while held', async ({ page }) => {
+  await startGame(page)
+
+  await page.evaluate(() => {
+    window.__NEON_TEST_GAMEPAD__ = { axes: [0, 0], buttons: Array.from({ length: 16 }, (_, index) => index === 2) }
+  })
+  await page.waitForTimeout(380)
+  const heldCombo = await page.evaluate(() => window.__NEON_DEBUG__?.player.combo)
+  expect(heldCombo).toBe(1)
+
+  await page.evaluate(() => {
+    window.__NEON_TEST_GAMEPAD__ = { axes: [0, 0], buttons: [] }
+  })
+  await page.waitForTimeout(60)
+  await page.evaluate(() => {
+    window.__NEON_TEST_GAMEPAD__ = { axes: [0, 0], buttons: Array.from({ length: 16 }, (_, index) => index === 2) }
+  })
+  await page.waitForTimeout(80)
+  const secondPressCombo = await page.evaluate(() => window.__NEON_DEBUG__?.player.combo)
+  expect(secondPressCombo).toBe(2)
+})

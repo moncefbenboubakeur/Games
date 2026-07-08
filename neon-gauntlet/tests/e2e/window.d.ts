@@ -9,7 +9,7 @@ declare global {
     __NEON_GAME__?: import('phaser').Game
     __NEON_DEBUG__?: {
       title: string
-      player: { x: number; hp: number }
+      player: { x: number; hp: number; combo?: number }
       level: { id: string; name: string; index?: number; stageClearX?: number; exitReady?: boolean; boss?: { id: string } }
       boss?: null | { id: string; name: string; hp: number; x: number; phase?: string }
       enemies: Array<{ x: number; hp: number; active?: boolean; aiState?: string; aiReason?: string; texture?: string }>
@@ -39,11 +39,15 @@ declare global {
       }
       assets: Record<string, boolean | number>
       world?: {
-        hazards: Array<{ id: string; type: string; x: number; lane: number }>
+        hazards: Array<{ id: string; type: string; x: number; lane: number; forcedActive?: boolean }>
         props: Array<{ id: string; type: string; hp: number }>
         npcs: Array<{ id: string; purpose: string; x: number }>
         projectiles: { count: number }
       }
+    }
+    __NEON_TEST_GAMEPAD__?: {
+      axes?: number[]
+      buttons?: Array<boolean | number>
     }
   }
 }

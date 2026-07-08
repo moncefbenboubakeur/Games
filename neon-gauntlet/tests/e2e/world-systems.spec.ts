@@ -51,10 +51,13 @@ test('bosses enter data-driven phase states', async ({ page }) => {
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
       boss?: { hp: number; updateEnemy: (dt: number, player: unknown, worldWidth: number) => void }
+      enemies: Array<{ destroy: () => void }>
       handleBossSpawn: () => void
       level: { boss: { spawnAfterX: number }; worldWidth: number }
       player: { x: number }
     }
+    world.enemies.forEach((enemy) => enemy.destroy())
+    world.enemies = []
     world.player.x = world.level.boss.spawnAfterX + 4
     world.handleBossSpawn()
     if (!world.boss) throw new Error('boss missing')
@@ -62,4 +65,7 @@ test('bosses enter data-driven phase states', async ({ page }) => {
     world.boss.updateEnemy(16, world.player, world.level.worldWidth)
   })
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.phase)).toBe('final-lantern')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.world?.projectiles.count)).toBeGreaterThanOrEqual(3)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.some((enemy) => enemy.texture === 'thrower-sheet'))).toBe(true)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.world?.hazards.find((hazard) => hazard.id === 'rolling-market-cart')?.forcedActive)).toBe(true)
 })
