@@ -43,7 +43,7 @@ export class UIScene extends Phaser.Scene {
       strokeThickness: 2,
     }).setOrigin(1, 0).setAlpha(0.78)
 
-    this.createTouchControls()
+    if (this.shouldShowTouchControls()) this.createTouchControls()
     this.world = this.scene.get(SceneKeys.World) as WorldScene
     this.world.events.on('hud:update', this.onHudUpdate)
     this.world.events.on('message', this.onMessage)
@@ -100,6 +100,15 @@ export class UIScene extends Phaser.Scene {
     this.createTouchButton(input, GAME_WIDTH - 76, GAME_HEIGHT - 45, 'K', 'kick', 0xffd166, 14, 'KICK')
     this.createTouchButton(input, GAME_WIDTH - 94, GAME_HEIGHT - 20, 'J', 'jump', 0x23d5ff, 14, 'JUMP')
     this.createTouchButton(input, GAME_WIDTH - 40, GAME_HEIGHT - 28, 'G', 'guard', 0x9b5cff, 13, 'GUARD')
+  }
+
+  private shouldShowTouchControls() {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('touchControls') === '1') return true
+    if (params.get('touchControls') === '0') return false
+    const hasTouch = navigator.maxTouchPoints > 0
+    const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false
+    return hasTouch || coarsePointer
   }
 
   private createTouchButton(

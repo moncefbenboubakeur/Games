@@ -1,7 +1,7 @@
 import { expect, test } from 'playwright/test'
 
-async function startGame(page: import('playwright/test').Page) {
-  await page.goto('/')
+async function startGame(page: import('playwright/test').Page, options: { touchControls?: boolean } = {}) {
+  await page.goto(options.touchControls ? '/?touchControls=1' : '/')
   await page.waitForSelector('canvas')
   await page.waitForFunction(() => typeof window.__NEON_START__ === 'function')
   await page.evaluate(() => window.__NEON_START__?.())
@@ -34,7 +34,7 @@ test('keyboard arrows stop moving after key release', async ({ page }) => {
 })
 
 test('touch direction buttons stop moving after pointer release', async ({ page }) => {
-  await startGame(page)
+  await startGame(page, { touchControls: true })
   const canvas = await page.locator('canvas').boundingBox()
   if (!canvas) throw new Error('Missing game canvas')
   const screen = (x: number, y: number) => ({
@@ -59,7 +59,7 @@ test('touch direction buttons stop moving after pointer release', async ({ page 
 
 test('touch buttons trigger only their intended actions', async ({ page }) => {
   test.setTimeout(90_000)
-  await startGame(page)
+  await startGame(page, { touchControls: true })
   const canvas = await page.locator('canvas').boundingBox()
   if (!canvas) throw new Error('Missing game canvas')
   const screen = (x: number, y: number) => ({
@@ -94,6 +94,23 @@ test('touch buttons trigger only their intended actions', async ({ page }) => {
     await page.mouse.up()
     await page.waitForTimeout(10)
   }
+})
+
+test('desktop play does not show touch controls over the map', async ({ page }) => {
+  await startGame(page)
+  const visibleLabels = await page.evaluate(() => {
+    const ui = window.__NEON_GAME__?.scene.getScene('UIScene') as unknown as {
+      children: { list: Array<{ type?: string; text?: string; visible?: boolean; alpha?: number }> }
+    }
+    return ui.children.list
+      .filter((item) => item.type === 'Text' && item.visible !== false && (item.alpha ?? 1) > 0.05)
+      .map((item) => item.text || '')
+  })
+
+  expect(visibleLabels).not.toContain('MOVE')
+  expect(visibleLabels).not.toContain('COMBO')
+  expect(visibleLabels).not.toContain('PUNCH')
+  expect(visibleLabels).not.toContain('KICK')
 })
 
 test('gamepad analog movement stops when centered', async ({ page }) => {
