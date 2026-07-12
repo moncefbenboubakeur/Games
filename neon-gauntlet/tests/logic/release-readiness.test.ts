@@ -19,4 +19,14 @@ describe('release readiness gate', () => {
     expect(levelBlockers.every((blocker) => blocker.reason.includes('vertical-slice'))).toBe(true)
     expect(report.blockerCount).toBe(report.blockers.length)
   })
+
+  it('reports reused boss sprite sheets as boss-art blockers', () => {
+    const output = execFileSync('node', ['tools/check-release-readiness.mjs'], { encoding: 'utf8' })
+    const report = JSON.parse(output) as ReleaseReport
+    const bossArtBlockers = report.blockers.filter((blocker) => blocker.kind === 'boss-art')
+
+    expect(bossArtBlockers.length).toBeGreaterThanOrEqual(1)
+    expect(bossArtBlockers.some((blocker) => blocker.reason.includes('zero-volt-ren'))).toBe(true)
+    expect(bossArtBlockers.every((blocker) => blocker.reason.includes('unique approved sprite sheet'))).toBe(true)
+  })
 })

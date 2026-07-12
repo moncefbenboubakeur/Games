@@ -10,6 +10,7 @@ const assets = JSON.parse(fs.readFileSync(path.join(root, 'public/data/assets.js
 const mapArt = JSON.parse(fs.readFileSync(path.join(root, 'public/data/map-art.json'), 'utf8'))
 const audioSources = JSON.parse(fs.readFileSync(path.join(root, 'public/data/audio-sources.json'), 'utf8'))
 const levelProductionPlan = JSON.parse(fs.readFileSync(path.join(root, 'public/data/level-production-plan.json'), 'utf8'))
+const bosses = JSON.parse(fs.readFileSync(path.join(root, 'public/data/bosses.json'), 'utf8'))
 
 const blockers = []
 
@@ -47,6 +48,23 @@ for (const level of levelProductionPlan.levels || []) {
       kind: 'level-production',
       key: level.id,
       reason: `${level.productionStatus}; boss=${level.boss?.id || 'missing'}; next=${level.nextHarnessStep || 'missing next step'}`,
+    })
+  }
+}
+
+const bossTextureUsers = new Map()
+for (const boss of bosses.bosses || []) {
+  const users = bossTextureUsers.get(boss.texture) || []
+  users.push(boss.id)
+  bossTextureUsers.set(boss.texture, users)
+}
+
+for (const [texture, users] of bossTextureUsers.entries()) {
+  if (users.length > 1) {
+    blockers.push({
+      kind: 'boss-art',
+      key: texture,
+      reason: `shared by bosses: ${users.join(', ')}; each production boss needs a unique approved sprite sheet`,
     })
   }
 }
