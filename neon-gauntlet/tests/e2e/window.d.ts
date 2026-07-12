@@ -39,7 +39,7 @@ declare global {
       }
       assets: Record<string, boolean | number>
       world?: {
-        hazards: Array<{ id: string; type: string; x: number; lane: number; forcedActive?: boolean }>
+        hazards: Array<{ id: string; type: string; x: number; lane: number; forceX?: number; forceLane?: number; forcedActive?: boolean }>
         props: Array<{ id: string; type: string; hp: number }>
         npcs: Array<{ id: string; purpose: string; x: number }>
         projectiles: { count: number }

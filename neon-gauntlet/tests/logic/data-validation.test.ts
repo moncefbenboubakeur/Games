@@ -333,6 +333,10 @@ describe('DataValidationSystem', () => {
     const badSystems = worldSystems()
     badSystems.stages['stage-01'].hazards[0].cycleMs = 900
     expect(() => DataValidationSystem.validateWorldSystems(badSystems, [level()], bosses(), enemies())).toThrow(/cycle/)
+
+    const badImpulse = worldSystems()
+    badImpulse.stages['stage-01'].hazards[0].forceLane = 0.5
+    expect(() => DataValidationSystem.validateWorldSystems(badImpulse, [level()], bosses(), enemies())).toThrow(/forceLane/)
   })
 
   it('rejects unknown projectile references from enemies and boss phases', () => {

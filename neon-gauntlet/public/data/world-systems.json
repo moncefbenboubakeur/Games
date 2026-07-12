@@ -276,7 +276,9 @@
           "telegraphMs": 820,
           "activeMs": 640,
           "damage": 12,
-          "color": "#ff9f43"
+          "color": "#ff9f43",
+          "forceX": 18,
+          "forceLane": 0.03
         }
       ],
       "props": [
@@ -328,7 +330,9 @@
           "telegraphMs": 760,
           "activeMs": 560,
           "damage": 9,
-          "color": "#dff6ff"
+          "color": "#dff6ff",
+          "forceX": 26,
+          "forceLane": 0.08
         }
       ],
       "props": [
@@ -380,7 +384,9 @@
           "telegraphMs": 720,
           "activeMs": 480,
           "damage": 10,
-          "color": "#b56cff"
+          "color": "#b56cff",
+          "forceX": 10,
+          "forceLane": 0.12
         }
       ],
       "props": [
@@ -432,7 +438,9 @@
           "telegraphMs": 820,
           "activeMs": 450,
           "damage": 13,
-          "color": "#dff6ff"
+          "color": "#dff6ff",
+          "forceX": 34,
+          "forceLane": 0.04
         }
       ],
       "props": [
@@ -484,7 +492,9 @@
           "telegraphMs": 740,
           "activeMs": 520,
           "damage": 12,
-          "color": "#50e7ff"
+          "color": "#50e7ff",
+          "forceX": 14,
+          "forceLane": 0.1
         }
       ],
       "props": [
@@ -536,7 +546,9 @@
           "telegraphMs": 760,
           "activeMs": 620,
           "damage": 15,
-          "color": "#ffd166"
+          "color": "#ffd166",
+          "forceX": 22,
+          "forceLane": 0.14
         }
       ],
       "props": [

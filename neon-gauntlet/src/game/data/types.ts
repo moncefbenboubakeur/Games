@@ -201,6 +201,8 @@ export interface HazardDefinition {
   activeMs: number
   damage: number
   color: string
+  forceX?: number
+  forceLane?: number
 }
 
 export interface PropDefinition {

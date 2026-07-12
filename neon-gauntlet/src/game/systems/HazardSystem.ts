@@ -45,9 +45,20 @@ export class HazardSystem {
       const inLane = Math.abs(player.lane - hazard.def.lane) <= 0.065
       const inX = Math.abs(player.x - hazard.body.x) <= hazard.def.width / 2 + 12
       if (!inLane || !inX) return
-      player.hurt(hazard.def.damage, player.x < hazard.def.x ? -14 : 14)
+      const hitDirection = player.x < hazard.def.x ? -1 : 1
+      const damaged = player.hurt(hazard.def.damage, hitDirection * 14)
+      if (damaged) this.applyImpulse(player, hazard.def, hitDirection)
       hazard.nextHitAt = time + 650
     })
+  }
+
+  private applyImpulse(player: Player, def: HazardDefinition, hitDirection: -1 | 1) {
+    if (def.forceX) player.x += def.forceX * hitDirection
+    if (def.forceLane) {
+      const laneDirection = player.lane < def.lane ? -1 : 1
+      player.lane = Phaser.Math.Clamp(player.lane + def.forceLane * laneDirection, 0.58, 0.88)
+      player.y = laneToY(player.lane)
+    }
   }
 
   private typeOffset(type: HazardDefinition['type'], time: number, active: boolean) {
@@ -79,6 +90,8 @@ export class HazardSystem {
       type: hazard.def.type,
       x: hazard.def.x,
       lane: hazard.def.lane,
+      forceX: hazard.def.forceX || 0,
+      forceLane: hazard.def.forceLane || 0,
       forcedActive: hazard.body.scene.time.now <= hazard.forcedActiveUntil,
     }))
   }

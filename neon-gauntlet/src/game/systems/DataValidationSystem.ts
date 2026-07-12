@@ -195,6 +195,8 @@ export class DataValidationSystem {
         this.require(hazard.telegraphMs > 0 && hazard.activeMs > 0, `${hazard.id} hazard timing must be positive`)
         this.require(hazard.damage > 0, `${hazard.id} hazard damage must be positive`)
         this.require(/^#[0-9a-fA-F]{6}$/.test(hazard.color), `${hazard.id} hazard color must be #RRGGBB`)
+        if (hazard.forceX !== undefined) this.require(Math.abs(hazard.forceX) <= 60, `${hazard.id} forceX must stay within readable bounds`)
+        if (hazard.forceLane !== undefined) this.require(Math.abs(hazard.forceLane) <= 0.16, `${hazard.id} forceLane must stay within playable bounds`)
       })
       const hazardIds = new Set(stage.hazards.map((hazard) => hazard.id))
       const levelBoss = bosses.bosses.find((boss) => boss.id === level.boss.id)
