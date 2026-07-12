@@ -1,0 +1,56 @@
+{
+  "id": "stage-10-neon-core",
+  "name": "Neon Core",
+  "worldWidth": 960,
+  "background": "stage-01-metro-arcade-bg",
+  "music": "stage-01",
+  "playerSpawn": {
+    "x": 76,
+    "lane": 0.72
+  },
+  "enemyWaves": [
+    {
+      "x": 245,
+      "lane": 0.64,
+      "role": "runner"
+    },
+    {
+      "x": 323,
+      "lane": 0.78,
+      "role": "bruiser"
+    },
+    {
+      "x": 401,
+      "lane": 0.7,
+      "role": "thrower"
+    },
+    {
+      "x": 479,
+      "lane": 0.83,
+      "role": "striker"
+    },
+    {
+      "x": 557,
+      "lane": 0.66,
+      "role": "thrower"
+    },
+    {
+      "x": 635,
+      "lane": 0.76,
+      "role": "bruiser"
+    },
+    {
+      "x": 713,
+      "lane": 0.72,
+      "role": "runner"
+    }
+  ],
+  "boss": {
+    "id": "zero-volt-ren",
+    "x": 850,
+    "lane": 0.72,
+    "spawnAfterX": 660
+  },
+  "stageClearX": 912,
+  "map": "stage-10-neon-core-map"
+}

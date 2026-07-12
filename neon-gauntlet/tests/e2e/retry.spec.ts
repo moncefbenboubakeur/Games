@@ -43,7 +43,7 @@ test('exit arrow appears after threats are cleared', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-01-metro-arcade')
 })
 
-test('walking into the blinking exit advances to the next China background', async ({ page }) => {
+test('walking into the blinking exit advances to the next chapter stage', async ({ page }) => {
   await startGame(page)
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
@@ -72,7 +72,7 @@ test('walking into the blinking exit advances to the next China background', asy
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player?.hp)).toBe(150)
 })
 
-test('final China background clears to the replay screen', async ({ page }) => {
+test('stage four advances into the extended chapter backbone', async ({ page }) => {
   await startGame(page)
   await page.evaluate(() => {
     window.__NEON_GAME__?.scene.stop('WorldScene')
@@ -98,17 +98,47 @@ test('final China background clears to the replay screen', async ({ page }) => {
     world.player.x = world.level.stageClearX + 2
   })
 
-  await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('StageClearScene'))).toBe(true)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id), { timeout: 5000 }).toBe('stage-05-solar-foundry')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.boss?.id)).toBe('forge-aya')
 })
 
-test('late China bosses spawn with their stage identity', async ({ page }) => {
+test('final chapter stage clears to the replay screen', async ({ page }) => {
   await startGame(page)
   await page.evaluate(() => {
     window.__NEON_GAME__?.scene.stop('WorldScene')
     window.__NEON_GAME__?.scene.stop('UIScene')
-    window.__NEON_GAME__?.scene.start('WorldScene', { levelId: 'stage-04-china-night-market' })
+    window.__NEON_GAME__?.scene.start('WorldScene', { levelId: 'stage-10-neon-core' })
   })
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-04-china-night-market')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-10-neon-core')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.boss?.id)).toBe('zero-volt-ren')
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      boss?: { hp: number }
+      bossSpawned: boolean
+      enemies: Array<{ hp: number; destroy: () => void }>
+      level: { stageClearX: number }
+      player: { x: number }
+    }
+    world.bossSpawned = true
+    world.boss = undefined
+    world.enemies.forEach((enemy) => {
+      enemy.hp = 0
+      enemy.destroy()
+    })
+    world.player.x = world.level.stageClearX + 2
+  })
+
+  await expect.poll(() => page.evaluate(() => window.__NEON_GAME__?.scene.isActive('StageClearScene'))).toBe(true)
+})
+
+test('late chapter bosses spawn with their stage identity', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => {
+    window.__NEON_GAME__?.scene.stop('WorldScene')
+    window.__NEON_GAME__?.scene.stop('UIScene')
+    window.__NEON_GAME__?.scene.start('WorldScene', { levelId: 'stage-10-neon-core' })
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-10-neon-core')
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
       level: { boss: { spawnAfterX: number } }
@@ -117,18 +147,18 @@ test('late China bosses spawn with their stage identity', async ({ page }) => {
     world.player.x = world.level.boss.spawnAfterX + 4
   })
 
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.id)).toBe('lantern-mai')
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.name)).toBe('Lantern Mai')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.id)).toBe('zero-volt-ren')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.name)).toBe('Zero Volt Ren')
 })
 
-test('automation can start a requested China level directly', async ({ page }) => {
+test('automation can start a requested chapter level directly', async ({ page }) => {
   await page.goto('/')
   await page.waitForSelector('canvas')
   await page.waitForFunction(() => typeof window.__NEON_START_LEVEL__ === 'function')
-  await page.evaluate(() => window.__NEON_START_LEVEL__?.('stage-04-china-night-market'))
+  await page.evaluate(() => window.__NEON_START_LEVEL__?.('stage-10-neon-core'))
 
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-04-china-night-market')
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.boss?.id)).toBe('lantern-mai')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.id)).toBe('stage-10-neon-core')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.level?.boss?.id)).toBe('zero-volt-ren')
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player?.hp)).toBe(150)
 })
 

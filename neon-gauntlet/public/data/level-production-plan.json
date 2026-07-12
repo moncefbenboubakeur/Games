@@ -79,8 +79,8 @@
         "name": "Forge Aya"
       },
       "bossMechanic": "Armored boss using heat vent zones and hammer slam tells.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Prototype conveyor/hazard object layers and heat vent telegraph visuals."
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Playable in harness with prototype stand-in art. Replace scene plate, boss sheet, and stage-specific mechanics before production approval."
     },
     {
       "order": 6,
@@ -95,8 +95,8 @@
         "name": "Drone Queen Nova"
       },
       "bossMechanic": "Controller boss that commands drones and exposes weak windows after overcommit.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Add projectile/hurtbox review tooling before boss implementation."
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Playable in harness with prototype stand-in art. Replace scene plate, boss sheet, and stage-specific mechanics before production approval."
     },
     {
       "order": 7,
@@ -111,8 +111,8 @@
         "name": "Cipher Iris"
       },
       "bossMechanic": "Decoy boss with clear tells distinguishing real body from projection.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Create actor-state rules for decoys before map playtest."
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Playable in harness with prototype stand-in art. Replace scene plate, boss sheet, and stage-specific mechanics before production approval."
     },
     {
       "order": 8,
@@ -127,8 +127,8 @@
         "name": "Harbor Hale"
       },
       "bossMechanic": "Long-range chain boss who pulls props and punishes bad spacing.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Design crane/hook object layer semantics and lightning visual review."
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Playable in harness with prototype stand-in art. Replace scene plate, boss sheet, and stage-specific mechanics before production approval."
     },
     {
       "order": 9,
@@ -143,8 +143,8 @@
         "name": "Signal Vex"
       },
       "bossMechanic": "Technical boss using signal pulses, delayed mines, and punishable channeling.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Add signal-pulse timing data and visual baseline cases."
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Playable in harness with prototype stand-in art. Replace scene plate, boss sheet, and stage-specific mechanics before production approval."
     },
     {
       "order": 10,
@@ -159,8 +159,8 @@
         "name": "Zero Volt Ren"
       },
       "bossMechanic": "Three-phase final boss with readable surges, summons, and clear vulnerable windows.",
-      "productionStatus": "concept",
-      "nextHarnessStep": "Do not build until phases 2-9 prove boss/state/combat systems are production-ready."
+      "productionStatus": "vertical-slice",
+      "nextHarnessStep": "Playable in harness with prototype stand-in art. Replace scene plate, boss sheet, and stage-specific mechanics before production approval."
     }
   ]
 }

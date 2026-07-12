@@ -1,0 +1,51 @@
+{
+  "id": "stage-05-solar-foundry",
+  "name": "Solar Foundry",
+  "worldWidth": 832,
+  "background": "stage-04-china-night-market-bg",
+  "music": "stage-01",
+  "playerSpawn": {
+    "x": 76,
+    "lane": 0.72
+  },
+  "enemyWaves": [
+    {
+      "x": 245,
+      "lane": 0.64,
+      "role": "bruiser"
+    },
+    {
+      "x": 323,
+      "lane": 0.78,
+      "role": "striker"
+    },
+    {
+      "x": 401,
+      "lane": 0.7,
+      "role": "runner"
+    },
+    {
+      "x": 479,
+      "lane": 0.83,
+      "role": "thrower"
+    },
+    {
+      "x": 557,
+      "lane": 0.66,
+      "role": "bruiser"
+    },
+    {
+      "x": 635,
+      "lane": 0.76,
+      "role": "runner"
+    }
+  ],
+  "boss": {
+    "id": "forge-aya",
+    "x": 722,
+    "lane": 0.72,
+    "spawnAfterX": 532
+  },
+  "stageClearX": 784,
+  "map": "stage-05-solar-foundry-map"
+}
