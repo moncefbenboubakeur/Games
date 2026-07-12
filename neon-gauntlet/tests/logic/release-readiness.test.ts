@@ -29,4 +29,14 @@ describe('release readiness gate', () => {
     expect(bossArtBlockers.some((blocker) => blocker.reason.includes('zero-volt-ren'))).toBe(true)
     expect(bossArtBlockers.every((blocker) => blocker.reason.includes('unique approved sprite sheet'))).toBe(true)
   })
+
+  it('does not report audio blockers after project-owned cue replacement', () => {
+    const output = execFileSync('node', ['tools/check-release-readiness.mjs'], { encoding: 'utf8' })
+    const report = JSON.parse(output) as ReleaseReport
+    const audioBlockers = report.blockers.filter((blocker) => blocker.kind === 'audio-ledger' || blocker.kind === 'audio-source')
+
+    expect(audioBlockers).toHaveLength(0)
+    expect(report.blockers.some((blocker) => blocker.kind === 'texture')).toBe(true)
+    expect(report.blockers.some((blocker) => blocker.kind === 'level-production')).toBe(true)
+  })
 })
