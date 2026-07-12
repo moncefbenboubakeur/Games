@@ -10,34 +10,44 @@
   },
   "enemyWaves": [
     {
-      "x": 245,
-      "lane": 0.64,
+      "x": 250,
+      "lane": 0.68,
       "role": "thrower"
     },
     {
-      "x": 323,
-      "lane": 0.78,
+      "x": 330,
+      "lane": 0.76,
       "role": "runner"
     },
     {
-      "x": 401,
+      "x": 410,
       "lane": 0.7,
       "role": "striker"
     },
     {
-      "x": 479,
-      "lane": 0.83,
+      "x": 490,
+      "lane": 0.82,
       "role": "thrower"
     },
     {
-      "x": 557,
+      "x": 570,
       "lane": 0.66,
       "role": "bruiser"
     },
     {
-      "x": 635,
-      "lane": 0.76,
+      "x": 650,
+      "lane": 0.74,
       "role": "runner"
+    },
+    {
+      "x": 725,
+      "lane": 0.68,
+      "role": "striker"
+    },
+    {
+      "x": 805,
+      "lane": 0.8,
+      "role": "thrower"
     }
   ],
   "boss": {

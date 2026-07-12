@@ -16,6 +16,7 @@
     "test:maps": "node tools/inspect-map-art.mjs --check --all",
     "test:map-art": "node tools/validate-map-art.mjs",
     "test:audio": "node tools/validate-audio-sources.mjs",
+    "test:balance": "node tools/validate-balance.mjs",
     "test:release": "node tools/check-release-readiness.mjs",
     "release:check": "node tools/check-release-readiness.mjs --strict",
     "test:review-packets": "node tools/validate-review-packets.mjs",

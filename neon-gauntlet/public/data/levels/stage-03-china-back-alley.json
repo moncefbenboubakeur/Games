@@ -10,22 +10,27 @@
   },
   "enemyWaves": [
     {
-      "x": 284,
+      "x": 250,
       "lane": 0.7,
       "role": "striker"
     },
     {
-      "x": 360,
-      "lane": 0.78,
+      "x": 330,
+      "lane": 0.76,
       "role": "bruiser"
     },
     {
-      "x": 450,
+      "x": 410,
       "lane": 0.66,
+      "role": "runner"
+    },
+    {
+      "x": 500,
+      "lane": 0.72,
       "role": "thrower"
     },
     {
-      "x": 548,
+      "x": 585,
       "lane": 0.8,
       "role": "bruiser"
     }
