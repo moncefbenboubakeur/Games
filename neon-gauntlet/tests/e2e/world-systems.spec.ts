@@ -19,6 +19,25 @@ test('stage world systems spawn hazards props and purposeful NPCs', async ({ pag
   expect(world?.npcs[0].purpose).toContain('background')
 })
 
+test('world objects render as semantic scene objects instead of raw blocks', async ({ page }) => {
+  await startGame(page)
+  const worldObjects = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      children: {
+        list: Array<{ name?: string; type?: string }>
+      }
+    }
+    return world.children.list
+      .filter((item) => item.name?.startsWith('prop-') || item.name?.startsWith('background-actor') || item.name?.startsWith('hazard-'))
+      .map((item) => ({ name: item.name, type: item.type }))
+  })
+
+  expect(worldObjects.some((item) => item.name?.startsWith('prop-cabinet'))).toBe(true)
+  expect(worldObjects.some((item) => item.name === 'background-actor')).toBe(true)
+  expect(worldObjects.some((item) => item.name?.startsWith('hazard-body'))).toBe(true)
+  expect(worldObjects.every((item) => item.type === 'Container')).toBe(true)
+})
+
 test('enemy roles use role-specific textures', async ({ page }) => {
   await startGame(page)
   const textures = await page.evaluate(() => window.__NEON_DEBUG__?.enemies.map((enemy) => enemy.texture))

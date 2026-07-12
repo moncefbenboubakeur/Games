@@ -5,10 +5,50 @@ import { laneToY } from '../utils/lane'
 
 interface HazardRuntime {
   def: HazardDefinition
-  body: Phaser.GameObjects.Rectangle
-  warning: Phaser.GameObjects.Rectangle
+  body: Phaser.GameObjects.Container
+  warning: Phaser.GameObjects.Container
   nextHitAt: number
   forcedActiveUntil: number
+}
+
+function addPixel(container: Phaser.GameObjects.Container, scene: Phaser.Scene, x: number, y: number, w: number, h: number, color: number, alpha = 1) {
+  container.add(scene.add.rectangle(x, y, w, h, color, alpha).setOrigin(0.5))
+}
+
+function makeWarning(scene: Phaser.Scene, def: HazardDefinition, color: number, y: number) {
+  const warning = scene.add.container(def.x, y)
+  const halfW = def.width / 2
+  addPixel(warning, scene, -halfW, 0, 5, 3, color, 0.85)
+  addPixel(warning, scene, -halfW * 0.45, 0, 6, 3, color, 0.75)
+  addPixel(warning, scene, halfW * 0.45, 0, 6, 3, color, 0.75)
+  addPixel(warning, scene, halfW, 0, 5, 3, color, 0.85)
+  warning.add(scene.add.rectangle(0, 0, def.width + 8, def.height + 5).setStrokeStyle(1, color, 0.55).setOrigin(0.5))
+  warning.setAlpha(0)
+  warning.setName(`hazard-warning-${def.type}`)
+  return warning
+}
+
+function makeHazardBody(scene: Phaser.Scene, def: HazardDefinition, color: number, y: number) {
+  const body = scene.add.container(def.x, y)
+  if (def.type === 'steam') {
+    body.add(scene.add.ellipse(-def.width * 0.25, 1, def.width * 0.34, def.height * 0.7, color, 0.2))
+    body.add(scene.add.ellipse(0, -2, def.width * 0.42, def.height, color, 0.26))
+    body.add(scene.add.ellipse(def.width * 0.25, 2, def.width * 0.32, def.height * 0.72, color, 0.2))
+    addPixel(body, scene, 0, def.height * 0.38, def.width * 0.58, 3, 0xdff6ff, 0.32)
+  } else if (def.type === 'cart') {
+    addPixel(body, scene, 0, 0, def.width, def.height, 0x2a1208, 0.78)
+    addPixel(body, scene, 0, -def.height * 0.22, def.width * 0.85, 4, color, 0.82)
+    body.add(scene.add.ellipse(-def.width * 0.32, def.height * 0.5, 7, 7, 0x050711, 0.9))
+    body.add(scene.add.ellipse(def.width * 0.32, def.height * 0.5, 7, 7, 0x050711, 0.9))
+  } else {
+    addPixel(body, scene, -def.width * 0.26, 0, def.width * 0.2, 3, color, 0.7)
+    addPixel(body, scene, 0, -2, def.width * 0.26, 3, 0xdff6ff, 0.72)
+    addPixel(body, scene, def.width * 0.26, 1, def.width * 0.2, 3, color, 0.7)
+    body.add(scene.add.star(0, 0, 5, 2, 8, color, 0.55).setBlendMode(Phaser.BlendModes.ADD))
+  }
+  body.setAlpha(0.08)
+  body.setName(`hazard-body-${def.type}`)
+  return body
 }
 
 export class HazardSystem {
@@ -18,10 +58,9 @@ export class HazardSystem {
     this.hazards = definitions.map((def) => {
       const color = Number.parseInt(def.color.replace('#', ''), 16)
       const y = laneToY(def.lane) - def.height / 2
-      const body = scene.add.rectangle(def.x, y, def.width, def.height, color, 0.08)
+      const body = makeHazardBody(scene, def, color, y)
         .setDepth(Math.round(laneToY(def.lane)) - 2)
-      const warning = scene.add.rectangle(def.x, y, def.width + 8, def.height + 5, color, 0)
-        .setStrokeStyle(2, color, 0.9)
+      const warning = makeWarning(scene, def, color, y)
         .setDepth(Math.round(laneToY(def.lane)) - 1)
       return { def, body, warning, nextHitAt: 0, forcedActiveUntil: 0 }
     })
@@ -40,7 +79,7 @@ export class HazardSystem {
       hazard.warning.setPosition(hazard.def.x + typeOffset.x, hazard.warning.y)
       hazard.body.setScale(typeOffset.scaleX, typeOffset.scaleY)
       hazard.warning.setAlpha(telegraphing ? 0.35 + Math.sin(time / 65) * 0.18 : 0)
-      hazard.body.setAlpha(active ? (forcedActive ? 0.9 : 0.72) : 0.08)
+      hazard.body.setAlpha(active ? (forcedActive ? 0.82 : 0.64) : 0.08)
       if (!active || time < hazard.nextHitAt || player.invincibleMs > 0) return
       const inLane = Math.abs(player.lane - hazard.def.lane) <= 0.065
       const inX = Math.abs(player.x - hazard.body.x) <= hazard.def.width / 2 + 12

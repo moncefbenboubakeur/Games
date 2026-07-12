@@ -7,8 +7,53 @@ import { laneToY } from '../utils/lane'
 interface PropRuntime {
   def: PropDefinition
   hp: number
-  body: Phaser.GameObjects.Rectangle
-  shine: Phaser.GameObjects.Rectangle
+  body: Phaser.GameObjects.Container
+  shine: Phaser.GameObjects.Container
+}
+
+function addPixel(container: Phaser.GameObjects.Container, scene: Phaser.Scene, x: number, y: number, w: number, h: number, color: number, alpha = 1) {
+  container.add(scene.add.rectangle(x, y, w, h, color, alpha).setOrigin(0.5))
+}
+
+function addPropSprite(scene: Phaser.Scene, def: PropDefinition, color: number, y: number) {
+  const body = scene.add.container(def.x, y)
+  const accent = 0xdff6ff
+  const dark = 0x050711
+  const glow = 0xffd166
+
+  if (def.type === 'cabinet') {
+    addPixel(body, scene, 0, def.height * 0.18, def.width * 0.86, def.height * 0.5, dark, 0.88)
+    addPixel(body, scene, 0, def.height * 0.02, def.width * 0.54, def.height * 0.16, color, 0.58)
+    addPixel(body, scene, 0, def.height * 0.02, def.width * 0.38, 2, accent, 0.58)
+    addPixel(body, scene, -def.width * 0.22, def.height * 0.36, 3, 3, glow, 0.58)
+    addPixel(body, scene, def.width * 0.22, def.height * 0.36, 3, 3, 0x50e7ff, 0.58)
+  } else if (def.type === 'crate') {
+    addPixel(body, scene, 0, 0, def.width, def.height, color, 0.84)
+    addPixel(body, scene, 0, -def.height * 0.28, def.width, 3, 0x2a1508, 0.75)
+    addPixel(body, scene, 0, def.height * 0.05, def.width, 3, 0x2a1508, 0.75)
+    addPixel(body, scene, -def.width * 0.22, 0, 3, def.height, 0x2a1508, 0.75)
+    addPixel(body, scene, def.width * 0.22, 0, 3, def.height, 0x2a1508, 0.75)
+  } else if (def.type === 'barrel') {
+    body.add(scene.add.ellipse(0, 0, def.width, def.height, color, 0.82))
+    addPixel(body, scene, 0, -def.height * 0.24, def.width * 0.82, 3, accent, 0.68)
+    addPixel(body, scene, 0, def.height * 0.22, def.width * 0.82, 3, dark, 0.78)
+    addPixel(body, scene, -def.width * 0.18, 0, 3, def.height * 0.72, dark, 0.5)
+  } else {
+    addPixel(body, scene, 0, 0, def.width, def.height, color, 0.78)
+    addPixel(body, scene, 0, -def.height * 0.36, def.width * 1.05, 6, 0xffd166, 0.88)
+    addPixel(body, scene, -def.width * 0.25, -def.height * 0.06, 4, def.height * 0.74, dark, 0.72)
+    addPixel(body, scene, def.width * 0.25, -def.height * 0.06, 4, def.height * 0.74, dark, 0.72)
+  }
+
+  body.add(scene.add.rectangle(0, def.height / 2 + 1, def.width * 0.95, 3, 0x000000, 0.3).setOrigin(0.5))
+  body.setAlpha(0.62)
+  return body
+}
+
+function addPropShine(scene: Phaser.Scene, def: PropDefinition, y: number) {
+  const shine = scene.add.container(def.x, y)
+  addPixel(shine, scene, 0, -def.height * 0.38, def.width * 0.58, 2, 0xdff6ff, 0.45)
+  return shine
 }
 
 export class PropSystem {
@@ -22,11 +67,12 @@ export class PropSystem {
     this.props = definitions.map((def) => {
       const color = Number.parseInt(def.color.replace('#', ''), 16)
       const y = laneToY(def.lane) - def.height / 2
-      const body = scene.add.rectangle(def.x, y, def.width, def.height, color, 0.72)
-        .setStrokeStyle(2, 0x050711, 0.9)
+      const body = addPropSprite(scene, def, color, y)
         .setDepth(Math.round(laneToY(def.lane)) - 3)
-      const shine = scene.add.rectangle(def.x, y - def.height * 0.24, def.width * 0.68, 3, 0xdff6ff, 0.75)
+        .setName(`prop-${def.type}`)
+      const shine = addPropShine(scene, def, y)
         .setDepth(Math.round(laneToY(def.lane)) - 2)
+        .setName('prop-shine')
       return { def, hp: def.hp, body, shine }
     })
   }
@@ -43,7 +89,7 @@ export class PropSystem {
       const overlaps = bounds.right >= propLeft && bounds.left <= propRight
       if (!inLane || !overlaps) return
       prop.hp = Math.max(0, prop.hp - attack.damage)
-      prop.body.setAlpha(prop.hp > 0 ? 0.38 : 0)
+      prop.body.setAlpha(prop.hp > 0 ? 0.45 : 0)
       prop.shine.setAlpha(prop.hp > 0 ? 0.2 : 0)
       if (prop.hp <= 0) {
         score += prop.def.score
