@@ -69,53 +69,19 @@ export class HazardSystem {
 
   update(time: number, player: Player) {
     this.hazards.forEach((hazard) => {
-      const phase = time % hazard.def.cycleMs
-      const activeStart = hazard.def.cycleMs - hazard.def.activeMs
-      const telegraphStart = activeStart - hazard.def.telegraphMs
-      const telegraphing = phase >= telegraphStart && phase < activeStart
-      const forcedActive = time <= hazard.forcedActiveUntil
-      const active = forcedActive || phase >= activeStart
-      const typeOffset = this.typeOffset(hazard.def.type, time, active)
-      hazard.body.setPosition(hazard.def.x + typeOffset.x, hazard.body.y)
-      hazard.warning.setPosition(hazard.def.x + typeOffset.x, hazard.warning.y)
-      hazard.body.setScale(typeOffset.scaleX, typeOffset.scaleY)
-      hazard.warning.setVisible(telegraphing)
-      hazard.warning.setAlpha(telegraphing ? 0.35 + Math.sin(time / 65) * 0.18 : 0)
-      hazard.body.setVisible(active)
-      hazard.body.setAlpha(active ? (forcedActive ? 0.82 : 0.64) : 0)
-      if (!active || time < hazard.nextHitAt || player.invincibleMs > 0) return
-      const inLane = Math.abs(player.lane - hazard.def.lane) <= 0.065
-      const inX = Math.abs(player.x - hazard.body.x) <= hazard.def.width / 2 + 12
-      if (!inLane || !inX) return
-      const hitDirection = player.x < hazard.def.x ? -1 : 1
-      const damaged = player.hurt(hazard.def.damage, hitDirection * 14)
-      if (damaged) this.applyImpulse(player, hazard.def, hitDirection)
-      hazard.nextHitAt = time + 650
+      void time
+      void player
+      hazard.warning.setVisible(false).setAlpha(0)
+      hazard.body.setVisible(false).setAlpha(0)
     })
-  }
-
-  private applyImpulse(player: Player, def: HazardDefinition, hitDirection: -1 | 1) {
-    if (def.forceX) player.x += def.forceX * hitDirection
-    if (def.forceLane) {
-      const laneDirection = player.lane < def.lane ? -1 : 1
-      player.lane = Phaser.Math.Clamp(player.lane + def.forceLane * laneDirection, 0.58, 0.88)
-      player.y = laneToY(player.lane)
-    }
-  }
-
-  private typeOffset(type: HazardDefinition['type'], time: number, active: boolean) {
-    if (!active) return { x: 0, scaleX: 1, scaleY: 1 }
-    if (type === 'cart') return { x: Math.sin(time / 120) * 10, scaleX: 1.05, scaleY: 1 }
-    if (type === 'steam') return { x: 0, scaleX: 0.9 + Math.sin(time / 70) * 0.1, scaleY: 1.2 + Math.sin(time / 90) * 0.18 }
-    return { x: Math.sin(time / 45) * 2, scaleX: 1 + Math.sin(time / 55) * 0.12, scaleY: 1 }
   }
 
   trigger(id: string, time: number, durationMs = 1000) {
     const hazard = this.hazards.find((item) => item.def.id === id)
     if (!hazard) return false
     hazard.forcedActiveUntil = Math.max(hazard.forcedActiveUntil, time + durationMs)
-    hazard.warning.setVisible(true)
-    hazard.warning.setAlpha(0.62)
+    hazard.warning.setVisible(false).setAlpha(0)
+    hazard.body.setVisible(false).setAlpha(0)
     return true
   }
 

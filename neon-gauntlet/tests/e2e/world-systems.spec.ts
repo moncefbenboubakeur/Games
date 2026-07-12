@@ -68,6 +68,26 @@ test('passive hazards do not paint permanent placeholder objects over the map', 
   expect(hazards.every((item) => item.visible === false || item.alpha === 0)).toBe(true)
 })
 
+test('placeholder hazards do not hurt the player until final readable art exists', async ({ page }) => {
+  await startGame(page)
+  const result = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      hazards: { update: (time: number, player: unknown) => void }
+      player: { hp: number; invincibleMs: number; lane: number; x: number }
+    }
+    const hazard = window.__NEON_DEBUG__?.world?.hazards[0]
+    if (!hazard) throw new Error('hazard missing')
+    world.player.hp = 150
+    world.player.invincibleMs = 0
+    world.player.x = hazard.x
+    world.player.lane = hazard.lane
+    world.hazards.update(60_000, world.player)
+    return { hp: world.player.hp }
+  })
+
+  expect(result.hp).toBe(150)
+})
+
 test('enemy roles use role-specific textures', async ({ page }) => {
   await startGame(page)
   const textures = await page.evaluate(() => window.__NEON_DEBUG__?.enemies.map((enemy) => enemy.texture))
