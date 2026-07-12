@@ -46,7 +46,8 @@ function makeHazardBody(scene: Phaser.Scene, def: HazardDefinition, color: numbe
     addPixel(body, scene, def.width * 0.26, 1, def.width * 0.2, 3, color, 0.7)
     body.add(scene.add.star(0, 0, 5, 2, 8, color, 0.55).setBlendMode(Phaser.BlendModes.ADD))
   }
-  body.setAlpha(0.08)
+  body.setAlpha(0)
+  body.setVisible(false)
   body.setName(`hazard-body-${def.type}`)
   return body
 }
@@ -62,7 +63,7 @@ export class HazardSystem {
         .setDepth(Math.round(laneToY(def.lane)) - 2)
       const warning = makeWarning(scene, def, color, y)
         .setDepth(Math.round(laneToY(def.lane)) - 1)
-      return { def, body, warning, nextHitAt: 0, forcedActiveUntil: 0 }
+      return { def, body, warning, nextHitAt: 0, forcedActiveUntil: -1 }
     })
   }
 
@@ -78,8 +79,10 @@ export class HazardSystem {
       hazard.body.setPosition(hazard.def.x + typeOffset.x, hazard.body.y)
       hazard.warning.setPosition(hazard.def.x + typeOffset.x, hazard.warning.y)
       hazard.body.setScale(typeOffset.scaleX, typeOffset.scaleY)
+      hazard.warning.setVisible(telegraphing)
       hazard.warning.setAlpha(telegraphing ? 0.35 + Math.sin(time / 65) * 0.18 : 0)
-      hazard.body.setAlpha(active ? (forcedActive ? 0.82 : 0.64) : 0.08)
+      hazard.body.setVisible(active)
+      hazard.body.setAlpha(active ? (forcedActive ? 0.82 : 0.64) : 0)
       if (!active || time < hazard.nextHitAt || player.invincibleMs > 0) return
       const inLane = Math.abs(player.lane - hazard.def.lane) <= 0.065
       const inX = Math.abs(player.x - hazard.body.x) <= hazard.def.width / 2 + 12
@@ -111,6 +114,7 @@ export class HazardSystem {
     const hazard = this.hazards.find((item) => item.def.id === id)
     if (!hazard) return false
     hazard.forcedActiveUntil = Math.max(hazard.forcedActiveUntil, time + durationMs)
+    hazard.warning.setVisible(true)
     hazard.warning.setAlpha(0.62)
     return true
   }

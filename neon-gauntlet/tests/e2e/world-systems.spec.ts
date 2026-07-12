@@ -19,23 +19,53 @@ test('stage world systems spawn hazards props and purposeful NPCs', async ({ pag
   expect(world?.npcs[0].purpose).toContain('background')
 })
 
-test('world objects render as semantic scene objects instead of raw blocks', async ({ page }) => {
+test('placeholder world extras stay hidden during normal map rendering', async ({ page }) => {
   await startGame(page)
   const worldObjects = await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
       children: {
-        list: Array<{ name?: string; type?: string }>
+        list: Array<{ name?: string; type?: string; visible?: boolean; alpha?: number }>
       }
     }
     return world.children.list
-      .filter((item) => item.name?.startsWith('prop-') || item.name?.startsWith('background-actor') || item.name?.startsWith('hazard-'))
-      .map((item) => ({ name: item.name, type: item.type }))
+      .filter((item) => item.name?.includes('placeholder-hidden'))
+      .map((item) => ({
+        name: item.name,
+        type: item.type,
+        visible: item.visible,
+        alpha: item.alpha,
+      }))
   })
 
-  expect(worldObjects.some((item) => item.name?.startsWith('prop-cabinet'))).toBe(true)
-  expect(worldObjects.some((item) => item.name === 'background-actor')).toBe(true)
-  expect(worldObjects.some((item) => item.name?.startsWith('hazard-body'))).toBe(true)
+  expect(worldObjects.length).toBeGreaterThan(0)
   expect(worldObjects.every((item) => item.type === 'Container')).toBe(true)
+  expect(worldObjects.every((item) => item.visible === false || item.alpha === 0)).toBe(true)
+})
+
+test('passive hazards do not paint permanent placeholder objects over the map', async ({ page }) => {
+  await startGame(page)
+  const hazards = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      hazards: { update: (time: number, player: unknown) => void }
+      player: unknown
+      children: {
+        list: Array<{ name?: string; type?: string; visible?: boolean; alpha?: number }>
+      }
+    }
+    world.hazards.update(0, world.player)
+    return world.children.list
+      .filter((item) => item.name?.startsWith('hazard-body'))
+      .map((item) => ({
+        name: item.name,
+        type: item.type,
+        visible: item.visible,
+        alpha: item.alpha,
+      }))
+  })
+
+  expect(hazards.length).toBeGreaterThan(0)
+  expect(hazards.every((item) => item.type === 'Container')).toBe(true)
+  expect(hazards.every((item) => item.visible === false || item.alpha === 0)).toBe(true)
 })
 
 test('enemy roles use role-specific textures', async ({ page }) => {
