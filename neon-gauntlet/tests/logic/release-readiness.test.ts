@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 interface ReleaseReport {
   releaseReady: boolean
@@ -8,9 +8,14 @@ interface ReleaseReport {
 }
 
 describe('release readiness gate', () => {
-  it('reports unfinished level production as explicit blockers', () => {
+  let report: ReleaseReport
+
+  beforeAll(() => {
     const output = execFileSync('node', ['tools/check-release-readiness.mjs'], { encoding: 'utf8' })
-    const report = JSON.parse(output) as ReleaseReport
+    report = JSON.parse(output) as ReleaseReport
+  })
+
+  it('reports unfinished level production as explicit blockers', () => {
     const levelBlockers = report.blockers.filter((blocker) => blocker.kind === 'level-production')
 
     expect(report.releaseReady).toBe(false)
@@ -21,8 +26,6 @@ describe('release readiness gate', () => {
   })
 
   it('reports reused boss sprite sheets as boss-art blockers', () => {
-    const output = execFileSync('node', ['tools/check-release-readiness.mjs'], { encoding: 'utf8' })
-    const report = JSON.parse(output) as ReleaseReport
     const bossArtBlockers = report.blockers.filter((blocker) => blocker.kind === 'boss-art')
 
     expect(bossArtBlockers.length).toBeGreaterThanOrEqual(1)
@@ -31,8 +34,6 @@ describe('release readiness gate', () => {
   })
 
   it('does not report audio blockers after project-owned cue replacement', () => {
-    const output = execFileSync('node', ['tools/check-release-readiness.mjs'], { encoding: 'utf8' })
-    const report = JSON.parse(output) as ReleaseReport
     const audioBlockers = report.blockers.filter((blocker) => blocker.kind === 'audio-ledger' || blocker.kind === 'audio-source')
 
     expect(audioBlockers).toHaveLength(0)

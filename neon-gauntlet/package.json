@@ -18,6 +18,7 @@
     "test:audio": "node tools/validate-audio-sources.mjs",
     "test:release": "node tools/check-release-readiness.mjs",
     "release:check": "node tools/check-release-readiness.mjs --strict",
+    "test:review-packets": "node tools/validate-review-packets.mjs",
     "test:levels": "node tools/validate-level-production-plan.mjs",
     "inspect:map": "node tools/inspect-map-art.mjs",
     "create:level": "node tools/create-level-from-template.mjs",
