@@ -19,6 +19,7 @@
     "test:balance": "node tools/validate-balance.mjs",
     "test:release": "node tools/check-release-readiness.mjs",
     "release:check": "node tools/check-release-readiness.mjs --strict",
+    "release:dossier": "node tools/export-production-approval-dossier.mjs",
     "test:review-packets": "node tools/validate-review-packets.mjs",
     "test:levels": "node tools/validate-level-production-plan.mjs",
     "inspect:map": "node tools/inspect-map-art.mjs",
