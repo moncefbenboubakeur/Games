@@ -9,6 +9,7 @@ const strict = process.argv.includes('--strict')
 const assets = JSON.parse(fs.readFileSync(path.join(root, 'public/data/assets.json'), 'utf8'))
 const mapArt = JSON.parse(fs.readFileSync(path.join(root, 'public/data/map-art.json'), 'utf8'))
 const audioSources = JSON.parse(fs.readFileSync(path.join(root, 'public/data/audio-sources.json'), 'utf8'))
+const levelProductionPlan = JSON.parse(fs.readFileSync(path.join(root, 'public/data/level-production-plan.json'), 'utf8'))
 
 const blockers = []
 
@@ -39,6 +40,16 @@ Object.entries(audioSources.cues || {}).forEach(([key, cue]) => {
     blockers.push({ kind: 'audio-source', key, reason: `${cue.approvalStatus}; ${cue.commercialUse}` })
   }
 })
+
+for (const level of levelProductionPlan.levels || []) {
+  if (level.productionStatus !== 'production-approved') {
+    blockers.push({
+      kind: 'level-production',
+      key: level.id,
+      reason: `${level.productionStatus}; boss=${level.boss?.id || 'missing'}; next=${level.nextHarnessStep || 'missing next step'}`,
+    })
+  }
+}
 
 const report = {
   releaseReady: blockers.length === 0,
