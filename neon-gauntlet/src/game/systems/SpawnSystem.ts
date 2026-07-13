@@ -18,10 +18,14 @@ export class SpawnSystem {
   ) {}
 
   spawnEnemies(level: LevelData) {
-    return level.enemyWaves.map((spawn, index) => {
+    return this.spawnWave(level, level.enemyWaves, level.playerSpawn.x)
+  }
+
+  spawnWave(level: LevelData, spawns: LevelData['enemyWaves'], referenceX: number) {
+    return spawns.map((spawn, index) => {
       const def = this.enemyDefs.find((enemy) => enemy.id === spawn.role)
       if (!def) throw new Error(`Unknown enemy role: ${spawn.role}`)
-      return new Enemy(this.scene, this.entryX(spawn.x, level.playerSpawn.x, level.worldWidth, index), spawn.lane, def, this.animations, this.combat)
+      return new Enemy(this.scene, this.entryX(spawn.x, referenceX, level.worldWidth, index), spawn.lane, def, this.animations, this.combat)
     })
   }
 

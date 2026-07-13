@@ -30,6 +30,42 @@
       "role": "thrower"
     }
   ],
+  "encounterWaves": [
+    {
+      "id": "casino-door-open",
+      "triggerX": 76,
+      "gateX": 214,
+      "spawns": [
+        {
+          "x": 242,
+          "lane": 0.7,
+          "role": "striker"
+        },
+        {
+          "x": 317,
+          "lane": 0.76,
+          "role": "runner"
+        }
+      ]
+    },
+    {
+      "id": "casino-flank-pressure",
+      "triggerX": 246,
+      "gateX": 390,
+      "spawns": [
+        {
+          "x": 392,
+          "lane": 0.68,
+          "role": "bruiser"
+        },
+        {
+          "x": 449,
+          "lane": 0.78,
+          "role": "thrower"
+        }
+      ]
+    }
+  ],
   "boss": {
     "id": "switchblade-sora",
     "x": 466,

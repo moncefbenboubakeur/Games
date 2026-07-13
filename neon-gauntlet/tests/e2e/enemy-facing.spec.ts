@@ -8,6 +8,26 @@ async function startGame(page: import('playwright/test').Page) {
   await page.waitForFunction(() => !!window.__NEON_DEBUG__?.player)
 }
 
+async function triggerSecondStageOneWave(page: import('playwright/test').Page) {
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ destroy: () => void; hp: number }>
+    }
+    world.enemies.forEach((enemy) => {
+      enemy.hp = 0
+      enemy.destroy()
+    })
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.encounter.activeId)).toBe(null)
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      player: { x: number }
+    }
+    world.player.x = 250
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.encounter.activeId)).toBe('casino-flank-pressure')
+}
+
 function expectedScaleSign(face: -1 | 1, sourceFacing: 'left' | 'right') {
   return sourceFacing === 'right' ? face : face === -1 ? 1 : -1
 }
@@ -28,6 +48,7 @@ test('initial enemies enter from outside the screen instead of popping into view
 
 test('enemy kick frames point toward the player', async ({ page }) => {
   await startGame(page)
+  await triggerSecondStageOneWave(page)
   await page.waitForTimeout(250)
 
   const walkingLeft = await page.evaluate(() => {
@@ -35,7 +56,8 @@ test('enemy kick frames point toward the player', async ({ page }) => {
       enemies: Array<{ face: -1 | 1; scaleX: number; texture: { key: string }; x: number }>
       player: { x: number }
     }
-    const enemy = world.enemies[2]
+    const enemy = world.enemies.find((candidate) => candidate.texture.key === 'bruiser-sheet')
+    if (!enemy) throw new Error('bruiser missing')
     return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX, texture: enemy.texture.key }
   })
   expect(walkingLeft.playerX).toBeLessThan(walkingLeft.enemyX)
@@ -44,10 +66,11 @@ test('enemy kick frames point toward the player', async ({ page }) => {
 
   const kickLeft = await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ attackMs: number; face: -1 | 1; scaleX: number; telegraphMs: number; x: number }>
+      enemies: Array<{ attackMs: number; face: -1 | 1; scaleX: number; telegraphMs: number; texture: { key: string }; x: number }>
       player: { x: number }
     }
-    const enemy = world.enemies[2]
+    const enemy = world.enemies.find((candidate) => candidate.texture.key === 'bruiser-sheet')
+    if (!enemy) throw new Error('bruiser missing')
     world.player.x = enemy.x - 80
     enemy.telegraphMs = 0
     enemy.attackMs = 260
@@ -61,7 +84,8 @@ test('enemy kick frames point toward the player', async ({ page }) => {
       enemies: Array<{ face: -1 | 1; scaleX: number; texture: { key: string }; x: number }>
       player: { x: number }
     }
-    const enemy = world.enemies[2]
+    const enemy = world.enemies.find((candidate) => candidate.texture.key === 'bruiser-sheet')
+    if (!enemy) throw new Error('bruiser missing')
     return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX, texture: enemy.texture.key }
   })
   expect(attackLeft.playerX).toBeLessThan(attackLeft.enemyX)
@@ -70,11 +94,12 @@ test('enemy kick frames point toward the player', async ({ page }) => {
 
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ attackMs: number; telegraphMs: number; x: number }>
+      enemies: Array<{ attackMs: number; telegraphMs: number; texture: { key: string }; x: number }>
       player: { x: number }
       level: { worldWidth: number }
     }
-    const enemy = world.enemies[2]
+    const enemy = world.enemies.find((candidate) => candidate.texture.key === 'bruiser-sheet')
+    if (!enemy) throw new Error('bruiser missing')
     enemy.x = 360
     world.player.x = Math.min(enemy.x + 120, world.level.worldWidth - 40)
     enemy.telegraphMs = 0
@@ -87,7 +112,8 @@ test('enemy kick frames point toward the player', async ({ page }) => {
       enemies: Array<{ face: -1 | 1; scaleX: number; texture: { key: string }; x: number }>
       player: { x: number }
     }
-    const enemy = world.enemies[2]
+    const enemy = world.enemies.find((candidate) => candidate.texture.key === 'bruiser-sheet')
+    if (!enemy) throw new Error('bruiser missing')
     return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX, texture: enemy.texture.key }
   })
   expect(attackRight.playerX).toBeGreaterThan(attackRight.enemyX)
@@ -102,10 +128,19 @@ test('switchblade sora walk and attacks face the player', async ({ page }) => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
       boss?: { attackMs: number; face: -1 | 1; scaleX: number; telegraphMs: number; texture: { key: string }; x: number }
       bossSpawned: boolean
+      encounterWaveIndex: number
+      activeEncounterId?: string
+      activeEncounterGateX?: number
+      enemies: Array<{ destroy: () => void }>
       handleBossSpawn: () => void
-      level: { boss: { spawnAfterX: number } }
+      level: { boss: { spawnAfterX: number }; encounterWaves?: unknown[] }
       player: { lane: number; x: number }
     }
+    world.enemies.forEach((enemy) => enemy.destroy())
+    world.enemies = []
+    world.encounterWaveIndex = world.level.encounterWaves?.length ?? 0
+    world.activeEncounterId = undefined
+    world.activeEncounterGateX = undefined
     world.player.x = world.level.boss.spawnAfterX + 4
     world.handleBossSpawn()
     if (!world.boss) throw new Error('boss did not spawn')

@@ -44,6 +44,12 @@ declare global {
         npcs: Array<{ id: string; purpose: string; x: number }>
         projectiles: { count: number }
       }
+      encounter: {
+        activeId: string | null
+        waveIndex: number
+        totalWaves: number
+        gateX: number | null
+      }
     }
     __NEON_TEST_GAMEPAD__?: {
       axes?: number[]

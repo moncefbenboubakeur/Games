@@ -147,6 +147,13 @@ export interface EnemySpawnData {
   role: EnemyRole
 }
 
+export interface EncounterWaveData {
+  id: string
+  triggerX: number
+  gateX: number
+  spawns: EnemySpawnData[]
+}
+
 export interface LevelData {
   id: string
   name: string
@@ -155,6 +162,7 @@ export interface LevelData {
   music: string
   playerSpawn: { x: number; lane: number }
   enemyWaves: EnemySpawnData[]
+  encounterWaves?: EncounterWaveData[]
   boss: { id: string; x: number; lane: number; spawnAfterX: number }
   stageClearX: number
   map: string

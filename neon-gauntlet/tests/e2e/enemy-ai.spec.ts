@@ -56,15 +56,26 @@ test('enemy walk animation uses a complete stepping cycle only while moving', as
 
   const idleFrame = await page.evaluate(async () => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ attackMs: number; cooldownMs: number; frame: { name: string }; lane: number; telegraphMs: number; x: number }>
+      enemies: Array<{
+        attackMs: number
+        cooldownMs: number
+        frame: { name: string }
+        lane: number
+        telegraphMs: number
+        updateEnemy: (dt: number, player: unknown, worldWidth: number) => void
+        x: number
+      }>
+      level: { worldWidth: number }
       player: { lane: number; x: number }
     }
     const enemy = world.enemies[0]
+    enemy.x = 120
     world.player.x = enemy.x
     world.player.lane = enemy.lane
     enemy.cooldownMs = 9999
     enemy.telegraphMs = 0
     enemy.attackMs = 0
+    enemy.updateEnemy(16, world.player, world.level.worldWidth)
     await new Promise((resolve) => setTimeout(resolve, 180))
     return enemy.frame.name
   })

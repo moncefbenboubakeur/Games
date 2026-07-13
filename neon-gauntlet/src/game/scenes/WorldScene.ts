@@ -26,6 +26,7 @@ export class WorldScene extends Phaser.Scene {
   private audioSystem!: AudioSystem
   private combat!: CombatSystem
   private combatDebug!: CombatDebugSystem
+  private spawner!: SpawnSystem
   private player!: Player
   private enemies: Enemy[] = []
   private boss?: Boss
@@ -37,6 +38,9 @@ export class WorldScene extends Phaser.Scene {
   private stageCleared = false
   private frozen = false
   private exitReady = false
+  private encounterWaveIndex = 0
+  private activeEncounterId?: string
+  private activeEncounterGateX?: number
   private exitArrow?: Phaser.GameObjects.Text
   private hazards?: HazardSystem
   private props?: PropSystem
@@ -98,8 +102,9 @@ export class WorldScene extends Phaser.Scene {
     this.createWorldSystems(worldSystems)
 
     this.player = new Player(this, this.level.playerSpawn.x, this.level.playerSpawn.lane, this.animationSystem, this.combat, combat)
-    const spawner = new SpawnSystem(this, this.animationSystem, this.combat, enemies.roles, bosses.bosses)
-    this.enemies = spawner.spawnEnemies(this.level)
+    this.spawner = new SpawnSystem(this, this.animationSystem, this.combat, enemies.roles, bosses.bosses)
+    this.enemies = this.level.encounterWaves?.length ? [] : this.spawner.spawnEnemies(this.level)
+    this.handleEncounterFlow()
 
     new CameraSystem(this, this.level.worldWidth).follow(this.player)
     this.scene.launch(SceneKeys.UI)
@@ -129,6 +134,7 @@ export class WorldScene extends Phaser.Scene {
     }
 
     this.player.updatePlayer(delta, input, this.level.worldWidth)
+    this.handleEncounterFlow()
     this.enemies = this.enemies.filter((enemy) => enemy.active)
     this.enemies.forEach((enemy) => enemy.updateEnemy(delta, this.player, this.level.worldWidth))
     this.enemies = this.enemies.filter((enemy) => enemy.active)
@@ -164,6 +170,9 @@ export class WorldScene extends Phaser.Scene {
     this.stageCleared = false
     this.frozen = false
     this.exitReady = false
+    this.encounterWaveIndex = 0
+    this.activeEncounterId = undefined
+    this.activeEncounterGateX = undefined
     this.exitArrow?.destroy()
     this.exitArrow = undefined
     this.destroyWorldSystems()
@@ -277,8 +286,36 @@ export class WorldScene extends Phaser.Scene {
     this.enemies.push(new Enemy(this, x, lane, def, this.animationSystem, this.combat))
   }
 
+  private handleEncounterFlow() {
+    const waves = this.level.encounterWaves
+    if (!waves?.length || this.bossSpawned) return
+
+    const encounterHasLivingThreats = this.enemies.some((enemy) => enemy.hp > 0)
+    if (this.activeEncounterId && encounterHasLivingThreats) {
+      if (this.activeEncounterGateX !== undefined && this.player.x > this.activeEncounterGateX) {
+        this.player.x = this.activeEncounterGateX
+      }
+      return
+    }
+
+    if (this.activeEncounterId) {
+      this.activeEncounterId = undefined
+      this.activeEncounterGateX = undefined
+      this.events.emit('message', 'MOVE')
+    }
+
+    const next = waves[this.encounterWaveIndex]
+    if (!next || this.player.x < next.triggerX) return
+    this.enemies.push(...this.spawner.spawnWave(this.level, next.spawns, this.player.x))
+    this.encounterWaveIndex += 1
+    this.activeEncounterId = next.id
+    this.activeEncounterGateX = next.gateX
+    this.events.emit('message', 'FIGHT')
+  }
+
   private handleBossSpawn() {
     if (this.bossSpawned || this.player.x < this.level.boss.spawnAfterX) return
+    if (this.hasPendingEncounterWaves()) return
     const spawner = new SpawnSystem(
       this,
       this.animationSystem,
@@ -309,7 +346,13 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private hasLivingThreats() {
-    return this.enemies.some((enemy) => enemy.hp > 0) || Boolean(this.boss && this.boss.hp > 0)
+    return this.enemies.some((enemy) => enemy.hp > 0) || Boolean(this.boss && this.boss.hp > 0) || this.hasPendingEncounterWaves()
+  }
+
+  private hasPendingEncounterWaves() {
+    const waves = this.level.encounterWaves
+    if (!waves?.length || this.bossSpawned) return false
+    return Boolean(this.activeEncounterId) || this.encounterWaveIndex < waves.length
   }
 
   private createExitArrow() {
@@ -444,6 +487,12 @@ export class WorldScene extends Phaser.Scene {
         props: this.props?.debugSnapshot() || [],
         npcs: this.npcs?.debugSnapshot() || [],
         projectiles: this.projectiles?.debugSnapshot() || { count: 0 },
+      },
+      encounter: {
+        activeId: this.activeEncounterId ?? null,
+        waveIndex: this.encounterWaveIndex,
+        totalWaves: this.level.encounterWaves?.length ?? 0,
+        gateX: this.activeEncounterGateX ?? null,
       },
     }
     ;(window as typeof window & { __NEON_FREEZE__?: () => void }).__NEON_FREEZE__ = () => {

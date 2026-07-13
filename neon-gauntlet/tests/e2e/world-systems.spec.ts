@@ -10,6 +10,26 @@ async function startGame(page: import('playwright/test').Page, levelId = 'stage-
   await page.waitForFunction((id) => window.__NEON_DEBUG__?.level?.id === id, levelId)
 }
 
+async function triggerSecondStageOneWave(page: import('playwright/test').Page) {
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ destroy: () => void; hp: number }>
+    }
+    world.enemies.forEach((enemy) => {
+      enemy.hp = 0
+      enemy.destroy()
+    })
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.encounter.activeId)).toBe(null)
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      player: { x: number }
+    }
+    world.player.x = 250
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.encounter.activeId)).toBe('casino-flank-pressure')
+}
+
 test('stage world systems spawn hazards props and purposeful NPCs', async ({ page }) => {
   await startGame(page)
   const world = await page.evaluate(() => window.__NEON_DEBUG__?.world)
@@ -90,21 +110,28 @@ test('placeholder hazards do not hurt the player until final readable art exists
 
 test('enemy roles use role-specific textures', async ({ page }) => {
   await startGame(page)
-  const textures = await page.evaluate(() => window.__NEON_DEBUG__?.enemies.map((enemy) => enemy.texture))
+  const firstWaveTextures = await page.evaluate(() => window.__NEON_DEBUG__?.enemies.map((enemy) => enemy.texture) ?? [])
+  await triggerSecondStageOneWave(page)
+  const secondWaveTextures = await page.evaluate(() => window.__NEON_DEBUG__?.enemies.map((enemy) => enemy.texture) ?? [])
+  const textures = [...firstWaveTextures, ...secondWaveTextures]
   expect(new Set(textures)).toEqual(new Set(['striker-sheet', 'runner-sheet', 'bruiser-sheet', 'thrower-sheet']))
 })
 
 test('throwers create real projectiles instead of fake contact hits', async ({ page }) => {
   await startGame(page)
+  await triggerSecondStageOneWave(page)
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ attackMs: number; cooldownMs: number; def: { id: string }; lane: number; telegraphMs: number; x: number }>
+      enemies: Array<{ attackMs: number; cooldownMs: number; def: { id: string }; destroy: () => void; lane: number; telegraphMs: number; x: number }>
       player: { hp: number; lane: number; x: number }
     }
     const thrower = world.enemies.find((enemy) => enemy.def.id === 'thrower')
     if (!thrower) throw new Error('thrower missing')
+    world.enemies.filter((enemy) => enemy !== thrower).forEach((enemy) => enemy.destroy())
+    world.enemies = [thrower]
     world.player.hp = 150
-    world.player.x = thrower.x - 88
+    thrower.x = 340
+    world.player.x = thrower.x - 96
     world.player.lane = thrower.lane
     thrower.cooldownMs = 9999
     thrower.telegraphMs = 35

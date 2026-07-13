@@ -133,6 +133,15 @@ export class DataValidationSystem {
     level.enemyWaves.forEach((spawn, index) => {
       this.require(enemyRoles.has(spawn.role), `${level.id} enemy spawn ${index} has unknown role: ${spawn.role}`)
     })
+    level.encounterWaves?.forEach((wave, index) => {
+      this.require(Boolean(wave.id), `${level.id} encounter ${index} id is required`)
+      this.require(wave.triggerX >= 0 && wave.triggerX <= level.stageClearX, `${wave.id} triggerX must fit before clear`)
+      this.require(wave.gateX >= wave.triggerX && wave.gateX <= level.stageClearX, `${wave.id} gateX must fit after trigger`)
+      this.require(wave.spawns.length > 0 && wave.spawns.length <= 4, `${wave.id} must spawn 1-4 enemies`)
+      wave.spawns.forEach((spawn, spawnIndex) => {
+        this.require(enemyRoles.has(spawn.role), `${wave.id} spawn ${spawnIndex} has unknown role: ${spawn.role}`)
+      })
+    })
     this.require(bossIds.has(level.boss.id), `${level.id} has unknown boss: ${level.boss.id}`)
     this.require(level.boss.spawnAfterX < level.stageClearX, `${level.id} boss trigger must come before stage clear`)
   }
