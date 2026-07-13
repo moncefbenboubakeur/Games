@@ -7,7 +7,8 @@ import type { AnimationSystem } from './AnimationSystem'
 import type { CombatSystem } from './CombatSystem'
 
 export class SpawnSystem {
-  private static readonly entryMargin = 72
+  private static readonly entryMargin = 42
+  private static readonly entrySpacing = 36
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -36,7 +37,7 @@ export class SpawnSystem {
   }
 
   private entryX(targetX: number, referenceX: number, worldWidth: number, index = 0) {
-    const spacing = index * 28
+    const spacing = index * SpawnSystem.entrySpacing
     const cameraLeft = this.scene.cameras.main.scrollX
     const cameraRight = cameraLeft + GAME_WIDTH
     if (targetX >= referenceX) return Math.min(worldWidth + SpawnSystem.entryMargin, cameraRight + SpawnSystem.entryMargin + spacing)

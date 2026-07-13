@@ -44,6 +44,17 @@ test('initial enemies enter from outside the screen instead of popping into view
 
   expect(spawnXs.length).toBeGreaterThan(0)
   expect(spawnXs.every((x) => x > 426)).toBe(true)
+
+  await page.waitForTimeout(900)
+  const entryXs = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ x: number }>
+    }
+    return world.enemies.map((enemy) => enemy.x)
+  })
+
+  expect(entryXs.some((x) => x < 426)).toBe(true)
+  expect(Math.max(...entryXs) - Math.min(...entryXs)).toBeGreaterThanOrEqual(8)
 })
 
 test('enemy kick frames point toward the player', async ({ page }) => {
