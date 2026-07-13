@@ -130,12 +130,12 @@
     "switchblade-sora-sheet": {
       "file": "/assets/sprites/bosses/switchblade-sora-sheet.png",
       "kind": "boss-sprite-sheet",
-      "status": "prototype-derived",
-      "source": "generated from local prototype enemy-rival-sheet via tools/generate-boss-sheets.mjs",
-      "author": "project prototype pipeline",
-      "license": "inherits blocked prototype source status",
-      "commercialUse": "blocked until replaced or formally approved",
-      "notes": "Separate runtime boss texture. This removes Phaser runtime tinting but is not final unique boss art."
+      "status": "needs-review",
+      "source": "Cleaned and cropped from project-provided high-resolution generated sheet public/assets/sprites/bosses/incoming/switchblade-sora-white-bg.png via tools/build-switchblade-sora-sheet.py",
+      "author": "project-generated asset provided by Moncef Benboubakeur",
+      "license": "pending project approval",
+      "commercialUse": "blocked until contact-sheet review and project approval",
+      "notes": "Unique runtime sheet for Switchblade Sora. Contact sheets live under docs/contact-sheets/bosses/switchblade-sora. Not production-approved until human visual review and licensing approval are complete."
     },
     "turnstile-ren-sheet": {
       "file": "/assets/sprites/bosses/turnstile-ren-sheet.png",
@@ -166,6 +166,16 @@
       "license": "inherits blocked prototype source status",
       "commercialUse": "blocked until replaced or formally approved",
       "notes": "Separate runtime boss texture. This removes Phaser runtime tinting but is not final unique boss art."
+    },
+    "harbor-hale-sheet": {
+      "file": "/assets/sprites/bosses/harbor-hale-sheet.png",
+      "kind": "boss-sprite-sheet",
+      "status": "prototype-derived",
+      "source": "temporary copy of the previous switchblade-sora prototype-derived boss sheet, split so Switchblade Sora can use unique incoming art",
+      "author": "project prototype pipeline",
+      "license": "inherits blocked prototype source status",
+      "commercialUse": "blocked until replaced or formally approved",
+      "notes": "Temporary Harbor Hale placeholder only. Replace with a unique approved Harbor Hale sprite sheet before production approval."
     }
   },
   "audio": {

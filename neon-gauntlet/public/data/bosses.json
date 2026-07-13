@@ -315,8 +315,8 @@
     {
       "id": "harbor-hale",
       "name": "Harbor Hale",
-      "texture": "switchblade-sora-sheet",
-      "textureFile": "/assets/sprites/bosses/switchblade-sora-sheet.png",
+      "texture": "harbor-hale-sheet",
+      "textureFile": "/assets/sprites/bosses/harbor-hale-sheet.png",
       "hp": 318,
       "speed": 56,
       "damage": 25,

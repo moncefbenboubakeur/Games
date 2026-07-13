@@ -11,13 +11,6 @@ const dimensions = execFileSync('magick', [source, '-format', '%wx%h', 'info:'],
 
 const bosses = [
   {
-    id: 'switchblade-sora',
-    file: 'switchblade-sora-sheet.png',
-    modulate: '104,118,96',
-    color: '#ffd166',
-    colorize: '9',
-  },
-  {
     id: 'turnstile-ren',
     file: 'turnstile-ren-sheet.png',
     modulate: '108,126,155',
@@ -37,6 +30,13 @@ const bosses = [
     modulate: '110,132,310',
     color: '#ff5cab',
     colorize: '12',
+  },
+  {
+    id: 'harbor-hale',
+    file: 'harbor-hale-sheet.png',
+    modulate: '104,118,96',
+    color: '#ffd166',
+    colorize: '9',
   },
 ]
 
