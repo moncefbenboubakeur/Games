@@ -5,6 +5,7 @@
       "name": "Switchblade Sora",
       "texture": "switchblade-sora-sheet",
       "textureFile": "/assets/sprites/bosses/switchblade-sora-sheet.png",
+      "sourceFacing": "right",
       "hp": 170,
       "speed": 42,
       "damage": 18,

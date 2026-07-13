@@ -80,6 +80,7 @@ export interface EnemyDefinition {
   id: EnemyRole
   texture?: string
   textureFile?: string
+  sourceFacing?: 'left' | 'right'
   hp: number
   speed: number
   damage: number
@@ -103,6 +104,7 @@ export interface BossDefinition {
   name: string
   texture: string
   textureFile: string
+  sourceFacing?: 'left' | 'right'
   hp: number
   speed: number
   damage: number

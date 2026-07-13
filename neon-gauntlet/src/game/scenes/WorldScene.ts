@@ -247,17 +247,24 @@ export class WorldScene extends Phaser.Scene {
 
   private spawnBossProjectileBurst(boss: Boss, projectileId: string, count: number) {
     const spread = [-0.055, 0, 0.055, -0.095, 0.095]
+    let originX = Phaser.Math.Clamp(boss.x, 40, this.level.worldWidth - 40)
+    if (Math.abs(originX - this.player.x) < 96) {
+      const side = boss.x >= this.player.x ? 1 : -1
+      originX = Phaser.Math.Clamp(this.player.x + side * 96, 40, this.level.worldWidth - 40)
+    }
     for (let index = 0; index < count; index += 1) {
       const face = index % 2 === 0 ? boss.face : ((boss.face * -1) as -1 | 1)
       const lane = Phaser.Math.Clamp(boss.lane + (spread[index] || 0), 0.58, 0.88)
-      this.projectiles?.spawn(projectileId, boss.x, lane, face)
+      this.projectiles?.spawn(projectileId, originX, lane, face)
     }
   }
 
   private spawnBossSupport(boss: Boss, role: EnemyRole, count: number) {
     for (let index = 0; index < count; index += 1) {
       const side = index % 2 === 0 ? -1 : 1
-      const x = Phaser.Math.Clamp(boss.x + side * (58 + index * 18), 34, this.level.worldWidth - 34)
+      const cameraLeft = this.cameras.main.scrollX
+      const cameraRight = cameraLeft + GAME_WIDTH
+      const x = side < 0 ? cameraLeft - 64 - index * 18 : cameraRight + 64 + index * 18
       const lane = Phaser.Math.Clamp(boss.lane + (index % 2 === 0 ? 0.055 : -0.055), 0.58, 0.88)
       this.spawnEnemySupport(x, role, lane)
     }
@@ -279,7 +286,7 @@ export class WorldScene extends Phaser.Scene {
       (this.cache.json.get('enemies') as EnemiesData).roles,
       (this.cache.json.get('bosses') as BossesData).bosses,
     )
-    this.boss = spawner.spawnBoss(this.level)
+    this.boss = spawner.spawnBoss(this.level, this.player.x)
     this.bossSpawned = true
     this.events.emit('message', `BOSS  ${this.boss.bossName}`)
   }

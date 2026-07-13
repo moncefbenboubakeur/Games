@@ -26,6 +26,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   private downFrameApplied = false
   private moving = false
   protected readonly textureKey: string
+  protected readonly sourceFacing: 'left' | 'right'
 
   constructor(
     scene: Phaser.Scene,
@@ -39,6 +40,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     const textureKey = def.texture ?? 'enemy-sheet'
     super(scene, x, laneToY(lane), textureKey, frame.name)
     this.textureKey = textureKey
+    this.sourceFacing = def.sourceFacing ?? 'left'
     this.lane = lane
     this.hp = def.hp
     this.setScale(0.38 * def.scale)
@@ -124,7 +126,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
       this.aiReason = 'target-in-range'
     }
 
-    this.x = clamp(this.x, 32, worldWidth - 32)
+    this.x = clamp(this.x, -96, worldWidth + 96)
     this.lane = clamp(this.lane, 0.58, 0.88)
     this.y = laneToY(this.lane)
     this.depth = Math.round(this.y)
@@ -191,9 +193,14 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   }
 
   private applyFacing(action: ActorVisualState) {
-    const attackArtFacesRight = action === 'punch' || action === 'kick'
-    const direction = attackArtFacesRight ? this.face : (this.face === -1 ? 1 : -1)
+    const sourceFacing = this.sourceFacingForAction(action)
+    const direction = sourceFacing === 'right' ? this.face : (this.face === -1 ? 1 : -1)
     this.scaleX = Math.abs(this.scaleX) * direction
+  }
+
+  private sourceFacingForAction(action: ActorVisualState) {
+    if (this.sourceFacing === 'right') return 'right'
+    return action === 'punch' || action === 'kick' ? 'right' : 'left'
   }
 
   private canStartAttack(player: Player) {

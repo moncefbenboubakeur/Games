@@ -19,6 +19,7 @@ export class Boss extends Enemy {
     const asEnemy: EnemyDefinition = {
       id: boss.preferredAttack === 'kick' ? 'bruiser' : 'striker',
       texture: boss.texture,
+      sourceFacing: boss.sourceFacing,
       hp: boss.hp,
       speed: boss.speed,
       damage: boss.damage,

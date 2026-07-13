@@ -8,21 +8,39 @@ async function startGame(page: import('playwright/test').Page) {
   await page.waitForFunction(() => !!window.__NEON_DEBUG__?.player)
 }
 
+function expectedScaleSign(face: -1 | 1, sourceFacing: 'left' | 'right') {
+  return sourceFacing === 'right' ? face : face === -1 ? 1 : -1
+}
+
+test('initial enemies enter from outside the screen instead of popping into view', async ({ page }) => {
+  await startGame(page)
+
+  const spawnXs = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ x: number }>
+    }
+    return world.enemies.map((enemy) => enemy.x)
+  })
+
+  expect(spawnXs.length).toBeGreaterThan(0)
+  expect(spawnXs.every((x) => x > 426)).toBe(true)
+})
+
 test('enemy kick frames point toward the player', async ({ page }) => {
   await startGame(page)
   await page.waitForTimeout(250)
 
   const walkingLeft = await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ face: -1 | 1; scaleX: number; x: number }>
+      enemies: Array<{ face: -1 | 1; scaleX: number; texture: { key: string }; x: number }>
       player: { x: number }
     }
     const enemy = world.enemies[2]
-    return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX }
+    return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX, texture: enemy.texture.key }
   })
   expect(walkingLeft.playerX).toBeLessThan(walkingLeft.enemyX)
   expect(walkingLeft.face).toBe(-1)
-  expect(walkingLeft.scaleX).toBeGreaterThan(0)
+  expect(Math.sign(walkingLeft.scaleX)).toBe(expectedScaleSign(walkingLeft.face, 'left'))
 
   const kickLeft = await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
@@ -32,23 +50,23 @@ test('enemy kick frames point toward the player', async ({ page }) => {
     const enemy = world.enemies[2]
     world.player.x = enemy.x - 80
     enemy.telegraphMs = 0
-    enemy.attackMs = 240
+    enemy.attackMs = 260
     return { enemyX: enemy.x, playerX: world.player.x }
   })
   expect(kickLeft.playerX).toBeLessThan(kickLeft.enemyX)
-  await page.waitForTimeout(250)
+  await page.waitForTimeout(90)
 
   const attackLeft = await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ face: -1 | 1; scaleX: number; x: number }>
+      enemies: Array<{ face: -1 | 1; scaleX: number; texture: { key: string }; x: number }>
       player: { x: number }
     }
     const enemy = world.enemies[2]
-    return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX }
+    return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX, texture: enemy.texture.key }
   })
   expect(attackLeft.playerX).toBeLessThan(attackLeft.enemyX)
   expect(attackLeft.face).toBe(-1)
-  expect(attackLeft.scaleX).toBeLessThan(0)
+  expect(Math.sign(attackLeft.scaleX)).toBe(expectedScaleSign(attackLeft.face, 'right'))
 
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
@@ -57,21 +75,84 @@ test('enemy kick frames point toward the player', async ({ page }) => {
       level: { worldWidth: number }
     }
     const enemy = world.enemies[2]
+    enemy.x = 360
     world.player.x = Math.min(enemy.x + 120, world.level.worldWidth - 40)
     enemy.telegraphMs = 0
-    enemy.attackMs = 240
+    enemy.attackMs = 260
   })
-  await page.waitForTimeout(250)
+  await page.waitForTimeout(90)
 
   const attackRight = await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ face: -1 | 1; scaleX: number; x: number }>
+      enemies: Array<{ face: -1 | 1; scaleX: number; texture: { key: string }; x: number }>
       player: { x: number }
     }
     const enemy = world.enemies[2]
-    return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX }
+    return { enemyX: enemy.x, playerX: world.player.x, face: enemy.face, scaleX: enemy.scaleX, texture: enemy.texture.key }
   })
   expect(attackRight.playerX).toBeGreaterThan(attackRight.enemyX)
   expect(attackRight.face).toBe(1)
-  expect(attackRight.scaleX).toBeGreaterThan(0)
+  expect(Math.sign(attackRight.scaleX)).toBe(expectedScaleSign(attackRight.face, 'right'))
+})
+
+test('switchblade sora walk and attacks face the player', async ({ page }) => {
+  await startGame(page)
+
+  const bossFacingLeft = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      boss?: { attackMs: number; face: -1 | 1; scaleX: number; telegraphMs: number; texture: { key: string }; x: number }
+      bossSpawned: boolean
+      handleBossSpawn: () => void
+      level: { boss: { spawnAfterX: number } }
+      player: { lane: number; x: number }
+    }
+    world.player.x = world.level.boss.spawnAfterX + 4
+    world.handleBossSpawn()
+    if (!world.boss) throw new Error('boss did not spawn')
+    world.player.x = world.boss.x - 120
+    world.player.lane = 0.72
+    world.boss.telegraphMs = 0
+    world.boss.attackMs = 0
+    return { bossX: world.boss.x, face: world.boss.face, playerX: world.player.x, scaleX: world.boss.scaleX, texture: world.boss.texture.key }
+  })
+  await page.waitForTimeout(180)
+  const walkLeft = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      boss?: { face: -1 | 1; scaleX: number; texture: { key: string }; x: number }
+      player: { x: number }
+    }
+    const boss = world.boss
+    if (!boss) throw new Error('boss missing')
+    return { bossX: boss.x, face: boss.face, playerX: world.player.x, scaleX: boss.scaleX, texture: boss.texture.key }
+  })
+
+  expect(bossFacingLeft.texture).toBe('switchblade-sora-sheet')
+  expect(walkLeft.playerX).toBeLessThan(walkLeft.bossX)
+  expect(walkLeft.face).toBe(-1)
+  expect(Math.sign(walkLeft.scaleX)).toBe(expectedScaleSign(walkLeft.face, 'right'))
+
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      boss?: { attackMs: number; telegraphMs: number; x: number }
+      player: { x: number }
+    }
+    if (!world.boss) throw new Error('boss missing')
+    world.player.x = world.boss.x - 60
+    world.boss.telegraphMs = 0
+    world.boss.attackMs = 260
+  })
+  await page.waitForTimeout(90)
+
+  const attackLeft = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      boss?: { face: -1 | 1; scaleX: number; texture: { key: string }; x: number }
+      player: { x: number }
+    }
+    const boss = world.boss
+    if (!boss) throw new Error('boss missing')
+    return { bossX: boss.x, face: boss.face, playerX: world.player.x, scaleX: boss.scaleX, texture: boss.texture.key }
+  })
+  expect(attackLeft.playerX).toBeLessThan(attackLeft.bossX)
+  expect(attackLeft.face).toBe(-1)
+  expect(Math.sign(attackLeft.scaleX)).toBe(expectedScaleSign(attackLeft.face, 'right'))
 })

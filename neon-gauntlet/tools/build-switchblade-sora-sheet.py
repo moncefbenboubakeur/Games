@@ -164,7 +164,7 @@ def paste_into_slot(atlas: Image.Image, frame: Image.Image, slot: tuple[int, int
     x, y, slot_w, slot_h = slot
     frame_w, frame_h = frame.size
     scale = min((slot_w - 6) / frame_w, (slot_h - 4) / frame_h)
-    resized = frame.resize((max(1, round(frame_w * scale)), max(1, round(frame_h * scale))), Image.Resampling.LANCZOS)
+    resized = frame.resize((max(1, round(frame_w * scale)), max(1, round(frame_h * scale))), Image.Resampling.NEAREST)
     px = x + (slot_w - resized.width) // 2
     py = y + slot_h - resized.height
     atlas.alpha_composite(resized, (px, py))
