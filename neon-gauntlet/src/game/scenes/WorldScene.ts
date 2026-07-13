@@ -350,26 +350,26 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private showAreaTitle() {
-    const title = this.add.text(GAME_WIDTH / 2, 42, `AREA ${this.levelIndex + 1}  ${this.level.name}`, {
-      fontFamily: 'monospace',
-      fontSize: '13px',
-      color: '#ffd166',
-      stroke: '#050711',
-      strokeThickness: 5,
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(1600).setAlpha(0)
-    const subtitle = this.add.text(GAME_WIDTH / 2, 61, 'CLEAR THE CREW  THEN MOVE RIGHT', {
+    const title = this.add.text(GAME_WIDTH - 14, 43, `AREA ${this.levelIndex + 1}  ${this.level.name}`, {
       fontFamily: 'monospace',
       fontSize: '8px',
+      color: '#ffd166',
+      stroke: '#050711',
+      strokeThickness: 2,
+    }).setOrigin(1, 0).setScrollFactor(0).setDepth(1600).setAlpha(0)
+    const subtitle = this.add.text(GAME_WIDTH - 14, 54, 'CLEAR CREW  THEN MOVE RIGHT', {
+      fontFamily: 'monospace',
+      fontSize: '6px',
       color: '#dff6ff',
       stroke: '#050711',
-      strokeThickness: 4,
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(1600).setAlpha(0)
+      strokeThickness: 2,
+    }).setOrigin(1, 0).setScrollFactor(0).setDepth(1600).setAlpha(0)
     this.tweens.add({
       targets: [title, subtitle],
-      alpha: 1,
-      duration: 240,
+      alpha: 0.82,
+      duration: 180,
       yoyo: true,
-      hold: 900,
+      hold: 560,
       onComplete: () => {
         title.destroy()
         subtitle.destroy()

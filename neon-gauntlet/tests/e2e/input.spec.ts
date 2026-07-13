@@ -33,6 +33,22 @@ test('keyboard arrows stop moving after key release', async ({ page }) => {
   expect(await page.evaluate(() => window.__NEON_DEBUG__?.input?.keyboard.windowKeys)).toEqual([])
 })
 
+test('keyboard J P and Enter all trigger punch', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => window.focus())
+
+  for (const key of ['KeyJ', 'KeyP', 'Enter']) {
+    const before = await page.evaluate(() => window.__NEON_DEBUG__?.player.combo || 0)
+    await page.keyboard.press(key)
+    await expect
+      .poll(() => page.evaluate(() => window.__NEON_DEBUG__?.combat?.playerAttack?.kind || null))
+      .toBe('punch')
+    const after = await page.evaluate(() => window.__NEON_DEBUG__?.player.combo || 0)
+    expect(after, `${key} should increment combo through punch`).toBeGreaterThan(before)
+    await page.waitForTimeout(360)
+  }
+})
+
 test('touch direction buttons stop moving after pointer release', async ({ page }) => {
   await startGame(page, { touchControls: true })
   const canvas = await page.locator('canvas').boundingBox()

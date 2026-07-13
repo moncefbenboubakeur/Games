@@ -29,8 +29,13 @@ async function freeze(page: import('playwright/test').Page) {
 }
 
 test('stage 1 idle baseline', async ({ page }) => {
-  await startGame(page)
-  await page.waitForTimeout(250)
+  await page.goto('/')
+  await page.waitForSelector('canvas')
+  await page.waitForFunction(() => typeof window.__NEON_START__ === 'function')
+  await page.evaluate(() => window.__NEON_START__?.())
+  await page.waitForFunction(() => !!window.__NEON_DEBUG__?.player)
+  await page.evaluate(() => window.__NEON_FREEZE__?.())
+  await page.waitForTimeout(1200)
   await expect(page.locator('canvas')).toHaveScreenshot('stage-01-idle.png', screenshotOptions)
 })
 

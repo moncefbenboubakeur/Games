@@ -31,7 +31,7 @@ export class MenuScene extends Phaser.Scene {
       padding: { left: 10, right: 10, top: 7, bottom: 7 },
     }).setOrigin(0.5).setInteractive({ useHandCursor: true })
 
-    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 24, 'MOVE WASD/ARROWS  PUNCH J  KICK K  JUMP SPACE  GUARD L', {
+    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 24, 'MOVE WASD/ARROWS  PUNCH J/P/ENTER  KICK K  JUMP SPACE  GUARD L', {
       fontFamily: 'monospace',
       fontSize: '8px',
       color: '#9ee7ff',

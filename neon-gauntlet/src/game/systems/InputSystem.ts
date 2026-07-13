@@ -38,6 +38,7 @@ export class InputSystem {
       w: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
       s: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
       punch: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
+      punchP: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P),
       punchEnter: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER),
       kick: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
       jump: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
@@ -92,7 +93,7 @@ export class InputSystem {
     next.right = horizontal.positive
     next.up = vertical.negative
     next.down = vertical.positive
-    next.punch = Phaser.Input.Keyboard.JustDown(this.keys.punch) || Phaser.Input.Keyboard.JustDown(this.keys.punchEnter) || this.shot('punch') || this.oneShot.has('punch')
+    next.punch = Phaser.Input.Keyboard.JustDown(this.keys.punch) || Phaser.Input.Keyboard.JustDown(this.keys.punchP) || Phaser.Input.Keyboard.JustDown(this.keys.punchEnter) || this.shot('punch') || this.oneShot.has('punch')
     next.kick = Phaser.Input.Keyboard.JustDown(this.keys.kick) || this.shot('kick') || this.oneShot.has('kick')
     next.jump = Phaser.Input.Keyboard.JustDown(this.keys.jump) || this.shot('jump') || this.oneShot.has('jump')
     next.guard = this.keys.guard.isDown || this.down('l', 'L') || this.held.guard
@@ -187,6 +188,8 @@ export class InputSystem {
         return 'down'
       case 'j':
       case 'J':
+      case 'p':
+      case 'P':
       case 'Enter':
         return 'punch'
       case 'k':

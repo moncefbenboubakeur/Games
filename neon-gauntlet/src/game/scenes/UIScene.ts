@@ -29,19 +29,19 @@ export class UIScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.rectangle(70, 18, 104, 14, 0x06091a, 0.92).setStrokeStyle(2, 0x23d5ff)
-    this.hpBar = this.add.rectangle(20, 18, 96, 7, 0x42e6b5).setOrigin(0, 0.5)
-    this.scoreText = this.add.text(18, 34, 'SCORE 000000', { fontFamily: 'monospace', fontSize: '12px', color: '#61ff6a', stroke: '#081020', strokeThickness: 3 })
-    this.levelText = this.add.text(18, 52, '', { fontFamily: 'monospace', fontSize: '9px', color: '#ffd166', stroke: '#081020', strokeThickness: 3 })
-    this.bossText = this.add.text(GAME_WIDTH - 16, 14, '', { fontFamily: 'monospace', fontSize: '9px', color: '#fff', stroke: '#081020', strokeThickness: 3 }).setOrigin(1, 0)
-    this.messageText = this.add.text(GAME_WIDTH / 2, 72, '', { fontFamily: 'monospace', fontSize: '16px', color: '#fff', stroke: '#081020', strokeThickness: 4 }).setOrigin(0.5)
-    this.add.text(GAME_WIDTH - 16, 30, 'PAD  D-PAD/LS MOVE  X=P  B=K  A=J  RB=G', {
+    this.add.rectangle(54, 16, 76, 10, 0x06091a, 0.8).setStrokeStyle(2, 0x23d5ff, 0.86)
+    this.hpBar = this.add.rectangle(20, 16, 68, 5, 0x42e6b5).setOrigin(0, 0.5)
+    this.scoreText = this.add.text(18, 30, 'SCORE 000000', { fontFamily: 'monospace', fontSize: '9px', color: '#61ff6a', stroke: '#081020', strokeThickness: 2 })
+    this.levelText = this.add.text(18, 44, '', { fontFamily: 'monospace', fontSize: '7px', color: '#ffd166', stroke: '#081020', strokeThickness: 2 })
+    this.bossText = this.add.text(GAME_WIDTH - 16, 14, '', { fontFamily: 'monospace', fontSize: '8px', color: '#fff', stroke: '#081020', strokeThickness: 2 }).setOrigin(1, 0)
+    this.messageText = this.add.text(GAME_WIDTH / 2, 72, '', { fontFamily: 'monospace', fontSize: '14px', color: '#fff', stroke: '#081020', strokeThickness: 3 }).setOrigin(0.5)
+    this.add.text(GAME_WIDTH - 16, 30, 'PAD  D-PAD/LS MOVE  X=PUNCH  B=KICK  A=JUMP  RB=GUARD', {
       fontFamily: 'monospace',
-      fontSize: '6px',
+      fontSize: '5px',
       color: '#9ee7ff',
       stroke: '#081020',
-      strokeThickness: 2,
-    }).setOrigin(1, 0).setAlpha(0.78)
+      strokeThickness: 1,
+    }).setOrigin(1, 0).setAlpha(0.58)
 
     if (this.shouldShowTouchControls()) this.createTouchControls()
     this.world = this.scene.get(SceneKeys.World) as WorldScene
@@ -52,7 +52,7 @@ export class UIScene extends Phaser.Scene {
 
   private renderHud(state: HudState) {
     if (!this.scene.isActive() || !this.hpBar?.active || !this.scoreText?.active) return
-    this.hpBar.width = 96 * Math.max(0, state.hp / state.maxHp)
+    this.hpBar.width = 68 * Math.max(0, state.hp / state.maxHp)
     this.scoreText.setText(`SCORE ${String(state.score).padStart(6, '0')}`)
     this.levelText.setText(`${state.level}  ENEMIES ${state.enemies}`)
     this.bossText.setText(state.boss ? `${state.boss.name}  ${Math.max(0, Math.round(state.boss.hp))}` : '')
@@ -73,33 +73,33 @@ export class UIScene extends Phaser.Scene {
   private createTouchControls() {
     const input = this.registry.get('inputSystem') as InputSystem
     const leftPanel = this.add.graphics().setDepth(930)
-    leftPanel.fillStyle(0x050711, 0.38).fillRoundedRect(8, GAME_HEIGHT - 82, 118, 74, 18)
-    leftPanel.lineStyle(1, 0x23d5ff, 0.38).strokeRoundedRect(8, GAME_HEIGHT - 82, 118, 74, 18)
-    leftPanel.lineStyle(1, 0xff5c8a, 0.18).strokeRoundedRect(12, GAME_HEIGHT - 78, 110, 66, 15)
+    leftPanel.fillStyle(0x050711, 0.24).fillRoundedRect(8, GAME_HEIGHT - 82, 118, 74, 18)
+    leftPanel.lineStyle(1, 0x23d5ff, 0.28).strokeRoundedRect(8, GAME_HEIGHT - 82, 118, 74, 18)
+    leftPanel.lineStyle(1, 0xff5c8a, 0.1).strokeRoundedRect(12, GAME_HEIGHT - 78, 110, 66, 15)
 
     const rightPanel = this.add.graphics().setDepth(930)
-    rightPanel.fillStyle(0x050711, 0.38).fillRoundedRect(GAME_WIDTH - 154, GAME_HEIGHT - 82, 146, 74, 18)
-    rightPanel.lineStyle(1, 0xffd166, 0.36).strokeRoundedRect(GAME_WIDTH - 154, GAME_HEIGHT - 82, 146, 74, 18)
-    rightPanel.lineStyle(1, 0x23d5ff, 0.16).strokeRoundedRect(GAME_WIDTH - 150, GAME_HEIGHT - 78, 138, 66, 15)
+    rightPanel.fillStyle(0x050711, 0.24).fillRoundedRect(GAME_WIDTH - 154, GAME_HEIGHT - 82, 146, 74, 18)
+    rightPanel.lineStyle(1, 0xffd166, 0.28).strokeRoundedRect(GAME_WIDTH - 154, GAME_HEIGHT - 82, 146, 74, 18)
+    rightPanel.lineStyle(1, 0x23d5ff, 0.1).strokeRoundedRect(GAME_WIDTH - 150, GAME_HEIGHT - 78, 138, 66, 15)
 
-    this.add.text(18, GAME_HEIGHT - 77, 'MOVE', { fontFamily: 'monospace', fontSize: '7px', color: '#9ee7ff' }).setDepth(940)
-    this.add.text(GAME_WIDTH - 144, GAME_HEIGHT - 77, 'COMBO', { fontFamily: 'monospace', fontSize: '7px', color: '#ffd166' }).setDepth(940)
+    this.add.text(18, GAME_HEIGHT - 77, 'MOVE', { fontFamily: 'monospace', fontSize: '6px', color: '#9ee7ff', stroke: '#050711', strokeThickness: 1 }).setDepth(940).setAlpha(0.78)
+    this.add.text(GAME_WIDTH - 144, GAME_HEIGHT - 77, 'COMBO', { fontFamily: 'monospace', fontSize: '6px', color: '#ffd166', stroke: '#050711', strokeThickness: 1 }).setDepth(940).setAlpha(0.78)
 
     const pad = this.add.graphics().setDepth(942)
-    pad.fillStyle(0x23d5ff, 0.16).fillRoundedRect(50, GAME_HEIGHT - 68, 26, 58, 7)
-    pad.fillStyle(0x23d5ff, 0.16).fillRoundedRect(34, GAME_HEIGHT - 52, 58, 26, 7)
-    pad.lineStyle(1, 0x9ee7ff, 0.34).strokeCircle(63, GAME_HEIGHT - 39, 18)
-    pad.fillStyle(0x050711, 0.64).fillCircle(63, GAME_HEIGHT - 39, 10)
+    pad.fillStyle(0x23d5ff, 0.1).fillRoundedRect(50, GAME_HEIGHT - 68, 26, 58, 7)
+    pad.fillStyle(0x23d5ff, 0.1).fillRoundedRect(34, GAME_HEIGHT - 52, 58, 26, 7)
+    pad.lineStyle(1, 0x9ee7ff, 0.26).strokeCircle(63, GAME_HEIGHT - 39, 18)
+    pad.fillStyle(0x050711, 0.48).fillCircle(63, GAME_HEIGHT - 39, 10)
 
     this.createTouchButton(input, 63, GAME_HEIGHT - 61, '^', 'up', 0x23d5ff, 13)
     this.createTouchButton(input, 63, GAME_HEIGHT - 17, 'v', 'down', 0x23d5ff, 13)
     this.createTouchButton(input, 39, GAME_HEIGHT - 39, '<', 'left', 0x23d5ff, 13)
     this.createTouchButton(input, 87, GAME_HEIGHT - 39, '>', 'right', 0x23d5ff, 13)
 
-    this.createTouchButton(input, GAME_WIDTH - 112, GAME_HEIGHT - 45, 'P', 'punch', 0xff5c8a, 14, 'PUNCH')
-    this.createTouchButton(input, GAME_WIDTH - 76, GAME_HEIGHT - 45, 'K', 'kick', 0xffd166, 14, 'KICK')
-    this.createTouchButton(input, GAME_WIDTH - 94, GAME_HEIGHT - 20, 'J', 'jump', 0x23d5ff, 14, 'JUMP')
-    this.createTouchButton(input, GAME_WIDTH - 40, GAME_HEIGHT - 28, 'G', 'guard', 0x9b5cff, 13, 'GUARD')
+    this.createTouchButton(input, GAME_WIDTH - 112, GAME_HEIGHT - 45, 'P', 'punch', 0xff5c8a, 14, 'J/P')
+    this.createTouchButton(input, GAME_WIDTH - 76, GAME_HEIGHT - 45, 'K', 'kick', 0xffd166, 14, 'K')
+    this.createTouchButton(input, GAME_WIDTH - 94, GAME_HEIGHT - 20, 'J', 'jump', 0x23d5ff, 14, 'SPACE')
+    this.createTouchButton(input, GAME_WIDTH - 40, GAME_HEIGHT - 28, 'G', 'guard', 0x9b5cff, 13, 'L')
   }
 
   private shouldShowTouchControls() {
@@ -121,13 +121,13 @@ export class UIScene extends Phaser.Scene {
     radius: number,
     caption?: string,
   ) {
-    const glow = this.add.circle(x, y, radius + 7, color, 0.16).setDepth(950).setBlendMode(Phaser.BlendModes.ADD)
-    const rim = this.add.circle(x, y, radius + 1, 0x050711, 0.82).setDepth(951).setStrokeStyle(2, color, 0.9)
-    const core = this.add.circle(x, y, radius - 3, color, 0.44).setDepth(952).setStrokeStyle(1, 0xdff6ff, 0.44)
-    const shine = this.add.ellipse(x - radius * 0.22, y - radius * 0.34, radius * 0.86, radius * 0.38, 0xffffff, 0.22).setDepth(953)
+    const glow = this.add.circle(x, y, radius + 7, color, 0.1).setDepth(950).setBlendMode(Phaser.BlendModes.ADD)
+    const rim = this.add.circle(x, y, radius + 1, 0x050711, 0.66).setDepth(951).setStrokeStyle(2, color, 0.78)
+    const core = this.add.circle(x, y, radius - 3, color, 0.34).setDepth(952).setStrokeStyle(1, 0xdff6ff, 0.36)
+    const shine = this.add.ellipse(x - radius * 0.22, y - radius * 0.34, radius * 0.86, radius * 0.38, 0xffffff, 0.14).setDepth(953)
     const text = this.add.text(x, y - 1, label, {
       fontFamily: 'monospace',
-      fontSize: caption ? '10px' : '11px',
+      fontSize: caption ? '9px' : '10px',
       color: '#ffffff',
       stroke: '#050711',
       strokeThickness: 3,
@@ -135,7 +135,7 @@ export class UIScene extends Phaser.Scene {
     const captionText = caption
       ? this.add.text(x, y + radius + 4, caption, {
         fontFamily: 'monospace',
-        fontSize: '5px',
+        fontSize: '4px',
         color: '#dff6ff',
         stroke: '#050711',
         strokeThickness: 2,
@@ -145,14 +145,14 @@ export class UIScene extends Phaser.Scene {
     const visuals = [glow, rim, core, shine, text, ...(captionText ? [captionText] : [])]
     const press = () => {
       input.press(action, true)
-      glow.setAlpha(0.36)
-      core.setAlpha(0.74)
+      glow.setAlpha(0.28)
+      core.setAlpha(0.62)
       visuals.forEach((part) => part.setScale(0.94))
     }
     const release = () => {
       input.press(action, false)
-      glow.setAlpha(0.16)
-      core.setAlpha(0.44)
+      glow.setAlpha(0.1)
+      core.setAlpha(0.34)
       visuals.forEach((part) => part.setScale(1))
     }
     hit.on('pointerdown', press)
