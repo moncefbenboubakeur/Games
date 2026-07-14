@@ -17,7 +17,7 @@
       "laneSpeed": 0.2,
       "telegraphMs": 250,
       "attackDurationMs": 280,
-      "scale": 1.2,
+      "scale": 1.05,
       "phases": [
         {
           "id": "blade-rush",
