@@ -10,6 +10,7 @@ import type { Player } from './Player'
 export interface EnemyTactics {
   slotOffsetX?: number
   slotLane?: number
+  speedMultiplier?: number
 }
 
 export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
@@ -73,6 +74,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     const moveTargetLane = tactics.slotLane ?? player.lane
     const moveDx = moveTargetX - this.x
     const moveDy = moveTargetLane - this.lane
+    const movementSpeed = this.def.speed * (tactics.speedMultiplier ?? 1)
     this.face = dx < 0 ? -1 : 1
     this.moving = false
     this.aiState = 'idle'
@@ -87,7 +89,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
 
     if (this.telegraphMs <= 0 && this.attackMs <= 0) {
       if (Math.abs(moveDx) > this.def.range * 0.82) {
-        this.x += Math.sign(moveDx) * this.def.speed * dt / 1000
+        this.x += Math.sign(moveDx) * movementSpeed * dt / 1000
         this.moving = true
         this.aiState = 'pursue'
         this.aiReason = 'closing-distance'

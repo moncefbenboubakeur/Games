@@ -142,6 +142,26 @@ test('combat staging keeps same-side enemies from stacking on the player', async
   expect(state.reasons).toContain('closing-distance')
 })
 
+test('active encounter waves close into fighting pressure quickly', async ({ page }) => {
+  await startGame(page)
+  await page.waitForTimeout(2400)
+
+  const state = await page.evaluate(() => {
+    const debug = window.__NEON_DEBUG__
+    const enemies = debug?.enemies.slice(0, 2) ?? []
+    const playerX = debug?.player.x ?? 0
+    return {
+      nearestDistance: Math.min(...enemies.map((enemy) => Math.abs(enemy.x - playerX))),
+      separation: Math.abs((enemies[0]?.x ?? 0) - (enemies[1]?.x ?? 0)),
+      activeEncounter: debug?.encounter.activeId,
+    }
+  })
+
+  expect(state.activeEncounter).toBe('casino-door-open')
+  expect(state.nearestDistance).toBeLessThanOrEqual(230)
+  expect(state.separation).toBeGreaterThanOrEqual(24)
+})
+
 test('enemies cancel their windup if the player escapes before the hit frame', async ({ page }) => {
   await startGame(page)
 

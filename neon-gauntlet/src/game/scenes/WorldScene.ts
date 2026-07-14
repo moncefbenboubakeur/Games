@@ -300,10 +300,13 @@ export class WorldScene extends Phaser.Scene {
     const holdSlot = isProjectile ? 96 : 64 + rank * 24
     const slotDistance = rank === 0 ? closeSlot : holdSlot
     const laneOffsets = [0, 0.045, -0.045, 0.075]
+    const farFromPlayer = Math.abs(enemy.x - this.player.x) > 150
+    const rushMultiplier = this.activeEncounterId && farFromPlayer ? 1.55 : 1
 
     return {
       slotOffsetX: side * slotDistance,
       slotLane: Phaser.Math.Clamp(this.player.lane + laneOffsets[rank % laneOffsets.length], 0.58, 0.88),
+      speedMultiplier: rushMultiplier,
     }
   }
 
