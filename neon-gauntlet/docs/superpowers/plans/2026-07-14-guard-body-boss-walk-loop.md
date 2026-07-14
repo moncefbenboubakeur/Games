@@ -20,4 +20,4 @@
 - [x] Add player-vs-living-threat horizontal body blocking after player movement.
 - [x] Fix boss walk frame sequencing or metadata based on exact frame evidence.
 - [x] Verify focused tests, visual screenshot/contact sheet, build, full desktop e2e.
-- [ ] Commit and push scoped files only.
+- [x] Commit and push scoped files only.
