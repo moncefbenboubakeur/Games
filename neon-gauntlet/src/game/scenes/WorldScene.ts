@@ -136,7 +136,9 @@ export class WorldScene extends Phaser.Scene {
     this.player.updatePlayer(delta, input, this.level.worldWidth)
     this.handleEncounterFlow()
     this.enemies = this.enemies.filter((enemy) => enemy.active)
-    this.enemies.forEach((enemy) => enemy.updateEnemy(delta, this.player, this.level.worldWidth))
+    const livingEnemies = this.enemies.filter((enemy) => enemy.active && enemy.hp > 0)
+    this.enemies.forEach((enemy) => enemy.updateEnemy(delta, this.player, this.level.worldWidth, this.enemyTactics(enemy, livingEnemies)))
+    this.separateEnemies()
     this.enemies = this.enemies.filter((enemy) => enemy.active)
     if (this.boss?.active) this.boss.updateEnemy(delta, this.player, this.level.worldWidth)
     if (this.boss && !this.boss.active) this.boss = undefined
@@ -284,6 +286,43 @@ export class WorldScene extends Phaser.Scene {
     const def = (this.cache.json.get('enemies') as EnemiesData).roles.find((enemy) => enemy.id === role)
     if (!def) return
     this.enemies.push(new Enemy(this, x, lane, def, this.animationSystem, this.combat))
+  }
+
+  private enemyTactics(enemy: Enemy, livingEnemies: Enemy[]) {
+    if (livingEnemies.length <= 1) return {}
+    const side: -1 | 1 = enemy.x >= this.player.x ? 1 : -1
+    const sameSide = livingEnemies
+      .filter((candidate) => (candidate.x >= this.player.x ? 1 : -1) === side)
+      .sort((a, b) => Math.abs(a.x - this.player.x) - Math.abs(b.x - this.player.x))
+    const rank = Math.max(0, sameSide.indexOf(enemy))
+    const isProjectile = Boolean(enemy.def.projectile)
+    const closeSlot = enemy.def.range * 0.82
+    const holdSlot = isProjectile ? 96 : 64 + rank * 24
+    const slotDistance = rank === 0 ? closeSlot : holdSlot
+    const laneOffsets = [0, 0.045, -0.045, 0.075]
+
+    return {
+      slotOffsetX: side * slotDistance,
+      slotLane: Phaser.Math.Clamp(this.player.lane + laneOffsets[rank % laneOffsets.length], 0.58, 0.88),
+    }
+  }
+
+  private separateEnemies() {
+    const living = this.enemies.filter((enemy) => enemy.active && enemy.hp > 0)
+    for (let leftIndex = 0; leftIndex < living.length; leftIndex += 1) {
+      for (let rightIndex = leftIndex + 1; rightIndex < living.length; rightIndex += 1) {
+        const first = living[leftIndex]
+        const second = living[rightIndex]
+        if (Math.abs(first.lane - second.lane) > 0.09) continue
+        const gap = Math.abs(first.x - second.x)
+        const minimumGap = 26
+        if (gap >= minimumGap) continue
+        const side: -1 | 1 = first.x <= second.x ? -1 : 1
+        const push = (minimumGap - gap) / 2
+        first.x = Phaser.Math.Clamp(first.x + side * push, -96, this.level.worldWidth + 96)
+        second.x = Phaser.Math.Clamp(second.x - side * push, -96, this.level.worldWidth + 96)
+      }
+    }
   }
 
   private handleEncounterFlow() {

@@ -45,7 +45,7 @@ test('initial enemies enter from outside the screen instead of popping into view
   expect(spawnXs.length).toBeGreaterThan(0)
   expect(spawnXs.every((x) => x > 426)).toBe(true)
 
-  await page.waitForTimeout(900)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.some((enemy) => enemy.x < 426) ?? false), { timeout: 3000 }).toBe(true)
   const entryXs = await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
       enemies: Array<{ x: number }>

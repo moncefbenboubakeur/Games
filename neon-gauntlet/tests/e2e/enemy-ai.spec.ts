@@ -104,6 +104,44 @@ test('enemy walk animation uses a complete stepping cycle only while moving', as
   expect(new Set(walkingFrames)).toEqual(new Set(['enemy-walk-0', 'enemy-walk-1', 'enemy-walk-2', 'enemy-walk-3']))
 })
 
+test('combat staging keeps same-side enemies from stacking on the player', async ({ page }) => {
+  await startGame(page)
+
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ attackMs: number; cooldownMs: number; lane: number; telegraphMs: number; x: number }>
+      player: { lane: number; x: number }
+    }
+    world.player.x = 70
+    world.player.lane = 0.72
+    world.enemies[0].x = 360
+    world.enemies[0].lane = 0.72
+    world.enemies[0].cooldownMs = 9999
+    world.enemies[0].telegraphMs = 0
+    world.enemies[0].attackMs = 0
+    world.enemies[1].x = 420
+    world.enemies[1].lane = 0.72
+    world.enemies[1].cooldownMs = 9999
+    world.enemies[1].telegraphMs = 0
+    world.enemies[1].attackMs = 0
+  })
+
+  await page.waitForTimeout(700)
+
+  const state = await page.evaluate(() => {
+    const enemies = window.__NEON_DEBUG__?.enemies.slice(0, 2) ?? []
+    return {
+      separation: Math.abs((enemies[0]?.x ?? 0) - (enemies[1]?.x ?? 0)),
+      states: enemies.map((enemy) => enemy.aiState),
+      reasons: enemies.map((enemy) => enemy.aiReason),
+    }
+  })
+
+  expect(state.separation).toBeGreaterThanOrEqual(32)
+  expect(state.states).not.toContain('telegraph')
+  expect(state.reasons).toContain('closing-distance')
+})
+
 test('enemies cancel their windup if the player escapes before the hit frame', async ({ page }) => {
   await startGame(page)
 

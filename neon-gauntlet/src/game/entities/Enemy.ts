@@ -7,6 +7,11 @@ import { clamp } from '../utils/math'
 import { laneToY } from '../utils/lane'
 import type { Player } from './Player'
 
+export interface EnemyTactics {
+  slotOffsetX?: number
+  slotLane?: number
+}
+
 export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   private static readonly corpseLifetimeMs = 1600
   private static readonly corpseFadeStartMs = 1200
@@ -48,7 +53,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     scene.add.existing(this)
   }
 
-  updateEnemy(dt: number, player: Player, worldWidth: number) {
+  updateEnemy(dt: number, player: Player, worldWidth: number, tactics: EnemyTactics = {}) {
     if (this.hp <= 0) {
       this.aiState = 'down'
       this.aiReason = 'defeated'
@@ -62,7 +67,12 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     this.cooldownMs -= dt
 
     const dx = player.x - this.x
-    const dy = player.lane - this.lane
+    const moveTargetX = tactics.slotOffsetX === undefined || this.canStartAttack(player)
+      ? player.x
+      : player.x + tactics.slotOffsetX
+    const moveTargetLane = tactics.slotLane ?? player.lane
+    const moveDx = moveTargetX - this.x
+    const moveDy = moveTargetLane - this.lane
     this.face = dx < 0 ? -1 : 1
     this.moving = false
     this.aiState = 'idle'
@@ -76,14 +86,14 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     }
 
     if (this.telegraphMs <= 0 && this.attackMs <= 0) {
-      if (Math.abs(dx) > this.def.range * 0.82) {
-        this.x += Math.sign(dx) * this.def.speed * dt / 1000
+      if (Math.abs(moveDx) > this.def.range * 0.82) {
+        this.x += Math.sign(moveDx) * this.def.speed * dt / 1000
         this.moving = true
         this.aiState = 'pursue'
         this.aiReason = 'closing-distance'
       }
-      if (Math.abs(dy) > 0.025) {
-        this.lane += Math.sign(dy) * (this.def.laneSpeed ?? 0.18) * dt / 1000
+      if (Math.abs(moveDy) > 0.025) {
+        this.lane += Math.sign(moveDy) * (this.def.laneSpeed ?? 0.18) * dt / 1000
         this.moving = true
         this.aiState = 'align'
         this.aiReason = 'matching-lane'

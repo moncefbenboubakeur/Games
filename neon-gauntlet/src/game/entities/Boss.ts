@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import type { BossDefinition, BossPhaseDefinition, EnemyDefinition } from '../data/types'
 import type { AnimationSystem } from '../systems/AnimationSystem'
 import type { CombatSystem } from '../systems/CombatSystem'
-import { Enemy } from './Enemy'
+import { Enemy, type EnemyTactics } from './Enemy'
 
 export class Boss extends Enemy {
   override readonly isBoss = true
@@ -46,10 +46,10 @@ export class Boss extends Enemy {
     }
   }
 
-  override updateEnemy(dt: number, player: Parameters<Enemy['updateEnemy']>[1], worldWidth: number) {
+  override updateEnemy(dt: number, player: Parameters<Enemy['updateEnemy']>[1], worldWidth: number, tactics: EnemyTactics = {}) {
     this.updatePhase()
     this.updatePhasePattern()
-    super.updateEnemy(dt, player, worldWidth)
+    super.updateEnemy(dt, player, worldWidth, tactics)
   }
 
   private updatePhase() {
