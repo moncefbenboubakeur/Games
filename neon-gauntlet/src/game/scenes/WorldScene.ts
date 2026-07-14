@@ -301,7 +301,7 @@ export class WorldScene extends Phaser.Scene {
     const slotDistance = rank === 0 ? closeSlot : holdSlot
     const laneOffsets = [0, 0.045, -0.045, 0.075]
     const farFromPlayer = Math.abs(enemy.x - this.player.x) > 150
-    const rushMultiplier = this.activeEncounterId && farFromPlayer ? 1.55 : 1
+    const rushMultiplier = this.activeEncounterId && farFromPlayer ? 2.15 : 1
 
     return {
       slotOffsetX: side * slotDistance,

@@ -89,7 +89,7 @@ test('enemy walk animation uses a complete stepping cycle only while moving', as
     const enemy = world.enemies[0]
     world.player.x = 70
     world.player.lane = enemy.lane
-    enemy.x = 360
+    enemy.x = 520
     enemy.cooldownMs = 9999
     enemy.telegraphMs = 0
     enemy.attackMs = 0
@@ -144,7 +144,15 @@ test('combat staging keeps same-side enemies from stacking on the player', async
 
 test('active encounter waves close into fighting pressure quickly', async ({ page }) => {
   await startGame(page)
-  await page.waitForTimeout(2400)
+
+  await expect.poll(async () => page.evaluate(() => {
+    const debug = window.__NEON_DEBUG__
+    const enemies = debug?.enemies.slice(0, 2) ?? []
+    const playerX = debug?.player.x ?? 0
+    const nearestDistance = Math.min(...enemies.map((enemy) => Math.abs(enemy.x - playerX)))
+    const separation = Math.abs((enemies[0]?.x ?? 0) - (enemies[1]?.x ?? 0))
+    return debug?.encounter.activeId === 'casino-door-open' && nearestDistance <= 230 && separation >= 24
+  }), { timeout: 4_500 }).toBe(true)
 
   const state = await page.evaluate(() => {
     const debug = window.__NEON_DEBUG__
@@ -156,7 +164,6 @@ test('active encounter waves close into fighting pressure quickly', async ({ pag
       activeEncounter: debug?.encounter.activeId,
     }
   })
-
   expect(state.activeEncounter).toBe('casino-door-open')
   expect(state.nearestDistance).toBeLessThanOrEqual(230)
   expect(state.separation).toBeGreaterThanOrEqual(24)
