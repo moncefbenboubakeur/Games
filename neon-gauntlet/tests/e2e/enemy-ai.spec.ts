@@ -142,6 +142,49 @@ test('combat staging keeps same-side enemies from stacking on the player', async
   expect(state.reasons).toContain('closing-distance')
 })
 
+test('player cannot run straight through a living same-lane enemy body', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => window.focus())
+
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ attackMs: number; cooldownMs: number; def: { speed: number }; destroy: () => void; hp: number; lane: number; telegraphMs: number; x: number }>
+      player: { lane: number; x: number }
+    }
+    const blocker = world.enemies[0]
+    world.enemies.slice(1).forEach((enemy) => enemy.destroy())
+    world.enemies = [blocker]
+    world.player.x = 100
+    world.player.lane = 0.72
+    blocker.x = 150
+    blocker.lane = 0.72
+    blocker.hp = 99
+    blocker.def.speed = 0
+    blocker.cooldownMs = 9999
+    blocker.telegraphMs = 0
+    blocker.attackMs = 0
+  })
+
+  await page.keyboard.down('ArrowRight')
+  await page.waitForTimeout(900)
+  await page.keyboard.up('ArrowRight')
+
+  const state = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ hp: number; x: number }>
+      player: { x: number }
+    }
+    return {
+      blockerHp: world.enemies[0].hp,
+      blockerX: world.enemies[0].x,
+      playerX: world.player.x,
+    }
+  })
+
+  expect(state.blockerHp).toBeGreaterThan(0)
+  expect(state.playerX).toBeLessThanOrEqual(state.blockerX - 24)
+})
+
 test('active encounter waves close into fighting pressure quickly', async ({ page }) => {
   await startGame(page)
 

@@ -177,7 +177,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
   }
 
   protected updateFrame(force?: 'down') {
-    const tick = Math.floor(this.scene.time.now / 130)
+    const tick = Math.floor(this.scene.time.now / (this.def.walkFrameMs ?? 130))
     const action: ActorVisualState = force ?? ActorStateMachine.enemyVisualState({
       hp: this.hp,
       invincibleMs: this.invincibleMs,
@@ -195,7 +195,8 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
     } else if (action === 'punch' || action === 'kick') {
       index = this.attackMs > 170 ? 0 : 1
     } else if (action === 'walk') {
-      index = tick % 4
+      const order = this.def.walkFrameOrder
+      index = order && order.length > 0 ? order[tick % order.length] : tick % 4
     }
 
     const frame = this.animations.frame('enemy', action, index)

@@ -133,7 +133,9 @@ export class WorldScene extends Phaser.Scene {
       return
     }
 
+    const previousPlayerX = this.player.x
     this.player.updatePlayer(delta, input, this.level.worldWidth)
+    this.blockPlayerAgainstLivingThreats(previousPlayerX)
     this.handleEncounterFlow()
     this.enemies = this.enemies.filter((enemy) => enemy.active)
     const livingEnemies = this.enemies.filter((enemy) => enemy.active && enemy.hp > 0)
@@ -325,6 +327,30 @@ export class WorldScene extends Phaser.Scene {
         first.x = Phaser.Math.Clamp(first.x + side * push, -96, this.level.worldWidth + 96)
         second.x = Phaser.Math.Clamp(second.x - side * push, -96, this.level.worldWidth + 96)
       }
+    }
+  }
+
+  private blockPlayerAgainstLivingThreats(previousPlayerX: number) {
+    const bodyGap = 24
+    const laneGap = 0.065
+    const threats = [...this.enemies, ...(this.boss ? [this.boss] : [])]
+      .filter((enemy) => enemy.active && enemy.hp > 0 && Math.abs(enemy.lane - this.player.lane) <= laneGap)
+      .sort((a, b) => Math.abs(a.x - this.player.x) - Math.abs(b.x - this.player.x))
+
+    for (const threat of threats) {
+      const leftStop = threat.x - bodyGap
+      const rightStop = threat.x + bodyGap
+      const crossedFromLeft = previousPlayerX <= leftStop && this.player.x > leftStop
+      const crossedFromRight = previousPlayerX >= rightStop && this.player.x < rightStop
+      const alreadyInside = this.player.x > leftStop && this.player.x < rightStop
+      if (!crossedFromLeft && !crossedFromRight && !alreadyInside) continue
+
+      if (crossedFromRight || (!crossedFromLeft && previousPlayerX > threat.x)) {
+        this.player.x = rightStop
+      } else {
+        this.player.x = leftStop
+      }
+      return
     }
   }
 

@@ -17,6 +17,8 @@
       "laneSpeed": 0.2,
       "telegraphMs": 250,
       "attackDurationMs": 280,
+      "walkFrameMs": 170,
+      "walkFrameOrder": [0, 1, 3, 2],
       "scale": 1.05,
       "phases": [
         {

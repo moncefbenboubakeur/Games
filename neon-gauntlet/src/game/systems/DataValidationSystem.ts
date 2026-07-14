@@ -302,6 +302,8 @@ export class DataValidationSystem {
       laneSpeed?: number
       telegraphMs?: number
       attackDurationMs?: number
+      walkFrameMs?: number
+      walkFrameOrder?: number[]
     },
   ) {
     if (data.preferredAttack !== undefined) {
@@ -310,6 +312,10 @@ export class DataValidationSystem {
     if (data.laneSpeed !== undefined) this.require(data.laneSpeed > 0, `${label} laneSpeed must be positive`)
     if (data.telegraphMs !== undefined) this.require(data.telegraphMs > 0, `${label} telegraphMs must be positive`)
     if (data.attackDurationMs !== undefined) this.require(data.attackDurationMs > 0, `${label} attackDurationMs must be positive`)
+    if (data.walkFrameMs !== undefined) this.require(data.walkFrameMs > 0, `${label} walkFrameMs must be positive`)
+    data.walkFrameOrder?.forEach((frame, index) => {
+      this.require(Number.isInteger(frame) && frame >= 0 && frame <= 3, `${label} walkFrameOrder[${index}] must be a 0-3 frame index`)
+    })
   }
 
   private static require(condition: boolean, message: string) {

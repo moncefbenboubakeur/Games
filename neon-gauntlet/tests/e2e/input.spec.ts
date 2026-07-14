@@ -49,6 +49,27 @@ test('keyboard J P and Enter all trigger punch', async ({ page }) => {
   }
 })
 
+test('keyboard L toggles guard up and down', async ({ page }) => {
+  await startGame(page)
+  await page.evaluate(() => window.focus())
+
+  await page.keyboard.press('KeyL')
+  await expect.poll(() => page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      player?: { frame: { name: string }; guard: boolean }
+    }
+    return { frame: world.player?.frame.name, guard: world.player?.guard }
+  })).toMatchObject({ frame: expect.stringMatching(/^player-guard/), guard: true })
+
+  await page.keyboard.press('KeyL')
+  await expect.poll(() => page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      player?: { frame: { name: string }; guard: boolean }
+    }
+    return { frame: world.player?.frame.name, guard: world.player?.guard }
+  })).toMatchObject({ frame: 'player-idle-0', guard: false })
+})
+
 test('touch direction buttons stop moving after pointer release', async ({ page }) => {
   await startGame(page, { touchControls: true })
   const canvas = await page.locator('canvas').boundingBox()

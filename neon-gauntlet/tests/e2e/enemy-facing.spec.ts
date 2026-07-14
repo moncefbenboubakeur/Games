@@ -202,3 +202,36 @@ test('switchblade sora walk and attacks face the player', async ({ page }) => {
   expect(attackLeft.face).toBe(-1)
   expect(Math.sign(attackLeft.scaleX)).toBe(expectedScaleSign(attackLeft.face, 'right'))
 })
+
+test('switchblade sora uses reviewed left-right walk cadence', async ({ page }) => {
+  await startGame(page)
+
+  const cadence = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      boss?: { def: { walkFrameMs?: number; walkFrameOrder?: number[] } }
+      bossSpawned: boolean
+      encounterWaveIndex: number
+      activeEncounterId?: string
+      activeEncounterGateX?: number
+      enemies: Array<{ destroy: () => void }>
+      handleBossSpawn: () => void
+      level: { boss: { spawnAfterX: number }; encounterWaves?: unknown[] }
+      player: { x: number }
+    }
+    world.enemies.forEach((enemy) => enemy.destroy())
+    world.enemies = []
+    world.encounterWaveIndex = world.level.encounterWaves?.length ?? 0
+    world.activeEncounterId = undefined
+    world.activeEncounterGateX = undefined
+    world.player.x = world.level.boss.spawnAfterX + 4
+    world.handleBossSpawn()
+    if (!world.boss) throw new Error('boss did not spawn')
+    return {
+      walkFrameMs: world.boss.def.walkFrameMs,
+      walkFrameOrder: world.boss.def.walkFrameOrder,
+    }
+  })
+
+  expect(cadence.walkFrameMs).toBeGreaterThanOrEqual(160)
+  expect(cadence.walkFrameOrder).toEqual([0, 1, 3, 2])
+})

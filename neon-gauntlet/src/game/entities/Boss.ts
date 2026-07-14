@@ -31,6 +31,8 @@ export class Boss extends Enemy {
       laneSpeed: boss.laneSpeed,
       telegraphMs: boss.telegraphMs,
       attackDurationMs: boss.attackDurationMs,
+      walkFrameMs: boss.walkFrameMs,
+      walkFrameOrder: boss.walkFrameOrder,
     }
     super(scene, x, lane, asEnemy, animations, combat)
     this.bossName = boss.name

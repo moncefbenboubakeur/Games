@@ -22,6 +22,7 @@ export class InputSystem {
   private readonly windowShots = new Set<keyof NormalizedInput>()
   private readonly oneShot = new Set<keyof NormalizedInput>()
   private readonly gamepad = new GamepadSystem()
+  private keyboardGuardToggled = false
   private lastHorizontal: 'left' | 'right' | null = null
   private lastVertical: 'up' | 'down' | null = null
 
@@ -96,7 +97,8 @@ export class InputSystem {
     next.punch = Phaser.Input.Keyboard.JustDown(this.keys.punch) || Phaser.Input.Keyboard.JustDown(this.keys.punchP) || Phaser.Input.Keyboard.JustDown(this.keys.punchEnter) || this.shot('punch') || this.oneShot.has('punch')
     next.kick = Phaser.Input.Keyboard.JustDown(this.keys.kick) || this.shot('kick') || this.oneShot.has('kick')
     next.jump = Phaser.Input.Keyboard.JustDown(this.keys.jump) || this.shot('jump') || this.oneShot.has('jump')
-    next.guard = this.keys.guard.isDown || this.down('l', 'L') || this.held.guard
+    if (Phaser.Input.Keyboard.JustDown(this.keys.guard) || this.shot('guard')) this.keyboardGuardToggled = !this.keyboardGuardToggled
+    next.guard = this.keyboardGuardToggled || this.held.guard
     next.pause = Phaser.Input.Keyboard.JustDown(this.keys.pause) || this.shot('pause') || this.oneShot.has('pause')
     this.gamepad.apply(next)
     Object.assign(this.state, next)
@@ -150,6 +152,7 @@ export class InputSystem {
     this.windowKeys.clear()
     this.windowShots.clear()
     Object.values(this.keys).forEach((key) => key.reset())
+    this.keyboardGuardToggled = false
     this.lastHorizontal = null
     this.lastVertical = null
   }

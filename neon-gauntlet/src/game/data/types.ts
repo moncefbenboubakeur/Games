@@ -93,6 +93,8 @@ export interface EnemyDefinition {
   telegraphMs?: number
   attackDurationMs?: number
   projectile?: string
+  walkFrameMs?: number
+  walkFrameOrder?: number[]
 }
 
 export interface EnemiesData {
@@ -117,6 +119,8 @@ export interface BossDefinition {
   telegraphMs?: number
   attackDurationMs?: number
   scale?: number
+  walkFrameMs?: number
+  walkFrameOrder?: number[]
   phases?: BossPhaseDefinition[]
 }
 
