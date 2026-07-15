@@ -3498,7 +3498,7 @@
         },
         {
           "id": 3,
-          "name": "thrower",
+          "name": "swordsman",
           "type": "enemy_spawn",
           "x": 401,
           "y": 167,
@@ -3508,7 +3508,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "swordsman"
             },
             {
               "name": "lane",
@@ -3561,7 +3561,7 @@
         },
         {
           "id": 6,
-          "name": "thrower",
+          "name": "nunchaku",
           "type": "enemy_spawn",
           "x": 635,
           "y": 171,
@@ -3571,7 +3571,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "nunchaku"
             },
             {
               "name": "lane",

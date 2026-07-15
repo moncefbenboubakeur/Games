@@ -3597,7 +3597,7 @@
         },
         {
           "id": 2,
-          "name": "thrower",
+          "name": "staffer",
           "type": "enemy_spawn",
           "x": 323,
           "y": 173,
@@ -3607,7 +3607,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "staffer"
             },
             {
               "name": "lane",
@@ -3681,7 +3681,7 @@
         },
         {
           "id": 6,
-          "name": "thrower",
+          "name": "swordsman",
           "type": "enemy_spawn",
           "x": 635,
           "y": 171,
@@ -3691,7 +3691,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "swordsman"
             },
             {
               "name": "lane",

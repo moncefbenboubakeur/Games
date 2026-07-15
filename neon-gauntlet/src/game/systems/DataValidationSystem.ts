@@ -304,6 +304,10 @@ export class DataValidationSystem {
       attackDurationMs?: number
       walkFrameMs?: number
       walkFrameOrder?: number[]
+      weaponDrop?: string
+      weaponDamageBonus?: number
+      weaponRangeBonus?: number
+      weaponUses?: number
     },
   ) {
     if (data.preferredAttack !== undefined) {
@@ -316,6 +320,9 @@ export class DataValidationSystem {
     data.walkFrameOrder?.forEach((frame, index) => {
       this.require(Number.isInteger(frame) && frame >= 0 && frame <= 3, `${label} walkFrameOrder[${index}] must be a 0-3 frame index`)
     })
+    if (data.weaponDamageBonus !== undefined) this.require(data.weaponDamageBonus > 0, `${label} weaponDamageBonus must be positive`)
+    if (data.weaponRangeBonus !== undefined) this.require(data.weaponRangeBonus > 0, `${label} weaponRangeBonus must be positive`)
+    if (data.weaponUses !== undefined) this.require(Number.isInteger(data.weaponUses) && data.weaponUses > 0, `${label} weaponUses must be a positive integer`)
   }
 
   private static require(condition: boolean, message: string) {

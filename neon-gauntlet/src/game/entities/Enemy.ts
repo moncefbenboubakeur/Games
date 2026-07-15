@@ -102,7 +102,7 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
       }
     }
     if (this.cooldownMs <= 0 && this.telegraphMs <= 0 && this.attackMs <= 0 && this.canStartAttack(player)) {
-      this.telegraphMs = this.def.telegraphMs ?? (this.def.id === 'thrower' ? 430 : 260)
+      this.telegraphMs = this.def.telegraphMs ?? (this.def.projectile ? 430 : 260)
       this.cooldownMs = Phaser.Math.Between(this.def.cooldownMinMs, this.def.cooldownMaxMs)
       this.aiState = 'telegraph'
       this.aiReason = 'target-in-range'
@@ -157,6 +157,19 @@ export class Enemy extends Phaser.GameObjects.Sprite implements FighterState {
       this.attackMs = 0
       this.telegraphMs = 0
       this.invincibleMs = 0
+      if (this.def.weaponDrop) {
+        this.scene.events.emit('enemy:weapon-drop', {
+          weapon: {
+            id: this.def.weaponDrop,
+            name: this.def.weaponName ?? this.def.weaponDrop,
+            damageBonus: this.def.weaponDamageBonus ?? 5,
+            rangeBonus: this.def.weaponRangeBonus ?? 14,
+            uses: this.def.weaponUses ?? 3,
+          },
+          x: this.x,
+          lane: this.lane,
+        })
+      }
     }
     return true
   }

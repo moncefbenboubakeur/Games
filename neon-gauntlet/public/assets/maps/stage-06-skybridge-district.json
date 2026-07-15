@@ -3477,7 +3477,7 @@
         },
         {
           "id": 2,
-          "name": "thrower",
+          "name": "nunchaku",
           "type": "enemy_spawn",
           "x": 323,
           "y": 173,
@@ -3487,7 +3487,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "nunchaku"
             },
             {
               "name": "lane",
@@ -3540,7 +3540,7 @@
         },
         {
           "id": 5,
-          "name": "thrower",
+          "name": "staffer",
           "type": "enemy_spawn",
           "x": 557,
           "y": 164,
@@ -3550,7 +3550,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "staffer"
             },
             {
               "name": "lane",

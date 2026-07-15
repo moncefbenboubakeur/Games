@@ -25,12 +25,33 @@ describe('release readiness gate', () => {
     expect(report.blockerCount).toBe(report.blockers.length)
   })
 
-  it('reports reused boss sprite sheets as boss-art blockers', () => {
+  it('does not report character art blockers after final sheet replacement', () => {
     const bossArtBlockers = report.blockers.filter((blocker) => blocker.kind === 'boss-art')
+    const characterTextureKeys = new Set([
+      'player-sheet',
+      'enemy-sheet',
+      'striker-sheet',
+      'runner-sheet',
+      'bruiser-sheet',
+      'staffer-sheet',
+      'swordsman-sheet',
+      'nunchaku-sheet',
+      'knife-punk-sheet',
+      'switchblade-sora-sheet',
+      'turnstile-ren-sheet',
+      'iron-wei-sheet',
+      'lantern-mai-sheet',
+      'forge-aya-sheet',
+      'drone-queen-nova-sheet',
+      'cipher-iris-sheet',
+      'harbor-hale-sheet',
+      'signal-vex-sheet',
+      'zero-volt-ren-sheet',
+    ])
+    const characterTextureBlockers = report.blockers.filter((blocker) => blocker.kind === 'texture' && characterTextureKeys.has(blocker.key))
 
-    expect(bossArtBlockers.length).toBeGreaterThanOrEqual(1)
-    expect(bossArtBlockers.some((blocker) => blocker.reason.includes('zero-volt-ren'))).toBe(true)
-    expect(bossArtBlockers.every((blocker) => blocker.reason.includes('unique approved sprite sheet'))).toBe(true)
+    expect(bossArtBlockers).toHaveLength(0)
+    expect(characterTextureBlockers).toHaveLength(0)
   })
 
   it('does not report audio blockers after project-owned cue replacement', () => {

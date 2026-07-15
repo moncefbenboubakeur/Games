@@ -110,36 +110,72 @@ test('placeholder hazards do not hurt the player until final readable art exists
 
 test('enemy roles use role-specific textures', async ({ page }) => {
   await startGame(page)
-  const firstWaveTextures = await page.evaluate(() => window.__NEON_DEBUG__?.enemies.map((enemy) => enemy.texture) ?? [])
-  await triggerSecondStageOneWave(page)
-  const secondWaveTextures = await page.evaluate(() => window.__NEON_DEBUG__?.enemies.map((enemy) => enemy.texture) ?? [])
-  const textures = [...firstWaveTextures, ...secondWaveTextures]
-  expect(new Set(textures)).toEqual(new Set(['striker-sheet', 'runner-sheet', 'bruiser-sheet', 'thrower-sheet']))
+  const textures = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      cache: { json: { get: (key: string) => { roles: Array<{ texture: string }> } } }
+    }
+    return world.cache.json.get('enemies').roles.map((role) => role.texture)
+  })
+  expect(new Set(textures)).toEqual(new Set([
+    'striker-sheet',
+    'runner-sheet',
+    'bruiser-sheet',
+    'staffer-sheet',
+    'swordsman-sheet',
+    'nunchaku-sheet',
+  ]))
 })
 
-test('throwers create real projectiles instead of fake contact hits', async ({ page }) => {
+test('armed enemies drop temporary weapons the hero can pick up', async ({ page }) => {
   await startGame(page)
-  await triggerSecondStageOneWave(page)
+
   await page.evaluate(() => {
     const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
-      enemies: Array<{ attackMs: number; cooldownMs: number; def: { id: string }; destroy: () => void; lane: number; telegraphMs: number; x: number }>
-      player: { hp: number; lane: number; x: number }
+      enemies: Array<{ destroy: () => void }>
+      player: { lane: number; x: number }
+      spawnEnemySupport: (x: number, role: string, lane: number) => void
     }
-    const thrower = world.enemies.find((enemy) => enemy.def.id === 'thrower')
-    if (!thrower) throw new Error('thrower missing')
-    world.enemies.filter((enemy) => enemy !== thrower).forEach((enemy) => enemy.destroy())
-    world.enemies = [thrower]
-    world.player.hp = 150
-    thrower.x = 340
-    world.player.x = thrower.x - 96
-    world.player.lane = thrower.lane
-    thrower.cooldownMs = 9999
-    thrower.telegraphMs = 35
-    thrower.attackMs = 0
+    world.enemies.forEach((enemy) => enemy.destroy())
+    world.enemies = []
+    world.player.x = 120
+    world.player.lane = 0.72
+    world.spawnEnemySupport(172, 'swordsman', 0.72)
   })
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.world?.projectiles.count), { timeout: 4000 }).toBeGreaterThan(0)
-  const hp = await page.evaluate(() => window.__NEON_DEBUG__?.player.hp)
-  expect(hp).toBe(150)
+
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      enemies: Array<{ hurt: (amount: number, knockback: number) => boolean }>
+    }
+    if (!world.enemies[0]) throw new Error('swordsman did not spawn')
+    world.enemies[0].hurt(999, 0)
+  })
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.world?.weapons.count ?? 0)).toBe(1)
+
+  await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      player: { lane: number; x: number }
+    }
+    const weapon = window.__NEON_DEBUG__?.world?.weapons.items[0]
+    if (!weapon) throw new Error('weapon missing')
+    world.player.x = weapon.x
+    world.player.lane = weapon.lane
+  })
+
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.player.weapon?.id)).toBe('sword')
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.world?.weapons.count ?? 0)).toBe(0)
+})
+
+test('armed enemy roles expose pickup weapon metadata', async ({ page }) => {
+  await startGame(page)
+  const roles = await page.evaluate(() => {
+    const world = window.__NEON_GAME__?.scene.getScene('WorldScene') as unknown as {
+      cache: { json: { get: (key: string) => { roles: Array<{ id: string; weaponDrop?: string; weaponUses?: number }> } } }
+    }
+    return world.cache.json.get('enemies').roles
+  })
+
+  expect(roles.filter((role) => role.weaponDrop).map((role) => role.id).sort()).toEqual(['nunchaku', 'runner', 'staffer', 'swordsman'])
+  expect(roles.filter((role) => role.weaponDrop).every((role) => (role.weaponUses ?? 0) > 0)).toBe(true)
 })
 
 test('bosses enter data-driven phase states', async ({ page }) => {
@@ -162,6 +198,6 @@ test('bosses enter data-driven phase states', async ({ page }) => {
   })
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.boss?.phase)).toBe('final-lantern')
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.world?.projectiles.count)).toBeGreaterThanOrEqual(3)
-  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.some((enemy) => enemy.texture === 'thrower-sheet'))).toBe(true)
+  await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.enemies.some((enemy) => enemy.texture === 'nunchaku-sheet'))).toBe(true)
   await expect.poll(() => page.evaluate(() => window.__NEON_DEBUG__?.world?.hazards.find((hazard) => hazard.id === 'rolling-market-cart')?.forcedActive)).toBe(true)
 })

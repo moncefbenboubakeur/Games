@@ -18,7 +18,12 @@
       "telegraphMs": 250,
       "attackDurationMs": 280,
       "walkFrameMs": 170,
-      "walkFrameOrder": [0, 1, 3, 2],
+      "walkFrameOrder": [
+        0,
+        1,
+        3,
+        2
+      ],
       "scale": 1.05,
       "phases": [
         {
@@ -152,7 +157,7 @@
           "patternCycleMs": 720,
           "projectile": "lantern-shot",
           "projectileBurst": 3,
-          "summonRole": "thrower",
+          "summonRole": "nunchaku",
           "summonCount": 1,
           "stageHazard": "rolling-market-cart",
           "auraColor": "#ffd166"
@@ -162,8 +167,8 @@
     {
       "id": "forge-aya",
       "name": "Forge Aya",
-      "texture": "iron-wei-sheet",
-      "textureFile": "/assets/sprites/bosses/iron-wei-sheet.png",
+      "texture": "forge-aya-sheet",
+      "textureFile": "/assets/sprites/bosses/forge-aya-sheet.png",
       "hp": 270,
       "speed": 44,
       "damage": 22,
@@ -214,8 +219,8 @@
     {
       "id": "drone-queen-nova",
       "name": "Drone Queen Nova",
-      "texture": "lantern-mai-sheet",
-      "textureFile": "/assets/sprites/bosses/lantern-mai-sheet.png",
+      "texture": "drone-queen-nova-sheet",
+      "textureFile": "/assets/sprites/bosses/drone-queen-nova-sheet.png",
       "hp": 288,
       "speed": 56,
       "damage": 23,
@@ -266,8 +271,8 @@
     {
       "id": "cipher-iris",
       "name": "Cipher Iris",
-      "texture": "turnstile-ren-sheet",
-      "textureFile": "/assets/sprites/bosses/turnstile-ren-sheet.png",
+      "texture": "cipher-iris-sheet",
+      "textureFile": "/assets/sprites/bosses/cipher-iris-sheet.png",
       "hp": 304,
       "speed": 44,
       "damage": 24,
@@ -360,7 +365,7 @@
           "patternCycleMs": 760,
           "projectile": "spark-bolt",
           "projectileBurst": 3,
-          "summonRole": "thrower",
+          "summonRole": "nunchaku",
           "summonCount": 1,
           "stageHazard": "harbor-lightning-strike",
           "auraColor": "#dff6ff"
@@ -370,8 +375,8 @@
     {
       "id": "signal-vex",
       "name": "Signal Vex",
-      "texture": "lantern-mai-sheet",
-      "textureFile": "/assets/sprites/bosses/lantern-mai-sheet.png",
+      "texture": "signal-vex-sheet",
+      "textureFile": "/assets/sprites/bosses/signal-vex-sheet.png",
       "hp": 332,
       "speed": 44,
       "damage": 26,
@@ -412,7 +417,7 @@
           "patternCycleMs": 760,
           "projectile": "spark-bolt",
           "projectileBurst": 3,
-          "summonRole": "thrower",
+          "summonRole": "nunchaku",
           "summonCount": 1,
           "stageHazard": "broadcast-signal-pulse",
           "auraColor": "#50e7ff"
@@ -422,8 +427,8 @@
     {
       "id": "zero-volt-ren",
       "name": "Zero Volt Ren",
-      "texture": "turnstile-ren-sheet",
-      "textureFile": "/assets/sprites/bosses/turnstile-ren-sheet.png",
+      "texture": "zero-volt-ren-sheet",
+      "textureFile": "/assets/sprites/bosses/zero-volt-ren-sheet.png",
       "hp": 360,
       "speed": 56,
       "damage": 29,
@@ -464,7 +469,7 @@
           "patternCycleMs": 760,
           "projectile": "lantern-shot",
           "projectileBurst": 3,
-          "summonRole": "thrower",
+          "summonRole": "nunchaku",
           "summonCount": 1,
           "stageHazard": "reactor-surge-lane",
           "auraColor": "#ffd166"
@@ -480,7 +485,7 @@
           "patternCycleMs": 560,
           "projectile": "lantern-shot",
           "projectileBurst": 4,
-          "summonRole": "thrower",
+          "summonRole": "nunchaku",
           "summonCount": 2,
           "stageHazard": "reactor-surge-lane",
           "auraColor": "#f9f871"

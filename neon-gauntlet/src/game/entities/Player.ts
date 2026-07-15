@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import type { CombatData, NormalizedInput } from '../data/types'
+import type { CombatData, NormalizedInput, WeaponDefinition } from '../data/types'
 import type { AnimationSystem } from '../systems/AnimationSystem'
 import { ActorStateMachine } from '../systems/ActorStateMachine'
 import type { CombatSystem, FighterState } from '../systems/CombatSystem'
@@ -16,6 +16,7 @@ export class Player extends Phaser.GameObjects.Sprite implements FighterState {
   combo = 0
   comboMs = 0
   z = 0
+  weapon: WeaponDefinition | null = null
   private vz = 0
   private attackMs = 0
   private attackKind: 'punch' | 'kick' | null = null
@@ -105,6 +106,17 @@ export class Player extends Phaser.GameObjects.Sprite implements FighterState {
 
   markHitApplied() {
     this.hitApplied = true
+  }
+
+  equipWeapon(weapon: WeaponDefinition) {
+    this.weapon = { ...weapon }
+    this.scene.events.emit('message', weapon.name.toUpperCase())
+  }
+
+  consumeWeaponUse() {
+    if (!this.weapon) return
+    this.weapon.uses -= 1
+    if (this.weapon.uses <= 0) this.weapon = null
   }
 
   canApplyAttackHit() {

@@ -2418,7 +2418,7 @@
         },
         {
           "id": 5,
-          "name": "thrower",
+          "name": "staffer",
           "type": "enemy_spawn",
           "x": 350,
           "y": 168,
@@ -2428,7 +2428,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "staffer"
             },
             {
               "name": "lane",

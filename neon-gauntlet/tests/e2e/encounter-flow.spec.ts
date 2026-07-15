@@ -65,5 +65,5 @@ test('clearing one pocket releases movement and later triggers the next pocket',
   const state = await page.evaluate(() => window.__NEON_DEBUG__)
   expect(state?.encounter.gateX).toBe(390)
   expect(state?.enemies.filter((enemy) => enemy.hp > 0)).toHaveLength(2)
-  expect(state?.enemies.map((enemy) => enemy.texture).sort()).toEqual(['bruiser-sheet', 'thrower-sheet'])
+  expect(state?.enemies.map((enemy) => enemy.texture).sort()).toEqual(['bruiser-sheet', 'swordsman-sheet'])
 })

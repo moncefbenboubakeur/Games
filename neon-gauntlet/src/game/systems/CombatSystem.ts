@@ -10,6 +10,12 @@ export interface FighterState {
   attackFrame?: number
 }
 
+export interface AttackBonus {
+  damageBonus?: number
+  rangeBonus?: number
+  knockbackBonus?: number
+}
+
 export function sameLane(a: FighterState, b: FighterState, range: number) {
   return Math.abs(a.lane - b.lane) <= range
 }
@@ -78,10 +84,31 @@ export class CombatSystem {
     return this.data.attacks[kind]
   }
 
-  hit(attacker: FighterState, defender: FighterState, kind: 'punch' | 'kick', combo = 0) {
-    const attack = this.getAttack(kind)
+  hit(attacker: FighterState, defender: FighterState, kind: 'punch' | 'kick', combo = 0, bonus: AttackBonus = {}) {
+    const attack = this.attackWithBonus(this.getAttack(kind), bonus)
     if (!canHit(attacker, defender, attack)) return { hit: false, damage: 0, knockback: 0 }
     const damage = kind === 'punch' && combo >= 3 && attack.comboFinisherDamage ? attack.comboFinisherDamage : attack.damage
     return { hit: true, damage, knockback: attack.knockback * attacker.face }
+  }
+
+  private attackWithBonus(attack: AttackDefinition, bonus: AttackBonus) {
+    const rangeBonus = bonus.rangeBonus ?? 0
+    const damageBonus = bonus.damageBonus ?? 0
+    const knockbackBonus = bonus.knockbackBonus ?? 0
+    if (!rangeBonus && !damageBonus && !knockbackBonus) return attack
+    return {
+      ...attack,
+      damage: attack.damage + damageBonus,
+      comboFinisherDamage: attack.comboFinisherDamage ? attack.comboFinisherDamage + damageBonus : undefined,
+      range: attack.range + rangeBonus,
+      knockback: attack.knockback + knockbackBonus,
+      hitbox: attack.hitbox
+        ? {
+          ...attack.hitbox,
+          width: attack.hitbox.width + rangeBonus,
+          frames: attack.hitbox.frames?.map((frame) => ({ ...frame, width: frame.width + rangeBonus })),
+        }
+        : undefined,
+    }
   }
 }

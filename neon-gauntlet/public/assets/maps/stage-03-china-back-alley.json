@@ -2958,7 +2958,7 @@
         },
         {
           "id": 5,
-          "name": "thrower",
+          "name": "swordsman",
           "type": "enemy_spawn",
           "x": 450,
           "y": 168,
@@ -2968,7 +2968,7 @@
             {
               "name": "role",
               "type": "string",
-              "value": "thrower"
+              "value": "swordsman"
             },
             {
               "name": "lane",

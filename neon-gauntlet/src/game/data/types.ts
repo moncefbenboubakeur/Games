@@ -1,6 +1,7 @@
 export type ActorKind = 'player' | 'enemy'
 export type ActionName = 'idle' | 'walk' | 'punch' | 'kick' | 'guard' | 'hurt' | 'jump' | 'down'
-export type EnemyRole = 'striker' | 'runner' | 'bruiser' | 'thrower'
+export type EnemyRole = 'striker' | 'runner' | 'bruiser' | 'staffer' | 'swordsman' | 'nunchaku'
+export type WeaponId = 'knife' | 'staff' | 'sword' | 'nunchaku'
 
 export interface SpriteFrameData {
   name: string
@@ -95,6 +96,11 @@ export interface EnemyDefinition {
   projectile?: string
   walkFrameMs?: number
   walkFrameOrder?: number[]
+  weaponDrop?: WeaponId
+  weaponName?: string
+  weaponDamageBonus?: number
+  weaponRangeBonus?: number
+  weaponUses?: number
 }
 
 export interface EnemiesData {
@@ -201,6 +207,14 @@ export interface ProjectileDefinition {
   height: number
   laneRange: number
   color: string
+}
+
+export interface WeaponDefinition {
+  id: WeaponId
+  name: string
+  damageBonus: number
+  rangeBonus: number
+  uses: number
 }
 
 export interface HazardDefinition {

@@ -27,7 +27,7 @@
     {
       "x": 449,
       "lane": 0.78,
-      "role": "thrower"
+      "role": "staffer"
     }
   ],
   "encounterWaves": [
@@ -61,7 +61,7 @@
         {
           "x": 449,
           "lane": 0.78,
-          "role": "thrower"
+          "role": "swordsman"
         }
       ]
     }

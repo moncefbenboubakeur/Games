@@ -12,7 +12,7 @@
     {
       "x": 250,
       "lane": 0.68,
-      "role": "thrower"
+      "role": "staffer"
     },
     {
       "x": 330,
@@ -27,7 +27,7 @@
     {
       "x": 490,
       "lane": 0.82,
-      "role": "thrower"
+      "role": "swordsman"
     },
     {
       "x": 570,
@@ -47,7 +47,7 @@
     {
       "x": 805,
       "lane": 0.8,
-      "role": "thrower"
+      "role": "nunchaku"
     }
   ],
   "boss": {

@@ -20,9 +20,20 @@
       "id": "stage-01-metro-arcade",
       "enemyCount": 4,
       "minUniqueRoles": 4,
-      "requiredRoles": ["striker", "runner", "bruiser", "thrower"],
-      "bossHp": { "min": 165, "max": 180 },
-      "bossDamage": { "min": 16, "max": 20 },
+      "requiredRoles": [
+        "striker",
+        "runner",
+        "bruiser",
+        "staffer"
+      ],
+      "bossHp": {
+        "min": 165,
+        "max": 180
+      },
+      "bossDamage": {
+        "min": 16,
+        "max": 20
+      },
       "minBossPhases": 1,
       "minWorldWidth": 560,
       "notes": "Intro stage: all core enemy roles appear, but boss pressure stays readable."
@@ -31,9 +42,19 @@
       "id": "stage-02-china-station",
       "enemyCount": 4,
       "minUniqueRoles": 3,
-      "requiredRoles": ["runner", "thrower", "striker"],
-      "bossHp": { "min": 185, "max": 200 },
-      "bossDamage": { "min": 15, "max": 18 },
+      "requiredRoles": [
+        "runner",
+        "staffer",
+        "striker"
+      ],
+      "bossHp": {
+        "min": 185,
+        "max": 200
+      },
+      "bossDamage": {
+        "min": 15,
+        "max": 18
+      },
       "minBossPhases": 1,
       "minWorldWidth": 560,
       "notes": "Fast station boss raises pressure through speed more than raw damage."
@@ -42,9 +63,20 @@
       "id": "stage-03-china-back-alley",
       "enemyCount": 5,
       "minUniqueRoles": 4,
-      "requiredRoles": ["striker", "runner", "bruiser", "thrower"],
-      "bossHp": { "min": 215, "max": 230 },
-      "bossDamage": { "min": 21, "max": 24 },
+      "requiredRoles": [
+        "striker",
+        "runner",
+        "bruiser",
+        "swordsman"
+      ],
+      "bossHp": {
+        "min": 215,
+        "max": 230
+      },
+      "bossDamage": {
+        "min": 21,
+        "max": 24
+      },
       "minBossPhases": 1,
       "minWorldWidth": 700,
       "notes": "Tighter alley adds one more enemy and heavier boss endurance."
@@ -53,9 +85,20 @@
       "id": "stage-04-china-night-market",
       "enemyCount": 5,
       "minUniqueRoles": 4,
-      "requiredRoles": ["runner", "striker", "thrower", "bruiser"],
-      "bossHp": { "min": 240, "max": 255 },
-      "bossDamage": { "min": 19, "max": 22 },
+      "requiredRoles": [
+        "runner",
+        "striker",
+        "nunchaku",
+        "bruiser"
+      ],
+      "bossHp": {
+        "min": 240,
+        "max": 255
+      },
+      "bossDamage": {
+        "min": 19,
+        "max": 22
+      },
       "minBossPhases": 2,
       "minWorldWidth": 700,
       "notes": "China chapter capstone: phase count steps up."
@@ -64,9 +107,20 @@
       "id": "stage-05-solar-foundry",
       "enemyCount": 6,
       "minUniqueRoles": 4,
-      "requiredRoles": ["bruiser", "striker", "runner", "thrower"],
-      "bossHp": { "min": 268, "max": 280 },
-      "bossDamage": { "min": 22, "max": 24 },
+      "requiredRoles": [
+        "bruiser",
+        "striker",
+        "runner",
+        "staffer"
+      ],
+      "bossHp": {
+        "min": 268,
+        "max": 280
+      },
+      "bossDamage": {
+        "min": 22,
+        "max": 24
+      },
       "minBossPhases": 2,
       "minWorldWidth": 820,
       "notes": "Second chapter opens with six enemies and stage hazard pressure."
@@ -75,20 +129,42 @@
       "id": "stage-06-skybridge-district",
       "enemyCount": 6,
       "minUniqueRoles": 4,
-      "requiredRoles": ["runner", "thrower", "striker", "bruiser"],
-      "bossHp": { "min": 282, "max": 292 },
-      "bossDamage": { "min": 23, "max": 25 },
+      "requiredRoles": [
+        "runner",
+        "nunchaku",
+        "striker",
+        "bruiser"
+      ],
+      "bossHp": {
+        "min": 282,
+        "max": 292
+      },
+      "bossDamage": {
+        "min": 23,
+        "max": 25
+      },
       "minBossPhases": 2,
       "minWorldWidth": 850,
-      "notes": "Skybridge keeps count stable but raises ranged and wind pressure."
+      "notes": "Skybridge keeps count stable but raises weapon and wind pressure."
     },
     {
       "id": "stage-07-data-garden",
       "enemyCount": 7,
       "minUniqueRoles": 4,
-      "requiredRoles": ["striker", "runner", "thrower", "bruiser"],
-      "bossHp": { "min": 298, "max": 308 },
-      "bossDamage": { "min": 24, "max": 26 },
+      "requiredRoles": [
+        "striker",
+        "runner",
+        "swordsman",
+        "bruiser"
+      ],
+      "bossHp": {
+        "min": 298,
+        "max": 308
+      },
+      "bossDamage": {
+        "min": 24,
+        "max": 26
+      },
       "minBossPhases": 2,
       "minWorldWidth": 850,
       "notes": "Role variety increases before the late-game run."
@@ -97,20 +173,42 @@
       "id": "stage-08-harbor-storm",
       "enemyCount": 7,
       "minUniqueRoles": 4,
-      "requiredRoles": ["bruiser", "thrower", "runner", "striker"],
-      "bossHp": { "min": 312, "max": 322 },
-      "bossDamage": { "min": 25, "max": 27 },
+      "requiredRoles": [
+        "bruiser",
+        "staffer",
+        "runner",
+        "striker"
+      ],
+      "bossHp": {
+        "min": 312,
+        "max": 322
+      },
+      "bossDamage": {
+        "min": 25,
+        "max": 27
+      },
       "minBossPhases": 2,
       "minWorldWidth": 880,
-      "notes": "Harbor adds sustained bruiser/thrower pressure."
+      "notes": "Harbor adds sustained bruiser/weapon-role pressure."
     },
     {
       "id": "stage-09-broadcast-tower",
       "enemyCount": 8,
       "minUniqueRoles": 4,
-      "requiredRoles": ["thrower", "runner", "striker", "bruiser"],
-      "bossHp": { "min": 326, "max": 336 },
-      "bossDamage": { "min": 26, "max": 28 },
+      "requiredRoles": [
+        "nunchaku",
+        "runner",
+        "striker",
+        "bruiser"
+      ],
+      "bossHp": {
+        "min": 326,
+        "max": 336
+      },
+      "bossDamage": {
+        "min": 26,
+        "max": 28
+      },
       "minBossPhases": 2,
       "minWorldWidth": 880,
       "notes": "Broadcast tower is the late-game gauntlet before the finale."
@@ -119,9 +217,20 @@
       "id": "stage-10-neon-core",
       "enemyCount": 8,
       "minUniqueRoles": 4,
-      "requiredRoles": ["runner", "bruiser", "thrower", "striker"],
-      "bossHp": { "min": 355, "max": 370 },
-      "bossDamage": { "min": 28, "max": 30 },
+      "requiredRoles": [
+        "runner",
+        "bruiser",
+        "swordsman",
+        "striker"
+      ],
+      "bossHp": {
+        "min": 355,
+        "max": 370
+      },
+      "bossDamage": {
+        "min": 28,
+        "max": 30
+      },
       "minBossPhases": 3,
       "minWorldWidth": 940,
       "notes": "Final stage has the strongest boss and a third low-HP phase."
