@@ -5,7 +5,7 @@ import colorsys
 import json
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageEnhance
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance
 
 ROOT = Path(__file__).resolve().parents[1]
 ANIMATIONS = json.loads((ROOT / "public/data/animations.json").read_text())
@@ -16,24 +16,24 @@ ENEMY_DIR = ROOT / "public/assets/sprites/enemies"
 
 
 ENEMY_SPECS = [
-    {"id": "striker", "file": "striker-sheet.png", "hue": -0.03, "sat": 1.08, "value": 1.05, "weapon": None},
-    {"id": "runner", "file": "runner-sheet.png", "hue": 0.47, "sat": 1.16, "value": 1.08, "weapon": "knife"},
-    {"id": "bruiser", "file": "bruiser-sheet.png", "hue": 0.09, "sat": 1.08, "value": 0.92, "weapon": None},
-    {"id": "staffer", "file": "staffer-sheet.png", "hue": 0.15, "sat": 1.05, "value": 1.02, "weapon": "staff"},
-    {"id": "swordsman", "file": "swordsman-sheet.png", "hue": 0.62, "sat": 1.12, "value": 1.0, "weapon": "sword"},
-    {"id": "nunchaku", "file": "nunchaku-sheet.png", "hue": 0.82, "sat": 1.18, "value": 1.03, "weapon": "nunchaku"},
+    {"id": "striker", "file": "striker-sheet.png", "hue": -0.03, "sat": 1.08, "value": 1.05, "weapon": None, "style": "striker"},
+    {"id": "runner", "file": "runner-sheet.png", "hue": 0.47, "sat": 1.16, "value": 1.08, "weapon": "knife", "style": "runner"},
+    {"id": "bruiser", "file": "bruiser-sheet.png", "hue": 0.09, "sat": 1.08, "value": 0.92, "weapon": None, "style": "bruiser"},
+    {"id": "staffer", "file": "staffer-sheet.png", "hue": 0.15, "sat": 1.05, "value": 1.02, "weapon": "staff", "style": "staffer"},
+    {"id": "swordsman", "file": "swordsman-sheet.png", "hue": 0.62, "sat": 1.12, "value": 1.0, "weapon": "sword", "style": "swordsman"},
+    {"id": "nunchaku", "file": "nunchaku-sheet.png", "hue": 0.82, "sat": 1.18, "value": 1.03, "weapon": "nunchaku", "style": "nunchaku"},
 ]
 
 BOSS_SPECS = [
-    {"id": "turnstile-ren", "file": "turnstile-ren-sheet.png", "hue": 0.48, "sat": 1.08, "value": 1.04, "weapon": "knife"},
-    {"id": "iron-wei", "file": "iron-wei-sheet.png", "hue": 0.08, "sat": 1.04, "value": 0.95, "weapon": "staff"},
-    {"id": "lantern-mai", "file": "lantern-mai-sheet.png", "hue": 0.88, "sat": 1.08, "value": 1.06, "weapon": "nunchaku"},
-    {"id": "forge-aya", "file": "forge-aya-sheet.png", "hue": 0.02, "sat": 1.12, "value": 1.02, "weapon": "staff"},
-    {"id": "drone-queen-nova", "file": "drone-queen-nova-sheet.png", "hue": 0.55, "sat": 1.18, "value": 1.08, "weapon": "sword"},
-    {"id": "cipher-iris", "file": "cipher-iris-sheet.png", "hue": 0.76, "sat": 1.18, "value": 1.02, "weapon": "nunchaku"},
-    {"id": "harbor-hale", "file": "harbor-hale-sheet.png", "hue": 0.56, "sat": 1.02, "value": 1.06, "weapon": "staff"},
-    {"id": "signal-vex", "file": "signal-vex-sheet.png", "hue": 0.49, "sat": 1.26, "value": 1.05, "weapon": "sword"},
-    {"id": "zero-volt-ren", "file": "zero-volt-ren-sheet.png", "hue": 0.14, "sat": 1.18, "value": 1.12, "weapon": "knife"},
+    {"id": "turnstile-ren", "file": "turnstile-ren-sheet.png", "hue": 0.48, "sat": 1.08, "value": 1.04, "weapon": "knife", "style": "runner"},
+    {"id": "iron-wei", "file": "iron-wei-sheet.png", "hue": 0.08, "sat": 1.04, "value": 0.95, "weapon": "staff", "style": "bruiser"},
+    {"id": "lantern-mai", "file": "lantern-mai-sheet.png", "hue": 0.88, "sat": 1.08, "value": 1.06, "weapon": "nunchaku", "style": "nunchaku"},
+    {"id": "forge-aya", "file": "forge-aya-sheet.png", "hue": 0.02, "sat": 1.12, "value": 1.02, "weapon": "staff", "style": "staffer"},
+    {"id": "drone-queen-nova", "file": "drone-queen-nova-sheet.png", "hue": 0.55, "sat": 1.18, "value": 1.08, "weapon": "sword", "style": "swordsman"},
+    {"id": "cipher-iris", "file": "cipher-iris-sheet.png", "hue": 0.76, "sat": 1.18, "value": 1.02, "weapon": "nunchaku", "style": "runner"},
+    {"id": "harbor-hale", "file": "harbor-hale-sheet.png", "hue": 0.56, "sat": 1.02, "value": 1.06, "weapon": "staff", "style": "staffer"},
+    {"id": "signal-vex", "file": "signal-vex-sheet.png", "hue": 0.49, "sat": 1.26, "value": 1.05, "weapon": "sword", "style": "swordsman"},
+    {"id": "zero-volt-ren", "file": "zero-volt-ren-sheet.png", "hue": 0.14, "sat": 1.18, "value": 1.12, "weapon": "knife", "style": "striker"},
 ]
 
 
@@ -78,6 +78,101 @@ def frame_groups() -> list[dict]:
     return groups
 
 
+def rect(frame: dict, left: float, top: float, right: float, bottom: float) -> tuple[int, int, int, int]:
+    x, y, w, h = frame["x"], frame["y"], frame["w"], frame["h"]
+    return (x + int(w * left), y + int(h * top), x + int(w * right), y + int(h * bottom))
+
+
+def line(frame: dict, ax: float, ay: float, bx: float, by: float) -> tuple[int, int, int, int]:
+    x, y, w, h = frame["x"], frame["y"], frame["w"], frame["h"]
+    return (x + int(w * ax), y + int(h * ay), x + int(w * bx), y + int(h * by))
+
+
+def draw_costume(back: ImageDraw.ImageDraw, front: ImageDraw.ImageDraw, frame: dict, style: str | None, boss_scale: float = 1.0) -> None:
+    if not style or frame["action"] == "down":
+        return
+    x, y, w, h = frame["x"], frame["y"], frame["w"], frame["h"]
+    heavy = max(2, int(3 * boss_scale))
+    outline = (18, 15, 23, 245)
+
+    if style == "striker":
+        front.rectangle(rect(frame, 0.34, 0.30, 0.66, 0.58), fill=(230, 226, 202, 150))
+        front.line(line(frame, 0.30, 0.24, 0.60, 0.22), fill=(210, 36, 44, 255), width=heavy)
+        front.ellipse(rect(frame, 0.14, 0.52, 0.27, 0.65), fill=(178, 22, 36, 245), outline=outline, width=2)
+        front.ellipse(rect(frame, 0.63, 0.50, 0.77, 0.64), fill=(178, 22, 36, 245), outline=outline, width=2)
+        front.rectangle(rect(frame, 0.39, 0.64, 0.62, 0.69), fill=(42, 42, 48, 240))
+
+    elif style == "runner":
+        back.polygon([
+            (x + int(w * 0.36), y + int(h * 0.18)),
+            (x + int(w * 0.62), y + int(h * 0.18)),
+            (x + int(w * 0.71), y + int(h * 0.37)),
+            (x + int(w * 0.50), y + int(h * 0.45)),
+            (x + int(w * 0.28), y + int(h * 0.36)),
+        ], fill=(14, 20, 30, 245))
+        back.polygon([
+            (x + int(w * 0.62), y + int(h * 0.30)),
+            (x + int(w * 0.92), y + int(h * 0.40)),
+            (x + int(w * 0.66), y + int(h * 0.45)),
+        ], fill=(18, 168, 196, 220))
+        front.rectangle(rect(frame, 0.33, 0.31, 0.67, 0.59), fill=(20, 34, 48, 165))
+        front.line(line(frame, 0.36, 0.34, 0.65, 0.56), fill=(40, 218, 230, 245), width=heavy)
+        front.rectangle(rect(frame, 0.35, 0.23, 0.64, 0.30), fill=(8, 12, 18, 235))
+        front.rectangle(rect(frame, 0.40, 0.63, 0.59, 0.68), fill=(36, 162, 190, 230))
+
+    elif style == "bruiser":
+        back.ellipse(rect(frame, 0.05, 0.23, 0.33, 0.47), fill=(48, 54, 62, 250), outline=outline, width=2)
+        back.ellipse(rect(frame, 0.63, 0.22, 0.93, 0.47), fill=(48, 54, 62, 250), outline=outline, width=2)
+        back.rectangle(rect(frame, 0.24, 0.31, 0.76, 0.66), fill=(32, 38, 43, 120))
+        front.rectangle(rect(frame, 0.30, 0.34, 0.70, 0.60), fill=(95, 76, 48, 145))
+        front.line(line(frame, 0.28, 0.38, 0.72, 0.38), fill=(232, 182, 58, 245), width=heavy)
+        front.ellipse(rect(frame, 0.10, 0.50, 0.26, 0.66), fill=(28, 28, 34, 250), outline=(232, 182, 58, 255), width=2)
+        front.ellipse(rect(frame, 0.67, 0.49, 0.84, 0.66), fill=(28, 28, 34, 250), outline=(232, 182, 58, 255), width=2)
+        front.rectangle(rect(frame, 0.22, 0.86, 0.45, 0.93), fill=(24, 24, 29, 240))
+        front.rectangle(rect(frame, 0.56, 0.86, 0.78, 0.93), fill=(24, 24, 29, 240))
+
+    elif style == "staffer":
+        back.polygon([
+            (x + int(w * 0.24), y + int(h * 0.38)),
+            (x + int(w * 0.76), y + int(h * 0.38)),
+            (x + int(w * 0.90), y + int(h * 0.86)),
+            (x + int(w * 0.58), y + int(h * 0.92)),
+            (x + int(w * 0.10), y + int(h * 0.86)),
+        ], fill=(37, 34, 46, 230))
+        front.polygon([
+            (x + int(w * 0.34), y + int(h * 0.16)),
+            (x + int(w * 0.58), y + int(h * 0.12)),
+            (x + int(w * 0.74), y + int(h * 0.22)),
+            (x + int(w * 0.22), y + int(h * 0.24)),
+        ], fill=(220, 172, 72, 245))
+        front.rectangle(rect(frame, 0.35, 0.34, 0.66, 0.75), fill=(31, 74, 66, 150))
+        front.line(line(frame, 0.38, 0.38, 0.66, 0.72), fill=(230, 184, 68, 245), width=heavy)
+        front.rectangle(rect(frame, 0.35, 0.69, 0.67, 0.73), fill=(84, 42, 20, 245))
+
+    elif style == "swordsman":
+        back.polygon([
+            (x + int(w * 0.28), y + int(h * 0.32)),
+            (x + int(w * 0.72), y + int(h * 0.31)),
+            (x + int(w * 0.78), y + int(h * 0.92)),
+            (x + int(w * 0.55), y + int(h * 0.90)),
+            (x + int(w * 0.47), y + int(h * 0.62)),
+            (x + int(w * 0.38), y + int(h * 0.91)),
+            (x + int(w * 0.18), y + int(h * 0.90)),
+        ], fill=(18, 22, 32, 235))
+        back.line(line(frame, 0.22, 0.85, 0.82, 0.18), fill=(198, 224, 238, 230), width=heavy + 1)
+        front.rectangle(rect(frame, 0.35, 0.32, 0.66, 0.62), fill=(42, 54, 88, 155))
+        front.line(line(frame, 0.35, 0.36, 0.66, 0.59), fill=(148, 46, 56, 245), width=heavy)
+        front.rectangle(rect(frame, 0.34, 0.63, 0.67, 0.68), fill=(218, 160, 72, 250))
+
+    elif style == "nunchaku":
+        back.line(line(frame, 0.28, 0.20, 0.08, 0.10), fill=(216, 34, 76, 240), width=heavy)
+        back.line(line(frame, 0.33, 0.20, 0.14, 0.08), fill=(30, 220, 234, 230), width=heavy)
+        front.rectangle(rect(frame, 0.32, 0.31, 0.68, 0.60), fill=(58, 24, 80, 145))
+        front.rectangle(rect(frame, 0.39, 0.35, 0.60, 0.58), fill=(220, 218, 198, 130))
+        front.line(line(frame, 0.30, 0.24, 0.62, 0.22), fill=(218, 34, 74, 255), width=heavy)
+        front.line(line(frame, 0.34, 0.62, 0.63, 0.68), fill=(34, 228, 236, 245), width=heavy)
+
+
 def draw_weapon(draw: ImageDraw.ImageDraw, frame: dict, weapon: str | None, boss_scale: float = 1.0) -> None:
     if not weapon or frame["action"] == "down":
         return
@@ -103,11 +198,23 @@ def draw_weapon(draw: ImageDraw.ImageDraw, frame: dict, weapon: str | None, boss
         draw.line((hand_x - 2, hand_y - 10, hand_x + 10, hand_y - 3), fill=(232, 210, 120, 255), width=max(1, width - 1))
 
 
-def write_sheet(source: Path, output: Path, hue: float, sat: float, value: float, weapon: str | None, boss_scale: float = 1.0) -> None:
+def write_sheet(source: Path, output: Path, hue: float, sat: float, value: float, weapon: str | None, style: str | None = None, boss_scale: float = 1.0) -> None:
     image = palette_shift(Image.open(source), hue, sat, value)
-    draw = ImageDraw.Draw(image)
+    back = Image.new("RGBA", image.size)
+    costume = Image.new("RGBA", image.size)
+    weapons = Image.new("RGBA", image.size)
+    back_draw = ImageDraw.Draw(back)
+    costume_draw = ImageDraw.Draw(costume)
+    weapon_draw = ImageDraw.Draw(weapons)
     for frame in frame_groups():
-        draw_weapon(draw, frame, weapon, boss_scale)
+        draw_costume(back_draw, costume_draw, frame, style, boss_scale)
+        draw_weapon(weapon_draw, frame, weapon, boss_scale)
+    body_alpha = image.getchannel("A")
+    costume_alpha = ImageChops.multiply(costume.getchannel("A"), body_alpha)
+    costume.putalpha(costume_alpha)
+    image = Image.alpha_composite(back, image)
+    image = Image.alpha_composite(image, costume)
+    image = Image.alpha_composite(image, weapons)
     output.parent.mkdir(parents=True, exist_ok=True)
     image.save(output)
     print(output.relative_to(ROOT))
@@ -118,9 +225,9 @@ def main() -> None:
     player = ensure_alpha(Image.open(PLAYER_SOURCE))
     player.save(PLAYER_SOURCE)
     for spec in ENEMY_SPECS:
-        write_sheet(ENEMY_SOURCE, ENEMY_DIR / spec["file"], spec["hue"], spec["sat"], spec["value"], spec["weapon"])
+        write_sheet(ENEMY_SOURCE, ENEMY_DIR / spec["file"], spec["hue"], spec["sat"], spec["value"], spec["weapon"], spec["style"])
     for spec in BOSS_SPECS:
-        write_sheet(ENEMY_SOURCE, BOSS_DIR / spec["file"], spec["hue"], spec["sat"], spec["value"], spec["weapon"], 1.18)
+        write_sheet(ENEMY_SOURCE, BOSS_DIR / spec["file"], spec["hue"], spec["sat"], spec["value"], spec["weapon"], spec["style"], 1.18)
 
 
 if __name__ == "__main__":
